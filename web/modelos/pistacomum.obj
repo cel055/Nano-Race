@@ -1,0 +1,15 @@
+# Blender v2.73 (sub 0) OBJ File: 'largada.blend'
+# www.blender.org
+mtllib pistacomum.mtl
+o Plane
+v -1.000000 0.000000 1.000000
+v 1.000000 0.000000 1.000000
+v -1.000000 0.000000 -1.000000
+v 1.000000 0.000000 -1.000000
+vt 0.722414 0.048363
+vt 0.983825 0.048363
+vt 0.983825 0.463959
+vt 0.722414 0.463959
+usemtl Material.001
+s off
+f 1/1 2/2 4/3 3/4
