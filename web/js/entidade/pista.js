@@ -76,11 +76,20 @@ var Pista = function () {
         });
 
     };
+    this.points = function (_posicaoCheck){
+        this.valor = _posicaoCheck /2;
+        this.checkPoint = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 300), this.materialChekpoint, 0);
+                this.checkPoint.position.z = this.pistaMeio.position.z / this.valor;
+                this.checkPoint.position.x = this.pistaMeio.position.x;
+                //this.checkPoint.rotation.x = 90;
+                this.checkPoint.position.y = 1.1;
+                _self.fase.cena.add(this.checkPoint);
+    };
     this.criaPista = function (_x, _y, _z, _posicaoInicialX, _posicaoInicialZ, _nomePista, _nomeMaterial, _tamanhoPista, _direcao, _direcaoY) {
         //1325 / -1640
         if (_nomePista === "pistaMeio") {
-
-            for (i = 0; i < _tamanhoPista; i++) {
+            
+            for (var i = 0; i < _tamanhoPista; i++) {
                 this.pistaPosicaoX = _posicaoInicialX;
                 this.pistaPosicaoZ = _posicaoInicialZ;
                 this.pistaMeio = new Physijs.BoxMesh(new THREE.BoxGeometry(_x, _y, _z), _nomeMaterial.clone(), 0);
@@ -94,8 +103,11 @@ var Pista = function () {
                 _self.pistaComum.scale.z = 150;
                 this.pistaMeio.add(_self.pistaComum.clone());
                 _self.fase.cena.add(this.pistaMeio);
+                 
 
             }
+            //checkpoints
+           this.points(_tamanhoPista,_x, _y, _z); 
             this.referenciaX = this.pistaMeio.position.x;
             this.referenciaZ = this.pistaMeio.position.z;
         }
@@ -210,6 +222,10 @@ var Pista = function () {
                 if (_direcao === "direita") {
                     this.pistaMeio.position.z = (this.referenciaZ - 300 * j) - 300;
                     this.pistaMeio.position.x = this.referenciaX;
+                    if (_direcaoY === "cima") {
+                    this.pistaMeio.position.z = (this.referenciaZ + 300 * j)  + 450;
+                    this.pistaMeio.position.x = this.referenciaX - 450;    
+                    }
                 } else {
                     this.pistaMeio.position.z = (this.referenciaZ - 300 * j) - 449;
                     this.pistaMeio.position.x = this.referenciaX + 150;
@@ -233,6 +249,10 @@ var Pista = function () {
                 this.curvaDois.rotation.y = 90 * Math.PI / 180;
                 ajusteX = 150;
                 ajusteZ = -150;
+                if(_direcaoY === "cima") {
+                    ajusteX = -300;
+                    ajusteZ = 300;
+                    }
             } else {
                 this.curvaDois.rotation.y = 0;
 
@@ -279,7 +299,8 @@ var Pista = function () {
         this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "pistaVoltar", chaoMeshPhisica, 8);
         this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "pistaCurvaVoltar", chaoMeshPhisica, 6);
         this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "pistaLateral", chaoMeshPhisica, 9, "direita","cima");
-        this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "curvaDois", chaoMeshPhisica, 1, "direita", "baixo");
+        this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "pistaCurvaVoltar", chaoMeshPhisica, 1,"esquerda","cima");
+        this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "pistaVoltar", chaoMeshPhisica, 5,'direita',"cima");
 
     };
 };
