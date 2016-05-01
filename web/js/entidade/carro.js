@@ -1,18 +1,15 @@
 var Carro = function () {
     var _self = this;
     this.fase;
+    this.checkPointAtual = 0;
     this.carro;
     this.velocidade = 0;
     this.rotacao = 0;
     this.fase;
     this.carregado = false;
     this.geoFisicaCarro;
-    this.gravidade = -10;
     this.rotSeno = 0;
     this.rotCoseno = 0;
-    this.forcaColisao = {x:0,y:0,z:0};
-    this.velX = 0;
-    this.velZ = 0;
 
     this.carrega = function (obj, mtl) {
         var loader = new THREE.OBJMTLLoader();
@@ -57,30 +54,15 @@ var Carro = function () {
     };
 
     this.colisaoCarro = function (outroObj, velocidadeRelativa, rotacaoRelativa, contato) {
-//        if (outroObj.name === "solo") {
-//            console.error("colidiu!!!");
-//        }
-//        if (outroObj.name === "pistaMeio") {
-//            console.error("colidiu!!!");
-//        }
-//        if (outroObj.name === "pistaLateral") {
-//            console.error("colidiu pista lateral!!!");
-//        }
+        if(outroObj.name === "checkPoint"){
+            _self.checkPointAtual++;
+            if(_self.fase.pista.listaCheckPoints.length >= _self.checkPointAtual){
+                _self.checkPointAtual = 0;
+            }
+        }
     };
 
     this.aceleraFrenteCarro = function () {
-//        _self.velX = _self.geoFisicaCarro.getLinearVelocity().x;
-//        _self.velZ = _self.geoFisicaCarro.getLinearVelocity().z;
-//        if(_self.velX == 0){
-//            _self.velX = 1.1 * _self.rotSeno;
-//        }else{
-//            _self.velX *= 1.1 * _self.rotSeno;
-//        }
-//        if(_self.velZ == 0){
-//            _self.velZ = 1.1 * _self.rotCoseno;
-//        }else{
-//            _self.velZ *= 1.1 * _self.rotCoseno;
-//        }
         if (_self.velocidade < 2000) {
             if (_self.velocidade > 1000) {
                 _self.velocidade += Math.abs(500 / (_self.velocidade / 5));
@@ -97,23 +79,11 @@ var Carro = function () {
     };
 
     this.aceleraTrasCarro = function () {
-//        _self.velX = _self.geoFisicaCarro.getLinearVelocity().x;
-//        _self.velZ = _self.geoFisicaCarro.getLinearVelocity().z;
-//        if(_self.velX < 0){
-//            _self.velX *= 1.1 * _self.rotSeno;
-//        }else{
-//            _self.velX *= 1.1 * _self.rotSeno;
-//        }
-//        if(_self.velZ < 0){
-//            _self.velZ *= 1.1 * _self.rotCoseno;
-//        }else{
-//            _self.velZ *= 1.1 * _self.rotCoseno;
-//        }
         if (_self.velocidade > -800) {
             if (_self.velocidade < 0) {
                 _self.velocidade -= Math.abs(500 / (_self.velocidade / 10));
             } else if (_self.velocidade > 0) {
-                _self.velocidade -= Math.abs(500 / (_self.velocidade / 15));
+                _self.velocidade -= Math.abs(500 / (_self.velocidade / 20));
             } else {
                 _self.velocidade = -10;
             }
@@ -130,25 +100,9 @@ var Carro = function () {
         } else {
             _self.velocidade = 0;
         }
-//        if (_self.velX > 100 || _self.velX < -100) {
-//            _self.velX *= 0.99;
-//        } else if (_self.velX > 1 || _self.velX < -1) {
-//            _self.velX *= 0.93;
-//        } else {
-//            _self.velX = 0;
-//        }
-//        if (_self.velZ > 100 || _self.velZ < -100) {
-//            _self.velZ *= 0.99;
-//        } else if (_self.velZ > 1 || _self.velZ < -1) {
-//            _self.velZ *= 0.93;
-//        } else {
-//            _self.velZ = 0;
-//        }
     };
 
     this.viraDireita = function () {
-//        _self.geoFisicaCarro.translate({x:_self.geoFisicaCarro.rotation.x,y:_self.geoFisicaCarro.rotation.y + 5,z:_self.geoFisicaCarro.rotation.z});
-//        _self.geoFisicaCarro.translateOnAxis("Y", {x:_self.geoFisicaCarro.rotation.x,y:_self.geoFisicaCarro.rotation.y + 5,z:_self.geoFisicaCarro.rotation.z});
         _self.rotacao -= 2.5;
         _self.rotSeno = Math.sin(_self.rotacao * Math.PI / 180);
         _self.rotCoseno = Math.cos(_self.rotacao * Math.PI / 180);
@@ -161,18 +115,14 @@ var Carro = function () {
     };
 
     this.moveCarro = function () {
-//        if (_self.rotSeno < 0) {
-//            _self.geoFisicaCarro.rotation.x = -0.05;
-//        } else {
-//            _self.geoFisicaCarro.rotation.x = 0.05;
-//        }
-//        if (_self.rotCoseno < 0) {
-//            _self.geoFisicaCarro.rotation.z = -0.05;
-//        } else {
-//            _self.geoFisicaCarro.rotation.z = 0.05;
-//        }
+        if(_self.geoFisicaCarro.position.y < -2){
+            _self.geoFisicaCarro.setLinearVelocity({x: 0, y: 0, z: 0});
+            _self.geoFisicaCarro.position.y = 5;
+            _self.geoFisicaCarro.position.x = _self.fase.pista.listaCheckPoints[_self.checkPointAtual].x;
+            _self.geoFisicaCarro.position.z = _self.fase.pista.listaCheckPoints[_self.checkPointAtual].z;
+            return ;
+        }
         _self.geoFisicaCarro.rotation.y = _self.rotacao * Math.PI / 180;
         _self.geoFisicaCarro.setLinearVelocity({x: _self.velocidade * _self.rotSeno, y: _self.geoFisicaCarro.getLinearVelocity().y, z: _self.velocidade * _self.rotCoseno});
-//        _self.geoFisicaCarro.setLinearVelocity({x: _self.velX, y: _self.geoFisicaCarro.getLinearVelocity().y, z: _self.velZ});
     };
 };

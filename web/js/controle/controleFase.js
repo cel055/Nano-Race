@@ -35,7 +35,7 @@ var ControleFase = function () {
     }
 
     function carregarLuz() {
-      luzSpot = new THREE.AmbientLight( 0x404040 );
+        luzSpot = new THREE.AmbientLight(0x404040);
 //        luzSpot.castShadow = true;
 //        luzSpot.shadowMapWidth = 1024;
 //        luzSpot.shadowMapheight = 1024;
@@ -75,7 +75,6 @@ var ControleFase = function () {
 
     function updateFisica() {
 //        _self.carro.moveCarro();
-        _self.carro.movimentoCarro();
     }
 
     function render() {
@@ -84,21 +83,22 @@ var ControleFase = function () {
         if (_self.carro.velocidade == 0) {
             document.getElementById('marcador').innerHTML = "kmH :  0";
         }
+        _self.carro.movimentoCarro();
 //        _self.carro.movimentoCarro();
 //        _self.carro.moveCarro();
-       // posiCamera();
+         posiCamera();
         _self.controls.update();
         _self.renderizador.render(_self.cena, _self.camera);
     }
 
-//    function posiCamera() {
+    function posiCamera() {
 //        if (_self.teclado.pressed('h')) {
-//        document.getElementById('x').innerHTML = "camera no eixo x:" + _self.camera.position.x;
-//        document.getElementById('y').innerHTML = "camera no eixo y:" + _self.camera.position.y;
-//        document.getElementById('z').innerHTML = "camera no eixo z:" + _self.camera.position.z;
-//        document.getElementById('posX').innerHTML = "carro eixo X:" + _self.carro.geoFisicaCarro.position.x;
-//        document.getElementById('posY').innerHTML = "carro eixo Y:" + _self.carro.geoFisicaCarro.position.y;
-//        document.getElementById('posZ').innerHTML = "carro eixo Z:" + _self.carro.geoFisicaCarro.position.z;
+        document.getElementById('x').innerHTML = "camera no eixo x:" + _self.camera.position.x;
+        document.getElementById('y').innerHTML = "camera no eixo y:" + _self.camera.position.y;
+        document.getElementById('z').innerHTML = "camera no eixo z:" + _self.camera.position.z;
+        document.getElementById('posX').innerHTML = "carro eixo X:" + _self.carro.geoFisicaCarro.position.x;
+        document.getElementById('posY').innerHTML = "carro eixo Y:" + _self.carro.geoFisicaCarro.position.y;
+        document.getElementById('posZ').innerHTML = "carro eixo Z:" + _self.carro.geoFisicaCarro.position.z;
 //        }
-   // }
+     }
 };
