@@ -37,15 +37,19 @@ var Carro = function () {
             shading: THREE.SmoothShading,
             opacity: 0.5,
             color: 0xFFFFFF,
-            transparent: true
-//            depthWrite: true
-        }), 0.0, 0.0);
-        _self.geoFisicaCarro = new Physijs.BoxMesh(new THREE.BoxGeometry(1.5 * 5, 0.5 * 5, 1.5 * 5), materialFisicaCarro, 200);
+            transparent: true,
+           visible: false
+        }));
+        _self.geoFisicaCarro = new Physijs.BoxMesh(new THREE.BoxGeometry(6, 2, 6), materialFisicaCarro, 100);
         _self.geoFisicaCarro.visible = true;
         _self.geoFisicaCarro.name = "carro";
-        _self.geoFisicaCarro.position.set(x, 1, z);
+        _self.geoFisicaCarro.position.set(x, 10, z);
         _self.geoFisicaCarro.add(_self.carro);
-        _self.geoFisicaCarro.receiveShadow = true;
+        //_self.geoFisicaCarro.receiveShadow = true;
+        _self.geoFisicaCarro.setCcdMotionThreshold(7);
+        _self.geoFisicaCarro.setCcdSweptSphereRadius(0.2);
+        _self.geoFisicaCarro.__dirtyRotation = true;
+        _self.geoFisicaCarro.__dirtyPosition = true;
 
         _self.geoFisicaCarro.addEventListener('collision', _self.colisaoCarro);
         _self.rotSeno = Math.sin(_self.rotacao * Math.PI / 180);
@@ -53,15 +57,15 @@ var Carro = function () {
     };
 
     this.colisaoCarro = function (outroObj, velocidadeRelativa, rotacaoRelativa, contato) {
-        if (outroObj.name === "solo") {
-            console.error("colidiu!!!");
-        }
-        if (outroObj.name === "pistaMeio") {
-            console.error("colidiu!!!");
-        }
-        if (outroObj.name === "pistaLateral") {
-            console.error("colidiu pista lateral!!!");
-        }
+//        if (outroObj.name === "solo") {
+//            console.error("colidiu!!!");
+//        }
+//        if (outroObj.name === "pistaMeio") {
+//            console.error("colidiu!!!");
+//        }
+//        if (outroObj.name === "pistaLateral") {
+//            console.error("colidiu pista lateral!!!");
+//        }
     };
 
     this.aceleraFrenteCarro = function () {

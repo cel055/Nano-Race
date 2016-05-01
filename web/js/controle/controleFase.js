@@ -8,7 +8,7 @@ var ControleFase = function () {
     this.controls;
     this.camera;
     this.distancia = 800;
-    this.gravidade = 0;
+    this.gravidade = 10;
 
     var luzSpot;
     var luzCarregado = false;
@@ -35,25 +35,25 @@ var ControleFase = function () {
     }
 
     function carregarLuz() {
-        luzSpot = new THREE.HemisphereLight(0xf3e2a9, 0x2222ef, 1);
-        luzSpot.castShadow = true;
-        luzSpot.shadowMapWidth = 1024;
-        luzSpot.shadowMapheight = 1024;
-        luzSpot.shadowCameraNear = 1;
-        luzSpot.shadowCameraFar = 800;
-        luzSpot.shadowCameraFov = 100;
-        luzSpot.shadowDarkness = 0.5;
-        luzSpot.shadowBias = 0;
-        luzSpot.shadowCameraRight = _self.distancia;
-        luzSpot.shadowCameraLeft = _self.distancia;
-        luzSpot.shadowCameraTop = _self.distancia;
-        luzSpot.shadowCameraBottoms = _self.distancia;
+      luzSpot = new THREE.AmbientLight( 0x404040 );
+//        luzSpot.castShadow = true;
+//        luzSpot.shadowMapWidth = 1024;
+//        luzSpot.shadowMapheight = 1024;
+//        luzSpot.shadowCameraNear = 1;
+//        luzSpot.shadowCameraFar = 800;
+//        luzSpot.shadowCameraFov = 100;
+//        luzSpot.shadowDarkness = 0.5;
+//        luzSpot.shadowBias = 0;
+//        luzSpot.shadowCameraRight = _self.distancia;
+//        luzSpot.shadowCameraLeft = _self.distancia;
+//        luzSpot.shadowCameraTop = _self.distancia;
+//        luzSpot.shadowCameraBottoms = _self.distancia;
         luzCarregado = true;
     }
 
     function init() {
         _self.cena = new Physijs.Scene();
-        _self.cena.setGravity(new THREE.Vector3(0, -1000, 0));
+        _self.cena.setGravity(new THREE.Vector3(0, -200, 0));
         _self.cena.addEventListener("update", updateFisica);
         _self.camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 10000);
         _self.renderizador = new THREE.WebGLRenderer({clearColor: 0xff8844, clearAlpha: 0.0, alpha: true, antialias: true});
@@ -86,17 +86,19 @@ var ControleFase = function () {
         }
 //        _self.carro.movimentoCarro();
 //        _self.carro.moveCarro();
-        posiCamera();
+       // posiCamera();
         _self.controls.update();
         _self.renderizador.render(_self.cena, _self.camera);
     }
 
-    function posiCamera() {
-        document.getElementById('x').innerHTML = "camera no eixo x:" + _self.camera.position.x;
-        document.getElementById('y').innerHTML = "camera no eixo y:" + _self.camera.position.y;
-        document.getElementById('z').innerHTML = "camera no eixo z:" + _self.camera.position.z;
-        document.getElementById('posX').innerHTML = "carro eixo X:" + _self.carro.geoFisicaCarro.position.x;
-        document.getElementById('posY').innerHTML = "carro eixo Y:" + _self.carro.geoFisicaCarro.position.y;
-        document.getElementById('posZ').innerHTML = "carro eixo Z:" + _self.carro.geoFisicaCarro.position.z;
-    }
+//    function posiCamera() {
+//        if (_self.teclado.pressed('h')) {
+//        document.getElementById('x').innerHTML = "camera no eixo x:" + _self.camera.position.x;
+//        document.getElementById('y').innerHTML = "camera no eixo y:" + _self.camera.position.y;
+//        document.getElementById('z').innerHTML = "camera no eixo z:" + _self.camera.position.z;
+//        document.getElementById('posX').innerHTML = "carro eixo X:" + _self.carro.geoFisicaCarro.position.x;
+//        document.getElementById('posY').innerHTML = "carro eixo Y:" + _self.carro.geoFisicaCarro.position.y;
+//        document.getElementById('posZ').innerHTML = "carro eixo Z:" + _self.carro.geoFisicaCarro.position.z;
+//        }
+   // }
 };

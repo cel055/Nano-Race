@@ -1,21 +1,26 @@
 @font-face {
-	font-family: robo;
-	src: url('ROBO.ttf');
+    font-family: robo;
+    src: url('ROBO.ttf');
+}
+html {
+   margin:0;
+    padding:0;
 }
 body {
-	margin:0;
-	padding:0;
-	overflow: hidden;
+    margin:0;
+    padding:0;
+    overflow: hidden;
 }
 #marcador {
-	font-family: 'robo';
-	font-style: italic;
-	text-shadow: 1px 1px white;
-	background: url(../imagens/parede.png) no-repeat;
-	width: 30%;
-	background-size: cover;
-	color: red;
-	font-size: 1.5em;
-	margin-top: 0.5%;
-	margin-left: 0.5%;
+    position: absolute;
+    font-family: 'robo';
+    font-style: italic;
+    text-shadow: 1px 1px white;
+    background: url(../imagens/parede.png) no-repeat;
+    width: 30%;
+    background-size: cover;
+    color: red;
+    font-size: 1.5em;
+/*    margin-top: 0.5%;
+    margin-left: 0.5%;*/
 }

@@ -1,4 +1,4 @@
-/* global THREE */
+/* global THREE, Physijs */
 
 var Pista = function () {
     var _self = this;
@@ -10,6 +10,7 @@ var Pista = function () {
     this.pistaComum;
     this.carregado = false;
     this.pistaInicioL;
+    this.esferaMundo;
 
     this.carrega = function () {
         var loader = new THREE.OBJMTLLoader();
@@ -61,441 +62,224 @@ var Pista = function () {
                     });
                     _self.carregadoJ = true;
                 });
-
+        //  criando o mundo ao redor
+        _self.geometria = new THREE.SphereGeometry(50, 40, 40);
+        _self.imagem = new THREE.ImageUtils.loadTexture('imagens/fundospecial.png');
+        _self.imagem.minFilter = THREE.LinearFilter;
+        _self.material = new THREE.MeshPhongMaterial({
+            overdraw: true,
+            map: _self.imagem,
+            side: THREE.DoubleSide,
+            color: 0xcccccc,
+            specular: 0x111111,
+            visible: true
+        });
 
     };
-    this.init = function () {
-        var chaoMeshPhisica = new Physijs.createMaterial(new THREE.MeshPhongMaterial({
-            ambient: 0x333333,
-            shading: THREE.SmoothShading,
-            opacity: 0.5,
-            transparent: true,
-            visible: false,
-            anisotropy: 5
-        }));
-        var chaoMeshPhisica2 = new Physijs.createMaterial(new THREE.MeshPhongMaterial({
-            ambient: 0x333333,
-            shading: THREE.SmoothShading,
-            opacity: 0.5,
-            transparent: true,
-            visible: false,
-            anisotropy: 5
-        }));
-        var chaoMeshPhisica3 = new Physijs.createMaterial(new THREE.MeshPhongMaterial({
-            ambient: 0x000FFF,
-            shading: THREE.SmoothShading,
-            opacity: 0.5,
-            transparent: true,
-            visible: false,
-            anisotropy: 5
-        }));
-        var chaoMeshPhisica4 = new Physijs.createMaterial(new THREE.MeshPhongMaterial({
-            ambient: 0x000FFF,
-            shading: THREE.SmoothShading,
-            opacity: 1,
-            transparent: true,
-            visible: true,
-            anisotropy: 5
-        }));
+    this.criaPista = function (_x, _y, _z, _posicaoInicialX, _posicaoInicialZ, _nomePista, _nomeMaterial, _tamanhoPista, _direcao, _direcaoY) {
+        //1325 / -1640
+        if (_nomePista === "pistaMeio") {
 
-        for (var i = 0; i < 100; i++) {
-            var pistaPosicaoX = 1325;
-            var pistaPosicaoZ = -1640;
-            var pistaMeio = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 300), chaoMeshPhisica.clone(), 0);
+            for (i = 0; i < _tamanhoPista; i++) {
+                this.pistaPosicaoX = _posicaoInicialX;
+                this.pistaPosicaoZ = _posicaoInicialZ;
+                this.pistaMeio = new Physijs.BoxMesh(new THREE.BoxGeometry(_x, _y, _z), _nomeMaterial.clone(), 0);
+                this.pistaMeio.visible = true;
+                this.pistaMeio.name = _nomePista;
+                this.pistaMeio.position.x = this.pistaPosicaoX;
+                this.pistaMeio.position.z = this.pistaPosicaoZ + 300 * i;
+                this.pistaMeio.position.y = 0;
 
-            var pistaCurva = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 300), chaoMeshPhisica3.clone(), 0);
-            if (i > 0 && i < 20) {
-                var paredeDireita = new Physijs.BoxMesh(new THREE.BoxGeometry(10, 50, 300), chaoMeshPhisica4.clone(), 0);
-                paredeDireita.position.x = 145;
-                if(i === 0){
-                paredeDireita.position.z = pistaMeio.position.z;    
-                paredeDireita.position.x = pistaMeio.position.x;    
-                paredeDireita.position.y = pistaMeio.position.y;    
-                }
-                paredeDireita.scale.z = 1 * 4;
-                var paredeEsqueda = new Physijs.BoxMesh(new THREE.BoxGeometry(10, 50, 300), chaoMeshPhisica4.clone(), 0);
-                paredeEsqueda.position.x = -145;
-                 if(i === 0){
-                paredeEsqueda.position.z = pistaMeio.position.z;    
-                paredeEsqueda.position.x = pistaMeio.position.x;    
-                paredeEsqueda.position.y = pistaMeio.position.y;    
-                }
-                paredeEsqueda.scale.z = 1 * 4;
-                pistaMeio.visible = true;
-                pistaMeio.name = "pistaMeio";
-                pistaMeio.position.x = pistaPosicaoX;
-                pistaMeio.position.z = pistaPosicaoZ + 300 * i;
-                pistaMeio.position.y = 0;
-                
                 _self.pistaComum.scale.x = 150;
                 _self.pistaComum.scale.z = 150;
-                pistaMeio.add(_self.pistaComum.clone());
-                pistaMeio.add(paredeDireita);
-                pistaMeio.add(paredeEsqueda);
-                /*var pistasMeios = [];
-                 pistasMeios.push(pistaMeio);
-                 */
-                _self.fase.cena.add(pistaMeio);
+                this.pistaMeio.add(_self.pistaComum.clone());
+                _self.fase.cena.add(this.pistaMeio);
+
             }
-            switch (i) {
-                case 0:
-                    var pistaStart = pistaMeio;
-                    pistaStart.scale.z = 1.1;
-                    pistaStart.visible = true;
-                    pistaStart.name = "pistaMeio";
-                    pistaStart.position.x = pistaPosicaoX;
-                    pistaStart.position.z = pistaPosicaoZ - 15;
-                    pistaStart.position.y = 0;
-                    _self.pistaLargada.position.z = -9;
-                    _self.pistaLargada.scale.x = 150;
-                    _self.pistaLargada.scale.z = 175;
-                    pistaStart.add(_self.pistaLargada);
-                    /*var pistasMeios = [];
-                     pistasMeios.push(pistaMeio);
-                     */
-                    _self.fase.cena.add(pistaMeio);
-                    break;
-                case 20:
-                    var pistaCurve = pistaCurva;
-                    //_self.localDaCurva = pistaMeio.position.z;
-                    pistaCurve.visible = true;
-                    pistaCurve.name = "pistaMeio";
-                    pistaCurve.position.x = pistaPosicaoX;
-                    pistaCurve.position.z = (pistaPosicaoZ + 300 * i) - 1;
-                    //pistaCurve.position.y = 0;
-                    pistaCurve.rotation.y = -180 * Math.PI / 180;
-                    //_self.pistaCurvaN.position.z = 48;
-                    _self.pistaCurvaN.scale.x = 150;
-                    _self.pistaCurvaN.scale.z = 150;
-                    pistaCurva.add(_self.pistaCurvaN);
-                    _self.fase.cena.add(pistaCurve);
-                    var curvaParteD = new Physijs.BoxMesh(new THREE.BoxGeometry(450, 1, 350), chaoMeshPhisica3.clone(), 0);
-                    curvaParteD.position.x = pistaCurve.position.x + 78;
-                    curvaParteD.position.z = pistaCurve.position.z + 140;
-                    _self.fase.cena.add(curvaParteD);
-                    break;
-                case 21:
-
-                    for (var j = 0; j < 10; j++) {
-                        var pistaMeioV = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 300), chaoMeshPhisica2.clone(), 0);
-                        pistaMeioV.visible = true;
-                        pistaMeioV.name = "pistaLateral";
-                        // pistaMeioV.position.x = pistaCurve.position.x + 350;
-                        pistaMeioV.position.z = pistaCurve.position.z + 150;
-                        pistaMeioV.rotation.y = 90 * Math.PI / 180;
-                        //variavel que pega o inicio da curva e e posiciona o novo elemento
-                        _self.pistaInicioL = pistaCurve.position.x + 445;
-                        pistaMeioV.position.x = _self.pistaInicioL + 300 * j;
-                        pistaMeioV.add(_self.pistaComum.clone());
-                        _self.fase.cena.add(pistaMeioV);
-                    }
-                    break;
-                case 22:
-                    var curvaDois = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 300), chaoMeshPhisica3.clone(), 0);
-                    curvaDois.visible = true;
-                    curvaDois.name = "curvaD";
-                    curvaDois.position.z = pistaMeioV.position.z;
-                    curvaDois.rotation.y = -90 * Math.PI / 180;
-                    curvaDois.position.x = pistaMeioV.position.x + 299;
-                    curvaDois.add(_self.pistaCurvaN.clone());
-                    var curvaParteD = new Physijs.BoxMesh(new THREE.BoxGeometry(350, 1, 450), chaoMeshPhisica3.clone(), 0);
-                    curvaParteD.position.x = curvaDois.position.x + 140;
-                    curvaParteD.position.z = curvaDois.position.z - 80;
-                    _self.fase.cena.add(curvaDois);
-                    _self.fase.cena.add(curvaParteD);
-                    break;
-                case 23:
-
-                    for (var j = 0; j < 3; j++) {
-                        var pistaMeioV = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 300), chaoMeshPhisica2.clone(), 0);
-                        pistaMeioV.visible = true;
-                        pistaMeioV.name = "pistaLateral";
-                        // pistaMeioV.position.x = pistaCurve.position.x + 350;
-                        pistaMeioV.position.z = (curvaDois.position.z - 300 * j) - 449;
-
-                        //variavel que pega o inicio da curva e e posiciona o novo elemento
-                        _self.pistaInicioL = curvaDois.position.x + 150;
-                        pistaMeioV.position.x = _self.pistaInicioL;
-                        pistaMeioV.add(_self.pistaComum.clone());
-                        _self.fase.cena.add(pistaMeioV);
-                    }
-                    break;
-                case 24:
-                    var curvaDois = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 300), chaoMeshPhisica3.clone(), 0);
-                    curvaDois.visible = true;
-                    curvaDois.name = "curvaD";
-                    curvaDois.position.z = pistaMeioV.position.z - 299;
-                    //curvaDois.rotation.y = -90 * Math.PI / 180;
-                    curvaDois.position.x = pistaMeioV.position.x;
-                    curvaDois.add(_self.pistaCurvaN.clone());
-                    var curvaParteD = new Physijs.BoxMesh(new THREE.BoxGeometry(450, 1, 350), chaoMeshPhisica3.clone(), 0);
-                    curvaParteD.position.x = curvaDois.position.x - 80;
-                    curvaParteD.position.z = curvaDois.position.z - 140;
-                    _self.fase.cena.add(curvaDois);
-                    _self.fase.cena.add(curvaParteD);
-                    break;
-                case 25:
-
-                    for (var j = 0; j < 2; j++) {
-                        var pistaMeioV = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 300), chaoMeshPhisica2.clone(), 0);
-                        pistaMeioV.visible = true;
-                        pistaMeioV.name = "pistaLateral";
-                        // pistaMeioV.position.x = pistaCurve.position.x + 350;
-                        pistaMeioV.position.z = curvaDois.position.z - 150;
-                        pistaMeioV.rotation.y = 90 * Math.PI / 180;
-                        //variavel que pega o inicio da curva e e posiciona o novo elemento
-                        _self.pistaInicioL = curvaDois.position.x - 445;
-                        pistaMeioV.position.x = _self.pistaInicioL - 300 * j;
-                        pistaMeioV.add(_self.pistaComum.clone());
-                        _self.fase.cena.add(pistaMeioV);
-                    }
-                    break;
-                case 26:
-                    var pistaSalto = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 300), chaoMeshPhisica.clone(), 0);
-                    pistaSalto.visible = true;
-                    pistaSalto.name = "pistaSalto";
-                    _self.pistaJump.scale.x = 150;
-                    _self.pistaJump.scale.z = 150;
-                    pistaSalto.add(_self.pistaJump);
-                    pistaSalto.rotation.z = -10 * Math.PI / 180;
-                    _self.pistaJump.rotation.y = 90 * Math.PI / 180;
-                    pistaSalto.position.x = pistaMeioV.position.x - 295;
-                    pistaSalto.position.z = pistaMeioV.position.z;
-                    pistaSalto.position.y = pistaMeioV.position.y + 26;
-                    _self.fase.cena.add(pistaSalto);
-                    break;
-                case 27:
-                    for (var j = 0; j < 3; j++) {
-                        var pistaMeioV = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 300), chaoMeshPhisica2.clone(), 0);
-                        pistaMeioV.visible = true;
-                        pistaMeioV.name = "pistaLateral";
-                        pistaMeioV.position.x = pistaSalto.position.x + 20;
-                        pistaMeioV.position.z = pistaSalto.position.z;
-                        pistaMeioV.rotation.y = 90 * Math.PI / 180;
-                        //variavel que pega o inicio da curva e e posiciona o novo elemento
-                        _self.pistaInicioL = pistaSalto.position.x - 900;
-                        pistaMeioV.position.x = _self.pistaInicioL - 300 * j;
-                        pistaMeioV.add(_self.pistaComum.clone());
-                        _self.fase.cena.add(pistaMeioV);
-                    }
-                    break;
-                case 28:
-                    var curvaDois = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 300), chaoMeshPhisica3.clone(), 0);
-                    curvaDois.visible = true;
-                    curvaDois.name = "curvaD";
-                    curvaDois.position.z = pistaMeioV.position.z - 150;
-                    curvaDois.rotation.y = -180 * Math.PI / 180;
-                    curvaDois.position.x = pistaMeioV.position.x - 449;
-                    curvaDois.add(_self.pistaCurvaN.clone());
-                    var curvaParteD = new Physijs.BoxMesh(new THREE.BoxGeometry(450, 1, 350), chaoMeshPhisica3.clone(), 0);
-                    _self.pistaCurvaN.scale.x = 150;
-                    _self.pistaCurvaN.scale.z = 150;
-                    curvaParteD.position.x = curvaDois.position.x + 80;
-                    curvaParteD.position.z = curvaDois.position.z + 140;
-                    _self.fase.cena.add(curvaDois);
-                    _self.fase.cena.add(curvaParteD);
-                    break;
-                case 29:
-
-                    for (var j = 0; j < 15; j++) {
-                        var pistaMeioV = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 300), chaoMeshPhisica2.clone(), 0);
-                        pistaMeioV.visible = true;
-                        pistaMeioV.name = "pistaLateral";
-                        // pistaMeioV.position.x = pistaCurve.position.x + 350;
-                        pistaMeioV.position.z = (curvaDois.position.z - 300 * j) - 300;
-
-                        //variavel que pega o inicio da curva e e posiciona o novo elemento
-                        _self.pistaInicioL = curvaDois.position.x;
-                        pistaMeioV.position.x = _self.pistaInicioL;
-                        pistaMeioV.add(_self.pistaComum.clone());
-                        _self.fase.cena.add(pistaMeioV);
-                    }
-                    break;
-                case 30:
-                    var curvaDois = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 300), chaoMeshPhisica3.clone(), 0);
-                    curvaDois.visible = true;
-                    curvaDois.name = "curvaD";
-                    curvaDois.position.z = pistaMeioV.position.z - 449;
-                    curvaDois.rotation.y = 90 * Math.PI / 180;
-                    curvaDois.position.x = pistaMeioV.position.x + 150;
-                    curvaDois.add(_self.pistaCurvaN.clone());
-                    var curvaParteD = new Physijs.BoxMesh(new THREE.BoxGeometry(350, 1, 450), chaoMeshPhisica3.clone(), 0);
-                    _self.pistaCurvaN.scale.x = 150;
-                    _self.pistaCurvaN.scale.z = 150;
-                    curvaParteD.position.x = curvaDois.position.x - 140;
-                    curvaParteD.position.z = curvaDois.position.z + 80;
-                    _self.fase.cena.add(curvaDois);
-                    _self.fase.cena.add(curvaParteD);
-                    break;
-                case 31:
-
-                    for (var j = 0; j < 1; j++) {
-                        var pistaMeioV = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 300), chaoMeshPhisica2.clone(), 0);
-                        pistaMeioV.visible = true;
-                        pistaMeioV.name = "pistaLateral";
-                        // pistaMeioV.position.x = pistaCurve.position.x + 350;
-                        pistaMeioV.position.z = curvaDois.position.z;
-                        pistaMeioV.rotation.y = 90 * Math.PI / 180;
-                        //variavel que pega o inicio da curva e e posiciona o novo elemento
-                        _self.pistaInicioL = curvaDois.position.x + 300;
-                        pistaMeioV.position.x = _self.pistaInicioL + 300 * j;
-                        pistaMeioV.add(_self.pistaComum.clone());
-                        _self.fase.cena.add(pistaMeioV);
-                    }
-                    break;
-                case 32:
-                    var curvaDois = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 300), chaoMeshPhisica3.clone(), 0);
-                    curvaDois.visible = true;
-                    curvaDois.name = "curvaD";
-                    curvaDois.position.z = pistaMeioV.position.z + 150;
-                    //curvaDois.rotation.y = -90 * Math.PI / 180;
-                    curvaDois.position.x = pistaMeioV.position.x + 450;
-                    curvaDois.add(_self.pistaCurvaN.clone());
-                    var curvaParteD = new Physijs.BoxMesh(new THREE.BoxGeometry(450, 1, 350), chaoMeshPhisica3.clone(), 0);
-                    curvaParteD.position.x = curvaDois.position.x - 80;
-                    curvaParteD.position.z = curvaDois.position.z - 140;
-                    _self.fase.cena.add(curvaDois);
-                    _self.fase.cena.add(curvaParteD);
-                    break;
-                case 33:
-                    for (var j = 0; j < 10; j++) {
-                        var pistaMeioV = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 300), chaoMeshPhisica2.clone(), 0);
-                        pistaMeioV.visible = true;
-                        pistaMeioV.name = "pistaLateral";
-                        // pistaMeioV.position.x = pistaCurve.position.x + 350;
-                        pistaMeioV.position.z = (curvaDois.position.z + 300 * j) + 300;
-
-                        //variavel que pega o inicio da curva e e posiciona o novo elemento
-                        _self.pistaInicioL = curvaDois.position.x;
-                        pistaMeioV.position.x = _self.pistaInicioL;
-                        pistaMeioV.add(_self.pistaComum.clone());
-                        _self.fase.cena.add(pistaMeioV);
-                    }
-                    break;
-                case 34:
-                    var curvaDois = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 300), chaoMeshPhisica3.clone(), 0);
-                    curvaDois.visible = true;
-                    curvaDois.name = "curvaD";
-                    curvaDois.position.z = pistaMeioV.position.z + 300;
-                    curvaDois.rotation.y = -180 * Math.PI / 180;
-                    curvaDois.position.x = pistaMeioV.position.x;
-                    curvaDois.add(_self.pistaCurvaN.clone());
-                    var curvaParteD = new Physijs.BoxMesh(new THREE.BoxGeometry(450, 1, 350), chaoMeshPhisica3.clone(), 0);
-                    _self.pistaCurvaN.scale.x = 150;
-                    _self.pistaCurvaN.scale.z = 150;
-                    curvaParteD.position.x = curvaDois.position.x + 80;
-                    curvaParteD.position.z = curvaDois.position.z + 140;
-                    _self.fase.cena.add(curvaDois);
-                    _self.fase.cena.add(curvaParteD);
-                    break;
-                case 35:
-                    for (var j = 0; j < 4; j++) {
-                        var pistaMeioV = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 300), chaoMeshPhisica2.clone(), 0);
-                        pistaMeioV.visible = true;
-                        pistaMeioV.name = "pistaLateral";
-                        // pistaMeioV.position.x = pistaCurve.position.x + 350;
-                        pistaMeioV.position.z = curvaDois.position.z + 150;
-                        pistaMeioV.rotation.y = 90 * Math.PI / 180;
-                        //variavel que pega o inicio da curva e e posiciona o novo elemento
-                        _self.pistaInicioL = curvaDois.position.x + 445;
-                        pistaMeioV.position.x = _self.pistaInicioL + 300 * j;
-                        pistaMeioV.add(_self.pistaComum.clone());
-                        _self.fase.cena.add(pistaMeioV);
-                    }
-                    break;
-                case 36:
-                    var curvaDois = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 300), chaoMeshPhisica3.clone(), 0);
-                    curvaDois.visible = true;
-                    curvaDois.name = "curvaD";
-                    curvaDois.position.z = pistaMeioV.position.z;
-                    curvaDois.rotation.y = -90 * Math.PI / 180;
-                    curvaDois.position.x = pistaMeioV.position.x + 299;
-                    curvaDois.add(_self.pistaCurvaN.clone());
-                    var curvaParteD = new Physijs.BoxMesh(new THREE.BoxGeometry(350, 1, 450), chaoMeshPhisica3.clone(), 0);
-                    curvaParteD.position.x = curvaDois.position.x + 140;
-                    curvaParteD.position.z = curvaDois.position.z - 80;
-                    _self.fase.cena.add(curvaDois);
-                    _self.fase.cena.add(curvaParteD);
-                    break;
-                case 37:
-                    for (var j = 0; j < 15; j++) {
-                        var pistaMeioV = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 300), chaoMeshPhisica2.clone(), 0);
-                        pistaMeioV.visible = true;
-                        pistaMeioV.name = "pistaLateral";
-                        // pistaMeioV.position.x = pistaCurve.position.x + 350;
-                        pistaMeioV.position.z = (curvaDois.position.z - 300 * j) - 300;
-
-                        //variavel que pega o inicio da curva e e posiciona o novo elemento
-                        _self.pistaInicioL = curvaDois.position.x + 150;
-                        pistaMeioV.position.x = _self.pistaInicioL;
-                        pistaMeioV.add(_self.pistaComum.clone());
-                        _self.fase.cena.add(pistaMeioV);
-                    }
-                    break;
-                case 38:
-                    var curvaDois = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 300), chaoMeshPhisica3.clone(), 0);
-                    curvaDois.visible = true;
-                    curvaDois.name = "curvaD";
-                    curvaDois.position.z = pistaMeioV.position.z - 299;
-                    //curvaDois.rotation.y = -90 * Math.PI / 180;
-                    curvaDois.position.x = pistaMeioV.position.x;
-                    curvaDois.add(_self.pistaCurvaN.clone());
-                    var curvaParteD = new Physijs.BoxMesh(new THREE.BoxGeometry(450, 1, 350), chaoMeshPhisica3.clone(), 0);
-                    curvaParteD.position.x = curvaDois.position.x - 81;
-                    curvaParteD.position.z = curvaDois.position.z - 140;
-                    _self.fase.cena.add(curvaDois);
-                    _self.fase.cena.add(curvaParteD);
-                    break;
-                case 39:
-
-                    for (var j = 0; j < 9; j++) {
-                        var pistaMeioV = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 300), chaoMeshPhisica2.clone(), 0);
-                        pistaMeioV.visible = true;
-                        pistaMeioV.name = "pistaLateral";
-                        // pistaMeioV.position.x = pistaCurve.position.x + 350;
-                        pistaMeioV.position.z = curvaDois.position.z - 150;
-                        pistaMeioV.rotation.y = 90 * Math.PI / 180;
-                        //variavel que pega o inicio da curva e e posiciona o novo elemento
-                        _self.pistaInicioL = curvaDois.position.x - 450;
-                        pistaMeioV.position.x = _self.pistaInicioL - 300 * j;
-                        pistaMeioV.add(_self.pistaComum.clone());
-                        _self.fase.cena.add(pistaMeioV);
-                    }
-                    break;
-                case 40:
-                    var curvaDois = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 300), chaoMeshPhisica3.clone(), 0);
-                    curvaDois.visible = true;
-                    curvaDois.name = "curvaD";
-                    curvaDois.position.z = pistaMeioV.position.z;
-                    curvaDois.rotation.y = 90 * Math.PI / 180;
-                    curvaDois.position.x = pistaMeioV.position.x - 300;
-                    curvaDois.add(_self.pistaCurvaN.clone());
-                    var curvaParteD = new Physijs.BoxMesh(new THREE.BoxGeometry(350, 1, 450), chaoMeshPhisica3.clone(), 0);
-                    _self.pistaCurvaN.scale.x = 150;
-                    _self.pistaCurvaN.scale.z = 150;
-                    curvaParteD.position.x = curvaDois.position.x - 140;
-                    curvaParteD.position.z = curvaDois.position.z + 90;
-                    _self.fase.cena.add(curvaDois);
-                    _self.fase.cena.add(curvaParteD);
-                    break;
-                case 41:
-                    for (var j = 0; j < 5; j++) {
-                        var pistaMeioV = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 300), chaoMeshPhisica2.clone(), 0);
-                        pistaMeioV.visible = true;
-                        pistaMeioV.name = "pistaLateral";
-                        // pistaMeioV.position.x = pistaCurve.position.x + 350;
-                        pistaMeioV.position.z = (curvaDois.position.z + 250 * j) + 450;
-
-                        //variavel que pega o inicio da curva e e posiciona o novo elemento
-                        _self.pistaInicioL = curvaDois.position.x - 150;
-                        pistaMeioV.position.x = _self.pistaInicioL;
-                        pistaMeioV.add(_self.pistaComum.clone());
-                        _self.fase.cena.add(pistaMeioV);
-                    }
-                    break;
-            }
-
-
+            this.referenciaX = this.pistaMeio.position.x;
+            this.referenciaZ = this.pistaMeio.position.z;
         }
+        if (_nomePista === "pistaCurva") {
+            this.pistaCurva = new Physijs.BoxMesh(new THREE.BoxGeometry(_x, _y, _z), _nomeMaterial.clone(), 0);
+            _self.localDaCurva = this.pistaMeio.position.z;
+            //this.pistaCurva.visible = true;
+            var direcao;
+            if (_direcao === "direita") {
+                direcao = -1;
+            } else {
+                direcao = 1;
+            }
+            this.pistaCurva.name = _nomePista;
+            this.pistaCurva.position.x = this.referenciaX;
+            this.pistaCurva.position.z = this.referenciaZ + 299 * direcao;
+            this.pistaCurva.position.y = 0;
+            this.pistaCurva.rotation.y = -180 * Math.PI / 180;
+            _self.pistaCurvaN.position.z = 0;
+            _self.pistaCurvaN.scale.x = 150;
+            _self.pistaCurvaN.scale.z = 150;
+            this.pistaCurva.add(_self.pistaCurvaN);
+            _self.fase.cena.add(this.pistaCurva);
+            this.curvaParteD = new Physijs.BoxMesh(new THREE.BoxGeometry(450, 1, 450), _nomeMaterial.clone(), 0);
+            this.curvaParteD.position.x = this.pistaCurva.position.x + 78;
+            this.curvaParteD.position.z = this.pistaCurva.position.z + 140;
+            _self.fase.cena.add(this.curvaParteD);
+            this.referenciaX = this.pistaCurva.position.x;
+            this.referenciaZ = this.pistaCurva.position.z;
+        }
+        if (_nomePista === "pistaLateral") {
+            for (var j = 0; j < _tamanhoPista; j++) {
+                var direcao;
+                var correcao;
+                
+                if (_direcao === "direita") {
+                    direcao = -1;
+                    correcao = 300;
+                }
+//                if (_direcao === "baixo") {
+//                    direcao = -1;
+//                    correcao = -150;
+//                }
+                else {
+                    direcao = 1;
+                    correcao = 0;
+                    if (_direcaoY === "baixo") {
+                        correcao = 600;
+                      }
+                    
+                }
+                
+                this.pistaMeio = new Physijs.BoxMesh(new THREE.BoxGeometry(_x, _y, _z), _nomeMaterial.clone(), 0);
+                this.pistaMeio.visible = true;
+                this.pistaMeio.name = _nomePista;
+                // pistaMeioV.position.x = pistaCurve.position.x + 350;
+                this.pistaMeio.position.z = this.referenciaZ + 150 * direcao - correcao;
+                this.pistaMeio.rotation.y = 90 * Math.PI / 180;
+                //variavel que pega o inicio da curva e e posiciona o novo elemento
+                _self.pistaInicioL = this.referenciaX + 449.5 * direcao;
+
+
+                this.pistaMeio.position.x = _self.pistaInicioL + 300 * j * direcao;
+                this.pistaMeio.add(_self.pistaComum.clone());
+                _self.fase.cena.add(this.pistaMeio);
+            }
+            this.referenciaX = this.pistaMeio.position.x;
+            this.referenciaZ = this.pistaMeio.position.z;
+        }
+        if (_nomePista === "curvaDois") {
+            this.pistaCurva = new Physijs.BoxMesh(new THREE.BoxGeometry(_x, _y, _z), _nomeMaterial.clone(), 0);
+            var direcao;
+            var distancia;
+            var ajuste = 0;
+            if (_direcao === "direita") {
+                direcao = -1;
+                distancia = -1;
+                if(_direcaoY ==="cima"){
+                    direcao = -2;
+                }
+            }
+            if (_direcao === "direita" && _direcaoY === "baixo") {
+                direcao = -2;
+                distancia = -1;
+                ajuste = -150;
+            }
+            else {
+                direcao = 1;
+                distancia = 1;
+            }
+            this.pistaCurva.visible = true;
+            this.pistaCurva.name = _nomePista;
+            this.pistaCurva.position.z = this.referenciaZ + ajuste;
+            this.pistaCurva.rotation.y = -90 * Math.PI / 180 * direcao;
+            this.pistaCurva.position.x = this.referenciaX + 300 * distancia + ajuste;
+            this.pistaCurva.add(_self.pistaCurvaN.clone());
+            this.curvaParteD = new Physijs.BoxMesh(new THREE.BoxGeometry(450, 0, 350), _nomeMaterial.clone(), 0);
+            this.curvaParteD.position.x = -75;
+            this.curvaParteD.position.z = -120;
+            this.pistaCurva.add(this.curvaParteD);
+            _self.fase.cena.add(this.pistaCurva);
+
+            this.referenciaX = this.pistaCurva.position.x;
+            this.referenciaZ = this.pistaCurva.position.z;
+        }
+        if (_nomePista === "pistaVoltar") {
+            for (var j = 0; j < _tamanhoPista; j++) {
+                var direcao;
+                this.pistaMeio = new Physijs.BoxMesh(new THREE.BoxGeometry(_x, _y, _z), _nomeMaterial.clone(), 0);
+                this.pistaMeio.visible = true;
+                this.pistaMeio.name = _nomePista;
+                if (_direcao === "direita") {
+                    this.pistaMeio.position.z = (this.referenciaZ - 300 * j) - 300;
+                    this.pistaMeio.position.x = this.referenciaX;
+                } else {
+                    this.pistaMeio.position.z = (this.referenciaZ - 300 * j) - 449;
+                    this.pistaMeio.position.x = this.referenciaX + 150;
+                }
+
+                this.pistaMeio.add(_self.pistaComum.clone());
+                _self.fase.cena.add(this.pistaMeio);
+
+            }
+            this.referenciaX = this.pistaMeio.position.x;
+            this.referenciaZ = this.pistaMeio.position.z;
+        }
+        if (_nomePista === "pistaCurvaVoltar") {
+            this.curvaDois = new Physijs.BoxMesh(new THREE.BoxGeometry(_x, _y, _z), _nomeMaterial.clone(), 0);
+            this.curvaDois.visible = true;
+            this.curvaDois.name = _nomePista;
+
+            var ajusteX = 0;
+            var ajusteZ = 0;
+            if (_direcao === "esquerda") {
+                this.curvaDois.rotation.y = 90 * Math.PI / 180;
+                ajusteX = 150;
+                ajusteZ = -150;
+            } else {
+                this.curvaDois.rotation.y = 0;
+
+            }
+            this.curvaDois.position.z = this.referenciaZ - 299 + ajusteZ;
+            this.curvaDois.position.x = this.referenciaX + ajusteX;
+            this.curvaDois.add(_self.pistaCurvaN.clone());
+            this.curvaParteE = new Physijs.BoxMesh(new THREE.BoxGeometry(450, 1, 350), _nomeMaterial.clone(), 0);
+            this.curvaParteE.position.x = -75;
+            this.curvaParteE.position.z = -120;
+            this.curvaDois.add(this.curvaParteE);
+            _self.fase.cena.add(this.curvaDois);
+            //_self.fase.cena.add(this.curvaParteD);
+        }
+    };
+    this.init = function () {
+        var mundo = new THREE.Mesh(_self.geometria, _self.material);
+        mundo.position.set(1900, 0, 200);
+        mundo.scale.set(110, 110, 110);
+
+        _self.fase.cena.add(mundo);
+        var chaoMeshPhisica = new Physijs.createMaterial(new THREE.MeshPhongMaterial({
+            ambient: 0x333333,
+            //shading: THREE.SmoothShading,
+            opacity: 0.9,
+            transparent: true,
+            side: THREE.DoubleSide,
+            visible: false
+                    //anisotropy: 5
+        }));
+
+        this.criaPista(300, 1, 300, 1325, -1640, "pistaMeio", chaoMeshPhisica, 20);
+        this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "pistaCurva", chaoMeshPhisica, 20);
+        this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "pistaLateral", chaoMeshPhisica, 10);
+        this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "curvaDois", chaoMeshPhisica, 10);
+        this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "pistaVoltar", chaoMeshPhisica, 3);
+        this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "pistaCurvaVoltar", chaoMeshPhisica, 4);
+        this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "pistaLateral", chaoMeshPhisica, 5, "direita","cima");
+        this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "curvaDois", chaoMeshPhisica, 1, "direita", "baixo");
+        this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "pistaVoltar", chaoMeshPhisica, 10, "direita");
+        this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "pistaCurvaVoltar", chaoMeshPhisica, 1, "esquerda");
+        this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "pistaLateral", chaoMeshPhisica, 4, "esquerda", "baixo");
+        this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "curvaDois", chaoMeshPhisica, 1);
+        this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "pistaVoltar", chaoMeshPhisica, 8);
+        this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "pistaCurvaVoltar", chaoMeshPhisica, 6);
+        this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "pistaLateral", chaoMeshPhisica, 9, "direita","cima");
+        this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "curvaDois", chaoMeshPhisica, 1, "direita", "baixo");
+
     };
 };

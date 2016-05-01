@@ -8,7 +8,7 @@ var CarroDesktop = function () {
         _self.initBase(1325, -1640);
         _self.geoFisicaCarro.add(_self.fase.camera);
 //        _self.geoFisicaCarro.__dirtyRotation = true;
-        _self.fase.camera.position.set(0, 5, -10);
+        _self.fase.camera.position.set(0, 8.5, -18);
 //        _self.fase.camera.lookAt({x:_self.geoFisicaCarro.x, y:_self.geoFisicaCarro.y + 10, z:_self.geoFisicaCarro.z});
         _self.fase.cena.add(_self.geoFisicaCarro);
     };
@@ -32,14 +32,14 @@ var CarroDesktop = function () {
         } else if (_self.teclado.pressed('left')) {
             _self.viraEsquerda();
         }
-        if (_self.teclado.pressed('h')) {
-            var divDebug = document.getElementById('debugar');
-            if (divDebug.style.display && divDebug.style.display == 'none') {
-                divDebug.style.display = 'block';
-            }else{
-                divDebug.style.display = 'none';
-            }
-        }
+//        if (_self.teclado.pressed('h')) {
+//            var divDebug = document.getElementById('debugar');
+//            if (divDebug.style.display && divDebug.style.display == 'none') {
+//                divDebug.style.display = 'block';
+//            }else{
+//                divDebug.style.display = 'none';
+//            }
+        //}
         _self.moveCarro();
         document.getElementById('marcador').innerHTML = "kmH :  " + parseInt(_self.velocidade);
     };
