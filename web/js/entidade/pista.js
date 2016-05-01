@@ -282,4 +282,5 @@ var Pista = function () {
         this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "curvaDois", chaoMeshPhisica, 1, "direita", "baixo");
 
     };
+    
 };
