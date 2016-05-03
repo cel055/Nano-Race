@@ -9,6 +9,7 @@ var ControleFase = function () {
     this.camera;
     this.distancia = 800;
     this.gravidade = 10;
+    this.posicaoInicial = {x:1325, z:-1640};
 
     var luzSpot;
     var luzCarregado = false;
@@ -36,18 +37,6 @@ var ControleFase = function () {
 
     function carregarLuz() {
         luzSpot = new THREE.AmbientLight(0x404040);
-//        luzSpot.castShadow = true;
-//        luzSpot.shadowMapWidth = 1024;
-//        luzSpot.shadowMapheight = 1024;
-//        luzSpot.shadowCameraNear = 1;
-//        luzSpot.shadowCameraFar = 800;
-//        luzSpot.shadowCameraFov = 100;
-//        luzSpot.shadowDarkness = 0.5;
-//        luzSpot.shadowBias = 0;
-//        luzSpot.shadowCameraRight = _self.distancia;
-//        luzSpot.shadowCameraLeft = _self.distancia;
-//        luzSpot.shadowCameraTop = _self.distancia;
-//        luzSpot.shadowCameraBottoms = _self.distancia;
         luzCarregado = true;
     }
 
@@ -68,13 +57,13 @@ var ControleFase = function () {
         _self.controls = new THREE.TrackballControls(_self.camera, _self.renderizador.domElement);
 //        _self.cena.add(criaPista());
         _self.cena.add(luzSpot);
-        _self.carro.init();
+        _self.carro.init(_self.posicaoInicial.x, _self.posicaoInicial.z);
         _self.pista.init();
         render();
     }
 
     function updateFisica() {
-//        _self.carro.moveCarro();
+        _self.carro.moveCarro();
     }
 
     function render() {
@@ -102,3 +91,12 @@ var ControleFase = function () {
 //        }
      }
 };
+
+ControleFase.prototype = Object.create(Object.prototype, {
+    constructor:{
+        value: "ControleFase"
+    },
+    listaJogadores:{
+        value: new Array()
+    }
+});

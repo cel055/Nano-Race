@@ -35,7 +35,7 @@ var Carro = function () {
             opacity: 0.5,
             color: 0xFFFFFF,
             transparent: true,
-           visible: false
+            visible: false
         }));
         _self.geoFisicaCarro = new Physijs.BoxMesh(new THREE.BoxGeometry(6, 2, 6), materialFisicaCarro, 100);
         _self.geoFisicaCarro.visible = true;
@@ -54,9 +54,9 @@ var Carro = function () {
     };
 
     this.colisaoCarro = function (outroObj, velocidadeRelativa, rotacaoRelativa, contato) {
-        if(outroObj.name === "checkPoint"){
+        if (outroObj.name === "checkPoint") {
             _self.checkPointAtual++;
-            if(_self.fase.pista.listaCheckPoints.length <= _self.checkPointAtual){
+            if (_self.fase.pista.listaCheckPoints.length <= _self.checkPointAtual) {
                 _self.checkPointAtual = 0;
             }
         }
@@ -115,12 +115,15 @@ var Carro = function () {
     };
 
     this.moveCarro = function () {
-        if(_self.geoFisicaCarro.position.y < -2){
-            _self.geoFisicaCarro.setLinearVelocity({x: 0, y: 0, z: 0});
+        if (_self.geoFisicaCarro.position.y < -2) {
+            _self.geoFisicaCarro.__dirtyRotation = true;
+            _self.geoFisicaCarro.__dirtyPosition = true;
+            _self.velocidade = 0;
+            _self.geoFisicaCarro.setLinearVelocity({x: _self.geoFisicaCarro.getLinearVelocity().x * -1, y: _self.geoFisicaCarro.getLinearVelocity().y * -1, z: _self.geoFisicaCarro.getLinearVelocity().z * -1});
             _self.geoFisicaCarro.position.y = 5;
             _self.geoFisicaCarro.position.x = _self.fase.pista.listaCheckPoints[_self.checkPointAtual].position.x;
             _self.geoFisicaCarro.position.z = _self.fase.pista.listaCheckPoints[_self.checkPointAtual].position.z;
-            return ;
+            return;
         }
         _self.geoFisicaCarro.rotation.y = _self.rotacao * Math.PI / 180;
         _self.geoFisicaCarro.setLinearVelocity({x: _self.velocidade * _self.rotSeno, y: _self.geoFisicaCarro.getLinearVelocity().y, z: _self.velocidade * _self.rotCoseno});

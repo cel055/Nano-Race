@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
@@ -32,7 +33,7 @@ public class WebSocket {
 
     @OnOpen
     public void abrir(Session session) {
-
+        System.out.println("Abriu");
     }
 
     @OnClose
@@ -49,15 +50,18 @@ public class WebSocket {
     @OnMessage
     public void mensagem(Session session, String msg) {
         JsonObject jsonRecebido = Json.createReader(new StringReader(msg)).readObject();
+        JsonObjectBuilder envio = Json.createObjectBuilder();
         switch (jsonRecebido.getString("comando")) {
             case "entrou":
+                envio.add("comando", "listaInicial");
                 JsonArrayBuilder listaJogadores = Json.createArrayBuilder();
                 for (String keySet : usuariosLogados.keySet()) {
                     listaJogadores.add(usuariosLogados.get(keySet).criaJson());
 
                 }
+                envio.add("lista", listaJogadores);
                 try {
-                    session.getBasicRemote().sendText(listaJogadores.build().toString());
+                    session.getBasicRemote().sendText(envio.build().toString());
                 } catch (IOException erro) {
                     System.out.println("ERRO ENTROU SOCKET:\n\t" + erro.getMessage() + "\n");
                 }
@@ -71,6 +75,10 @@ public class WebSocket {
                         jsonRecebido.getString("nave")
                 );
                 usuariosLogados.put(session.getId(), novo);
+                JsonObjectBuilder novoJogador = Json.createObjectBuilder();
+                novoJogador.add("comando", "novo");
+                novoJogador.add("jogador", novo.criaJson());
+                msg = novoJogador.build().toString();
             case "novaPosicao":
                 for (String keySet : usuariosLogados.keySet()) {
                     if (!keySet.equals(session.getId())) {

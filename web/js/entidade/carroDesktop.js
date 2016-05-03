@@ -3,9 +3,9 @@ var CarroDesktop = function () {
     var _self = this;
     this.teclado;
 
-    this.init = function () {
+    this.init = function (x, z) {
         _self.teclado = new THREEx.KeyboardState();
-        _self.initBase(1325, -1640);
+        _self.initBase(x, z);
         _self.geoFisicaCarro.add(_self.fase.camera);
 //        _self.geoFisicaCarro.__dirtyRotation = true;
         _self.fase.camera.position.set(0, 8.5, -18);
@@ -22,11 +22,6 @@ var CarroDesktop = function () {
             _self.desaceleraCarro();
         }
 
-//        if (_self.teclado.pressed('right') && _self.velocidade != 0) {
-//            _self.viraDireita();
-//        } else if (_self.teclado.pressed('left') && _self.velocidade != 0) {
-//            _self.viraEsquerda();
-//        }
         if (_self.teclado.pressed('right')) {
             _self.viraDireita();
         } else if (_self.teclado.pressed('left')) {
@@ -40,7 +35,7 @@ var CarroDesktop = function () {
 //                divDebug.style.display = 'none';
 //            }
         //}
-        _self.moveCarro();
+//        _self.moveCarro();
         document.getElementById('marcador').innerHTML = "kmH :  " + parseInt(_self.velocidade);
     };
 };
