@@ -56,7 +56,7 @@ var Carro = function () {
     this.colisaoCarro = function (outroObj, velocidadeRelativa, rotacaoRelativa, contato) {
         if(outroObj.name === "checkPoint"){
             _self.checkPointAtual++;
-            if(_self.fase.pista.listaCheckPoints.length >= _self.checkPointAtual){
+            if(_self.fase.pista.listaCheckPoints.length <= _self.checkPointAtual){
                 _self.checkPointAtual = 0;
             }
         }
@@ -118,8 +118,8 @@ var Carro = function () {
         if(_self.geoFisicaCarro.position.y < -2){
             _self.geoFisicaCarro.setLinearVelocity({x: 0, y: 0, z: 0});
             _self.geoFisicaCarro.position.y = 5;
-            _self.geoFisicaCarro.position.x = _self.fase.pista.listaCheckPoints[_self.checkPointAtual].x;
-            _self.geoFisicaCarro.position.z = _self.fase.pista.listaCheckPoints[_self.checkPointAtual].z;
+            _self.geoFisicaCarro.position.x = _self.fase.pista.listaCheckPoints[_self.checkPointAtual].position.x;
+            _self.geoFisicaCarro.position.z = _self.fase.pista.listaCheckPoints[_self.checkPointAtual].position.z;
             return ;
         }
         _self.geoFisicaCarro.rotation.y = _self.rotacao * Math.PI / 180;

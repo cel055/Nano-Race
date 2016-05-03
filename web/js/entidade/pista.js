@@ -11,7 +11,9 @@ var Pista = function () {
     this.carregado = false;
     this.pistaInicioL;
     this.esferaMundo;
-
+    this.posiCarroX = 1325;
+    this.posiCarroZ = -1605;
+    this.listaCheckPoints = [];
     this.carrega = function () {
         var loader = new THREE.OBJMTLLoader();
         loader.load("modelos/pista.obj", "modelos/pista.mtl",
@@ -76,19 +78,57 @@ var Pista = function () {
         });
 
     };
-    this.points = function (_posicaoCheck){
-        this.valor = _posicaoCheck /2;
-        this.checkPoint = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 300), this.materialChekpoint, 0);
-                this.checkPoint.position.z = this.pistaMeio.position.z / this.valor;
-                this.checkPoint.position.x = this.pistaMeio.position.x;
+    this.points = function (_posicaoCheck, _nomePista) {
+        this.materialChekpoint = new Physijs.createMaterial(new THREE.MeshPhongMaterial({
+            ambient: 0x000fff,
+            //shading: THREE.SmoothShading,
+            opacity: 0.9,
+            transparent: true,
+            side: THREE.DoubleSide,
+            visible: true
+                    //anisotropy: 5
+        }));
+        var checkPoint;
+        switch (_nomePista) {
+            case "pistaMeio":
+                this.valor = _posicaoCheck / 2;
+                checkPoint = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 300), this.materialChekpoint, 0);
+                checkPoint.name = "checkPoint";
+                checkPoint.position.z = this.pistaMeio.position.z / this.valor;
+                checkPoint.position.x = this.pistaMeio.position.x;
                 //this.checkPoint.rotation.x = 90;
-                this.checkPoint.position.y = 1.1;
-                _self.fase.cena.add(this.checkPoint);
+                checkPoint.position.y = 1.1;
+                _self.fase.cena.add(checkPoint);
+                _self.listaCheckPoints.push(checkPoint);
+                break;
+            case "pistaLateral":
+                this.valor = parseInt(_posicaoCheck / 3);
+                checkPoint = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 300), this.materialChekpoint, 0);
+                checkPoint.name = "checkPoint";
+                checkPoint.position.z = this.pistaMeio.position.z;
+                checkPoint.position.x = this.pistaMeio.position.x;
+                //this.checkPoint.rotation.x = 90;
+                checkPoint.position.y = 1.1;
+                _self.fase.cena.add(checkPoint);
+                _self.listaCheckPoints.push(checkPoint);
+                break;
+            case "pistaVoltar":
+                this.valor = parseInt(_posicaoCheck / 3);
+                checkPoint = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 300), this.materialChekpoint, 0);
+                checkPoint.name = "checkPoint";
+                checkPoint.position.z = this.pistaMeio.position.z / this.valor;
+                checkPoint.position.x = this.pistaMeio.position.x;
+                //this.checkPoint.rotation.x = 90;
+                checkPoint.position.y = 1.1;
+                _self.fase.cena.add(checkPoint);
+                _self.listaCheckPoints.push(checkPoint);
+                break;
+        }
     };
     this.criaPista = function (_x, _y, _z, _posicaoInicialX, _posicaoInicialZ, _nomePista, _nomeMaterial, _tamanhoPista, _direcao, _direcaoY) {
         //1325 / -1640
         if (_nomePista === "pistaMeio") {
-            
+
             for (var i = 0; i < _tamanhoPista; i++) {
                 this.pistaPosicaoX = _posicaoInicialX;
                 this.pistaPosicaoZ = _posicaoInicialZ;
@@ -103,11 +143,11 @@ var Pista = function () {
                 _self.pistaComum.scale.z = 150;
                 this.pistaMeio.add(_self.pistaComum.clone());
                 _self.fase.cena.add(this.pistaMeio);
-                 
+
 
             }
             //checkpoints
-           this.points(_tamanhoPista,_x, _y, _z); 
+            this.points(_tamanhoPista, _nomePista);
             this.referenciaX = this.pistaMeio.position.x;
             this.referenciaZ = this.pistaMeio.position.z;
         }
@@ -142,7 +182,7 @@ var Pista = function () {
             for (var j = 0; j < _tamanhoPista; j++) {
                 var direcao;
                 var correcao;
-                
+
                 if (_direcao === "direita") {
                     direcao = -1;
                     correcao = 300;
@@ -156,10 +196,10 @@ var Pista = function () {
                     correcao = 0;
                     if (_direcaoY === "baixo") {
                         correcao = 600;
-                      }
-                    
+                    }
+
                 }
-                
+
                 this.pistaMeio = new Physijs.BoxMesh(new THREE.BoxGeometry(_x, _y, _z), _nomeMaterial.clone(), 0);
                 this.pistaMeio.visible = true;
                 this.pistaMeio.name = _nomePista;
@@ -174,6 +214,7 @@ var Pista = function () {
                 this.pistaMeio.add(_self.pistaComum.clone());
                 _self.fase.cena.add(this.pistaMeio);
             }
+            this.points(_tamanhoPista, _nomePista);
             this.referenciaX = this.pistaMeio.position.x;
             this.referenciaZ = this.pistaMeio.position.z;
         }
@@ -185,7 +226,7 @@ var Pista = function () {
             if (_direcao === "direita") {
                 direcao = -1;
                 distancia = -1;
-                if(_direcaoY ==="cima"){
+                if (_direcaoY === "cima") {
                     direcao = -2;
                 }
             }
@@ -223,8 +264,8 @@ var Pista = function () {
                     this.pistaMeio.position.z = (this.referenciaZ - 300 * j) - 300;
                     this.pistaMeio.position.x = this.referenciaX;
                     if (_direcaoY === "cima") {
-                    this.pistaMeio.position.z = (this.referenciaZ + 300 * j)  + 450;
-                    this.pistaMeio.position.x = this.referenciaX - 450;    
+                        this.pistaMeio.position.z = (this.referenciaZ + 300 * j) + 450;
+                        this.pistaMeio.position.x = this.referenciaX - 450;
                     }
                 } else {
                     this.pistaMeio.position.z = (this.referenciaZ - 300 * j) - 449;
@@ -235,6 +276,7 @@ var Pista = function () {
                 _self.fase.cena.add(this.pistaMeio);
 
             }
+            this.points(_tamanhoPista, _nomePista);
             this.referenciaX = this.pistaMeio.position.x;
             this.referenciaZ = this.pistaMeio.position.z;
         }
@@ -249,10 +291,10 @@ var Pista = function () {
                 this.curvaDois.rotation.y = 90 * Math.PI / 180;
                 ajusteX = 150;
                 ajusteZ = -150;
-                if(_direcaoY === "cima") {
+                if (_direcaoY === "cima") {
                     ajusteX = -300;
                     ajusteZ = 300;
-                    }
+                }
             } else {
                 this.curvaDois.rotation.y = 0;
 
@@ -290,7 +332,7 @@ var Pista = function () {
         this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "curvaDois", chaoMeshPhisica, 10);
         this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "pistaVoltar", chaoMeshPhisica, 3);
         this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "pistaCurvaVoltar", chaoMeshPhisica, 4);
-        this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "pistaLateral", chaoMeshPhisica, 5, "direita","cima");
+        this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "pistaLateral", chaoMeshPhisica, 5, "direita", "cima");
         this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "curvaDois", chaoMeshPhisica, 1, "direita", "baixo");
         this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "pistaVoltar", chaoMeshPhisica, 10, "direita");
         this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "pistaCurvaVoltar", chaoMeshPhisica, 1, "esquerda");
@@ -298,10 +340,10 @@ var Pista = function () {
         this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "curvaDois", chaoMeshPhisica, 1);
         this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "pistaVoltar", chaoMeshPhisica, 8);
         this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "pistaCurvaVoltar", chaoMeshPhisica, 6);
-        this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "pistaLateral", chaoMeshPhisica, 9, "direita","cima");
-        this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "pistaCurvaVoltar", chaoMeshPhisica, 1,"esquerda","cima");
-        this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "pistaVoltar", chaoMeshPhisica, 5,'direita',"cima");
+        this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "pistaLateral", chaoMeshPhisica, 9, "direita", "cima");
+        this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "pistaCurvaVoltar", chaoMeshPhisica, 1, "esquerda", "cima");
+        this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "pistaVoltar", chaoMeshPhisica, 5, 'direita', "cima");
 
     };
-    
+
 };
