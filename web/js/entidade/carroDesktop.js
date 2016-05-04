@@ -7,10 +7,7 @@ var CarroDesktop = function () {
         _self.teclado = new THREEx.KeyboardState();
         _self.initBase(x, z);
         _self.geoFisicaCarro.add(_self.fase.camera);
-//        _self.geoFisicaCarro.__dirtyRotation = true;
         _self.fase.camera.position.set(0, 8.5, -18);
-//        _self.fase.camera.lookAt({x:_self.geoFisicaCarro.x, y:_self.geoFisicaCarro.y + 10, z:_self.geoFisicaCarro.z});
-        _self.fase.cena.add(_self.geoFisicaCarro);
     };
 
     this.movimentoCarro = function () {

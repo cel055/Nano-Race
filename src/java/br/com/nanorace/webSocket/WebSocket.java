@@ -9,8 +9,6 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
@@ -38,6 +36,7 @@ public class WebSocket {
 
     @OnClose
     public void fechou(Session session) {
+        System.out.println("Fechou sessao id " + session.getId());
         usuariosLogados.remove(session.getId());
     }
 

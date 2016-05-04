@@ -23,6 +23,7 @@ socket.onmessage = function (evento){
         case "listaInicial":
             for(var i = 0, size = objJson.lista.length; i < size; i++){
                 ControleFase.prototype.listaJogadores[objJson.lista[i].id] = objJson.lista[i];
+                ControleFase.prototype.listaJogadores[objJson.lista[i].id].carro = null;
             }
             break;
     }

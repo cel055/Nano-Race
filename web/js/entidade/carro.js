@@ -1,5 +1,6 @@
 var Carro = function () {
     var _self = this;
+    this.id;
     this.fase;
     this.checkPointAtual = 0;
     this.carro;
@@ -115,8 +116,8 @@ var Carro = function () {
     };
 
     this.moveCarro = function () {
+        _self.geoFisicaCarro.__dirtyRotation = true;
         if (_self.geoFisicaCarro.position.y < -2) {
-            _self.geoFisicaCarro.__dirtyRotation = true;
             _self.geoFisicaCarro.__dirtyPosition = true;
             _self.velocidade = 0;
             _self.geoFisicaCarro.setLinearVelocity({x: _self.geoFisicaCarro.getLinearVelocity().x * -1, y: _self.geoFisicaCarro.getLinearVelocity().y * -1, z: _self.geoFisicaCarro.getLinearVelocity().z * -1});

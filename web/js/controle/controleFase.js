@@ -27,8 +27,19 @@ var ControleFase = function () {
         _self.pista.carrega();
         carregarLuz();
     };
+    
+    function iniciaLocal(){
+        _self.carro = new CarroDesktop();
+        _self.carro.fase = _self;
+        _self.carro.carrega('modelos/supernave.obj', 'modelos/supernave.mtl');
+    }
 
     function checarCarregamento() {
+//        for(var i = 0, size = _self.listaJogadores.length; i < size; i++){
+//            if(!_self.listaJogadores[i].carro.carregado){
+//                return ;
+//            }
+//        }
         if (_self.pista.carregado == true && _self.pista.carregadoN == true && _self.pista.carregadoL == true && _self.pista.carregadoC == true && luzCarregado == true && _self.carro.carregado == true && _self.pista.carregadoJ) {
             clearInterval(checagem);
             init();
@@ -58,8 +69,16 @@ var ControleFase = function () {
 //        _self.cena.add(criaPista());
         _self.cena.add(luzSpot);
         _self.carro.init(_self.posicaoInicial.x, _self.posicaoInicial.z);
+        _self.cena.add(_self.carro.geoFisicaCarro);
         _self.pista.init();
         render();
+    }
+    
+    function colocaCarrosNaCena(){
+        for(var i = 0, size = _self.listaJogadores.length; i < size; i++){
+            _self.cena.add(_self.listaJogadores[i].carro.geoFisicaCarro);
+        }
+        _self.cena.add(_self.carro.geoFisicaCarro);
     }
 
     function updateFisica() {
