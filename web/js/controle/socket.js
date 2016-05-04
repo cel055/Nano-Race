@@ -6,7 +6,7 @@ socket.onopen = function (evento){
     var obj = {
         comando:"entrou"
     };
-    socket.send(JSON.stringify(obj));
+    socketSend(obj);
 };
 
 socket.onclose = function (evento){
@@ -23,8 +23,14 @@ socket.onmessage = function (evento){
         case "listaInicial":
             for(var i = 0, size = objJson.lista.length; i < size; i++){
                 ControleFase.prototype.listaJogadores[objJson.lista[i].id] = objJson.lista[i];
-                ControleFase.prototype.listaJogadores[objJson.lista[i].id].carro = null;
+                ControleFase.prototype.listaJogadores[objJson.lista[i].id].carro = new Carro();                
             }
             break;
+        case "novo":
+            ControleFase.prototype.novaPosicao(objJson.jogador);
     }
 };
+
+function socketSend(obj){
+    socket.send(JSON.stringify(obj));
+}
