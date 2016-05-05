@@ -116,7 +116,7 @@ var Carro = function () {
     };
 
     this.moveCarro = function () {
-        _self.geoFisicaCarro.__dirtyRotation = true;
+//        _self.geoFisicaCarro.__dirtyRotation = true;
         if (_self.geoFisicaCarro.position.y < -2) {
             _self.geoFisicaCarro.__dirtyPosition = true;
             _self.velocidade = 0;

@@ -17,7 +17,7 @@ var ControleFase = function () {
     var pista;
     var pistaCarregado = false;
 
-    this.inicia = function () {
+    this.inicia = function (_id) {
         checagem = setInterval(checarCarregamento, 10);
 //        _self.carro = new CarroDesktop();
 //        _self.carro.fase = _self;
@@ -26,22 +26,41 @@ var ControleFase = function () {
         _self.pista.fase = _self;
         _self.pista.carrega();
         carregarLuz();
-        iniciaLocal();
+        iniciaLocal(_id);
     };
 
-    function iniciaLocal() {
-        for (var i = 0, size = _self.listaJogadores.length; i < size; i++) {
-            _self.listaJogadores[i].carro.fase = _self;
-            _self.carro.carrega('modelos/' + _self.listaJogadores[i].nave + '.obj', 'modelos/' + _self.listaJogadores[i].nave + '.mtl');
+    function iniciaLocal(_id) {
+//        for (var i = 0, size = _self.listaJogadores.length; i < size; i++) {
+//            _self.listaJogadores[i].carro.fase = _self;
+//            _self.carro.carrega('modelos/' + _self.listaJogadores[i].nave + '.obj', 'modelos/' + _self.listaJogadores[i].nave + '.mtl');
+//        }
+        for (var prop in _self.listaJogadores) {
+            _self.listaJogadores[prop].carro.fase = _self;
+            _self.listaJogadores[prop].carro.carrega('modelos/' + _self.listaJogadores[prop].nave + '.obj', 'modelos/' + _self.listaJogadores[prop].nave + '.mtl');
         }
         _self.carro = new CarroDesktop();
         _self.carro.fase = _self;
+        _self.carro.id = _id;
+        _self.listaJogadores[_id] = {
+            id: _id,
+            x: _self.posicaoInicial.x,
+            y: 10,
+            z: _self.posicaoInicial.z - (_self.listaJogadores.length * 25),
+            nave: "supernave"
+        };
+        ;
+        _self.listaJogadores[_id].carro = _self.carro;
         _self.carro.carrega('modelos/supernave.obj', 'modelos/supernave.mtl');
     }
 
     function checarCarregamento() {
-        for (var i = 0, size = _self.listaJogadores.length; i < size; i++) {
-            if (!_self.listaJogadores[i].carro.carregado) {
+//        for (var i = 0, size = _self.listaJogadores.length; i < size; i++) {
+//            if (!_self.listaJogadores[i].carro.carregado) {
+//                return;
+//            }
+//        }
+        for (var prop in _self.listaJogadores) {
+            if (!_self.listaJogadores[prop].carro.carregado) {
                 return;
             }
         }
@@ -81,20 +100,30 @@ var ControleFase = function () {
     }
 
     function colocaCarrosNaCena() {
-        for (var i = 1, size = _self.listaJogadores.length; i <= size; i++) {
-            _self.listaJogadores[i].carro.init(_self.posicaoInicial.x, _self.posicaoInicial.z - (i * 25));
-            _self.cena.add(_self.listaJogadores[i].carro.geoFisicaCarro);
+//        for (var i = 1, size = _self.listaJogadores.length; i <= size; i++) {
+//            _self.listaJogadores[i].carro.init(_self.posicaoInicial.x, _self.posicaoInicial.z - (i * 25));
+//            _self.cena.add(_self.listaJogadores[i].carro.geoFisicaCarro);
+//        }
+        var i = 0;
+        for (var prop in _self.listaJogadores) {
+            if (_self.listaJogadores[prop].carro.init) {
+                _self.listaJogadores[prop].carro.init(_self.posicaoInicial.x, _self.posicaoInicial.z - (++i * 25));
+//                continue;
+            } else {
+                _self.listaJogadores[prop].carro.initBase(_self.posicaoInicial.x, _self.posicaoInicial.z - (++i * 25));
+            }
+            _self.cena.add(_self.listaJogadores[prop].carro.geoFisicaCarro);
         }
         var obj = {
-            comando:"novo",
-            x:_self.posicaoInicial.x,
-            y:10,
-            z:_self.posicaoInicial.z - (_self.listaJogadores.length * 25),
+            comando: "novo",
+            x: _self.posicaoInicial.x,
+            y: 10,
+            z: _self.posicaoInicial.z - (_self.listaJogadores.length * 25),
             nave: "supernave"
         };
         socketSend(obj);
-        _self.carro.init(_self.posicaoInicial.x, _self.posicaoInicial.z - (_self.listaJogadores.length * 25));
-        _self.cena.add(_self.carro.geoFisicaCarro);
+//        _self.carro.init(_self.posicaoInicial.x, _self.posicaoInicial.z - (_self.listaJogadores.length * 25));
+//        _self.cena.add(_self.carro.geoFisicaCarro);
     }
 
     function updateFisica() {
@@ -134,8 +163,23 @@ ControleFase.prototype = Object.create(Object.prototype, {
     listaJogadores: {
         value: new Array()
     },
+    colocaNovoCarroNaCena: {
+        value: function (jsonJogador) {
+            var __self = controleFase;
+            jsonJogador.carro = new Carro();
+            jsonJogador.carro.fase = __self;
+            jsonJogador.carro.carrega('modelos/' + jsonJogador.nave + '.obj', 'modelos/' + jsonJogador.nave + '.mtl');
+            var inter = setInterval(function () {
+                if (jsonJogador.carro.carregado) {
+                    clearInterval(inter);
+                    jsonJogador.carro.initBase(__self.posicaoInicial.x, __self.posicaoInicial.z - (__self.listaJogadores.length * 25))
+                    __self.cena.add(jsonJogador.carro.geoFisicaCarro);
+                }
+            }, 10);
+        }
+    },
     novaPosicao: {
-        value:function (dadosJogador){
+        value: function (dadosJogador) {
             var _c = ControleFase.prototype.listaJogadores[dadosJogador.id].carro;
             _c.geoFisicaCarro.__dirtyPosition = true;
             _c.geoFisicaCarro.__dirtyRotation = true;

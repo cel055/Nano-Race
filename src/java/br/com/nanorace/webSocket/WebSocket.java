@@ -59,6 +59,7 @@ public class WebSocket {
 
                 }
                 envio.add("lista", listaJogadores);
+                envio.add("id", session.getId());
                 try {
                     session.getBasicRemote().sendText(envio.build().toString());
                 } catch (IOException erro) {

@@ -1,36 +1,42 @@
 var ip = window.location.hostname, arquivo = "/socketNanoRace";
-var socket = new WebSocket("ws://" + ip + ":8084/Nano_Race" + arquivo);
+var socket;
 
-socket.onopen = function (evento){
+//socket.onclose = function (evento) {
+//
+//};
+//
+//socket.onerror = function (evento) {
+//
+//};
+
+function abriuSocket(evento) {
     console.log("Abriu");
     var obj = {
-        comando:"entrou"
+        comando: "entrou"
     };
     socketSend(obj);
-};
+}
 
-socket.onclose = function (evento){
-    
-};
-
-socket.onerror = function (evento){
-    
-};
-
-socket.onmessage = function (evento){
+function mensagemSocket(evento) {
     var objJson = JSON.parse(evento.data);
-    switch (objJson.comando){
+    switch (objJson.comando) {
         case "listaInicial":
-            for(var i = 0, size = objJson.lista.length; i < size; i++){
+            for (var i = 0, size = objJson.lista.length; i < size; i++) {
                 ControleFase.prototype.listaJogadores[objJson.lista[i].id] = objJson.lista[i];
-                ControleFase.prototype.listaJogadores[objJson.lista[i].id].carro = new Carro();                
+                ControleFase.prototype.listaJogadores[objJson.lista[i].id].carro = new Carro();
             }
+            controleFase.inicia(objJson.id);
             break;
         case "novo":
-            ControleFase.prototype.novaPosicao(objJson.jogador);
+            if (!ControleFase.prototype.listaJogadores[objJson.jogador.id]) {
+                ControleFase.prototype.listaJogadores[objJson.jogador.id] = objJson.jogador;
+                ControleFase.prototype.colocaNovoCarroNaCena(ControleFase.prototype.listaJogadores[objJson.jogador.id]);
+            } else {
+                ControleFase.prototype.novaPosicao(objJson.jogador);
+            }
     }
-};
+}
 
-function socketSend(obj){
+function socketSend(obj) {
     socket.send(JSON.stringify(obj));
 }
