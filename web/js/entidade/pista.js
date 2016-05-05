@@ -86,7 +86,7 @@ var Pista = function () {
             opacity: 0.9,
             transparent: true,
             side: THREE.DoubleSide,
-            visible: true
+            visible: false
                     //anisotropy: 5
         }));
         var checkPoint;
@@ -316,10 +316,20 @@ var Pista = function () {
         }
     };
     this.init = function () {
+        var listener = new THREE.AudioListener();
+        _self.fase.camera.add(listener);
+         var sound1 = new THREE.Audio(listener);
+             sound1.load('sound-music/sound-track.mp3');
+             sound1.setRefDistance( 1 );
+            sound1.autoplay = true;
+            sound1.setLoop(true);
+            sound1.setVolume(2000);
+            _self.fase.cena.add(sound1);
+       
         var mundo = new THREE.Mesh(_self.geometria, _self.material);
         mundo.position.set(1900, 0, 200);
         mundo.scale.set(110, 110, 110);
-
+        
         _self.fase.cena.add(mundo);
         var chaoMeshPhisica = new Physijs.createMaterial(new THREE.MeshPhongMaterial({
             ambient: 0x333333,
