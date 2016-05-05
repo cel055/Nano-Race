@@ -9,7 +9,7 @@ var ControleFase = function () {
     this.camera;
     this.distancia = 800;
     this.gravidade = 10;
-    this.posicaoInicial = {x:1325, z:-1640};
+    this.posicaoInicial = {x: 1325, z: -1640};
 
     var luzSpot;
     var luzCarregado = false;
@@ -19,27 +19,32 @@ var ControleFase = function () {
 
     this.inicia = function () {
         checagem = setInterval(checarCarregamento, 10);
-        _self.carro = new CarroDesktop();
-        _self.carro.fase = _self;
-        _self.carro.carrega('modelos/supernave.obj', 'modelos/supernave.mtl');
+//        _self.carro = new CarroDesktop();
+//        _self.carro.fase = _self;
+//        _self.carro.carrega('modelos/supernave.obj', 'modelos/supernave.mtl');
         _self.pista = new Pista();
         _self.pista.fase = _self;
         _self.pista.carrega();
         carregarLuz();
+        iniciaLocal();
     };
-    
-    function iniciaLocal(){
+
+    function iniciaLocal() {
+        for (var i = 0, size = _self.listaJogadores.length; i < size; i++) {
+            _self.listaJogadores[i].carro.fase = _self;
+            _self.carro.carrega('modelos/' + _self.listaJogadores[i].nave + '.obj', 'modelos/' + _self.listaJogadores[i].nave + '.mtl');
+        }
         _self.carro = new CarroDesktop();
         _self.carro.fase = _self;
         _self.carro.carrega('modelos/supernave.obj', 'modelos/supernave.mtl');
     }
 
     function checarCarregamento() {
-//        for(var i = 0, size = _self.listaJogadores.length; i < size; i++){
-//            if(!_self.listaJogadores[i].carro.carregado){
-//                return ;
-//            }
-//        }
+        for (var i = 0, size = _self.listaJogadores.length; i < size; i++) {
+            if (!_self.listaJogadores[i].carro.carregado) {
+                return;
+            }
+        }
         if (_self.pista.carregado == true && _self.pista.carregadoN == true && _self.pista.carregadoL == true && _self.pista.carregadoC == true && luzCarregado == true && _self.carro.carregado == true && _self.pista.carregadoJ) {
             clearInterval(checagem);
             init();
@@ -68,16 +73,27 @@ var ControleFase = function () {
         _self.controls = new THREE.TrackballControls(_self.camera, _self.renderizador.domElement);
 //        _self.cena.add(criaPista());
         _self.cena.add(luzSpot);
-        _self.carro.init(_self.posicaoInicial.x, _self.posicaoInicial.z);
-        _self.cena.add(_self.carro.geoFisicaCarro);
+//        _self.carro.init(_self.posicaoInicial.x, _self.posicaoInicial.z);
+//        _self.cena.add(_self.carro.geoFisicaCarro);
         _self.pista.init();
+        colocaCarrosNaCena();
         render();
     }
-    
-    function colocaCarrosNaCena(){
-        for(var i = 0, size = _self.listaJogadores.length; i < size; i++){
+
+    function colocaCarrosNaCena() {
+        for (var i = 1, size = _self.listaJogadores.length; i <= size; i++) {
+            _self.listaJogadores[i].carro.init(_self.posicaoInicial.x, _self.posicaoInicial.z - (i * 25));
             _self.cena.add(_self.listaJogadores[i].carro.geoFisicaCarro);
         }
+        var obj = {
+            comando:"novo",
+            x:_self.posicaoInicial.x,
+            y:10,
+            z:_self.posicaoInicial.z - (_self.listaJogadores.length * 25),
+            nave: "supernave"
+        };
+        socketSend(obj);
+        _self.carro.init(_self.posicaoInicial.x, _self.posicaoInicial.z - (_self.listaJogadores.length * 25));
         _self.cena.add(_self.carro.geoFisicaCarro);
     }
 
@@ -112,10 +128,18 @@ var ControleFase = function () {
 };
 
 ControleFase.prototype = Object.create(Object.prototype, {
-    constructor:{
+    constructor: {
         value: "ControleFase"
     },
-    listaJogadores:{
+    listaJogadores: {
         value: new Array()
+    },
+    novaPosicao: {
+        value:function (dadosJogador){
+            var _c = ControleFase.prototype.listaJogadores[dadosJogador.id].carro;
+            _c.geoFisicaCarro.__dirtyPosition = true;
+            _c.geoFisicaCarro.__dirtyRotation = true;
+            _c.geoFisicaCarro.position = new THREE.Vector3(dadosJogador.x, dadosJogador.y, dadosJogador.z)
+        }
     }
 });
