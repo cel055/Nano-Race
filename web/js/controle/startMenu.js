@@ -11,7 +11,7 @@ var startMenu = function(){
   function startGame (){
     document.getElementById('corpoMenu').style.display = 'none';
     controleFase = new ControleFase();
-    socket = new WebSocket("ws://" + ip + ":8084/Nano_Race" + arquivo);
+    socket = new WebSocket("ws://" + ip + ":8080/Nano_Race" + arquivo);
     socket.onopen = abriuSocket;
     socket.onmessage = mensagemSocket;
   }

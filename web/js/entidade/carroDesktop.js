@@ -13,10 +13,12 @@ var CarroDesktop = function () {
     this.movimentoCarro = function () {
         if (_self.teclado.pressed('down')) {
             _self.aceleraTrasCarro();
+            _self.carro.rotation.x = 0 * Math.PI / 180;
         } else if (_self.teclado.pressed('shift')) {
             _self.aceleraFrenteCarro();
         } else {
             _self.desaceleraCarro();
+            _self.carro.rotation.z = 0 * Math.PI / 180;
         }
 
         if (_self.teclado.pressed('right')) {

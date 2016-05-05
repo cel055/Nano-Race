@@ -320,10 +320,11 @@ var Pista = function () {
         _self.fase.camera.add(listener);
          var sound1 = new THREE.Audio(listener);
              sound1.load('sound-music/sound-track.mp3');
-             sound1.setRefDistance( 1 );
+        
+        sound1.setRefDistance( 1 );
             sound1.autoplay = true;
             sound1.setLoop(true);
-            sound1.setVolume(2000);
+            sound1.setVolume(1000);
             _self.fase.cena.add(sound1);
        
         var mundo = new THREE.Mesh(_self.geometria, _self.material);

@@ -80,7 +80,6 @@ var ControleFase = function () {
         _self.cena.setGravity(new THREE.Vector3(0, -200, 0));
         _self.cena.addEventListener("update", updateFisica);
         _self.camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 10000);
-       
         _self.renderizador = new THREE.WebGLRenderer({clearColor: 0xff8844, clearAlpha: 0.0, alpha: true, antialias: true});
         _self.renderizador.setSize(window.innerWidth, window.innerHeight);
         _self.renderizador.shadowMapEnable = true;
@@ -95,7 +94,6 @@ var ControleFase = function () {
         _self.cena.add(luzSpot);
 //        _self.carro.init(_self.posicaoInicial.x, _self.posicaoInicial.z);
 //        _self.cena.add(_self.carro.geoFisicaCarro);
-        
         _self.pista.init();
         colocaCarrosNaCena();
         render();

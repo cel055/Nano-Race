@@ -94,6 +94,7 @@ var Carro = function () {
     };
 
     this.desaceleraCarro = function () {
+        _self.carro.rotation.x = 10 * Math.PI / 180;
         if (_self.velocidade > 100 || _self.velocidade < -100) {
             _self.velocidade *= 0.99;
         } else if (_self.velocidade > 1 || _self.velocidade < -1) {
@@ -107,12 +108,14 @@ var Carro = function () {
         _self.rotacao -= 2.5;
         _self.rotSeno = Math.sin(_self.rotacao * Math.PI / 180);
         _self.rotCoseno = Math.cos(_self.rotacao * Math.PI / 180);
+        _self.carro.rotation.z = 5 * Math.PI / 180;
     };
 
     this.viraEsquerda = function () {
         _self.rotacao += 2.5;
         _self.rotSeno = Math.sin(_self.rotacao * Math.PI / 180);
         _self.rotCoseno = Math.cos(_self.rotacao * Math.PI / 180);
+        _self.carro.rotation.z = -5 * Math.PI / 180;
     };
 
     this.moveCarro = function () {
