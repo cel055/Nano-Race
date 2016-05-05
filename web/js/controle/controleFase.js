@@ -71,7 +71,7 @@ var ControleFase = function () {
     }
 
     function carregarLuz() {
-        luzSpot = new THREE.AmbientLight(0x404040);
+        luzSpot = new THREE.AmbientLight(0xffffff);
         luzCarregado = true;
     }
 

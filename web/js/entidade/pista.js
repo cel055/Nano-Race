@@ -1,6 +1,7 @@
 /* global THREE, Physijs */
 
 var Pista = function () {
+    document.body.style.cursor = 'none';
     var _self = this;
     this.pista;
     this.pistaN;
