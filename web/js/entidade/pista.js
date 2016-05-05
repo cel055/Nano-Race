@@ -97,7 +97,7 @@ var Pista = function () {
                 checkPoint.position.z = this.pistaMeio.position.z / this.valor;
                 checkPoint.position.x = this.pistaMeio.position.x;
                 //this.checkPoint.rotation.x = 90;
-                checkPoint.position.y = 1.1;
+                checkPoint.position.y = 1.001;
                 _self.fase.cena.add(checkPoint);
                 _self.listaCheckPoints.push(checkPoint);
                 break;
@@ -139,9 +139,17 @@ var Pista = function () {
                 this.pistaMeio.position.z = this.pistaPosicaoZ + 300 * i;
                 this.pistaMeio.position.y = 0;
 
+                
+                 if(i >0){
                 _self.pistaComum.scale.x = 150;
                 _self.pistaComum.scale.z = 150;
                 this.pistaMeio.add(_self.pistaComum.clone());
+                }
+                else {
+                _self.pistaLargada.scale.x = 150;
+                _self.pistaLargada.scale.z = 150;
+                this.pistaMeio.add(_self.pistaLargada);
+                }   
                 _self.fase.cena.add(this.pistaMeio);
 
 
@@ -187,10 +195,6 @@ var Pista = function () {
                     direcao = -1;
                     correcao = 300;
                 }
-//                if (_direcao === "baixo") {
-//                    direcao = -1;
-//                    correcao = -150;
-//                }
                 else {
                     direcao = 1;
                     correcao = 0;

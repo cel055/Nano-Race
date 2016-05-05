@@ -24,8 +24,9 @@
         <script type="text/javascript" src="js/libs/TrackballControls.js"></script>
 
         <!--<script type="text/javascript" src="js/controle/js.js"></script>-->
-        <script type="text/javascript" src="js/controle/socket.js"></script>
+        <!--<script type="text/javascript" src="js/controle/socket.js"></script>-->
         <script type="text/javascript" src="js/controle/init.js"></script>
+        <script type="text/javascript" src="js/controle/startMenu.js"></script>
         <script type="text/javascript" src="js/controle/controleFase.js"></script>
 
         <script type="text/javascript" src="js/entidade/carro.js"></script>
@@ -34,34 +35,16 @@
     </head>
     <body>
         <!-- s1e5515868 -->
+
         <div id="marcador"></div>
-        <div id="debugar">
-            <table>
-                <tr>
-                    <td id='x'>
-
-                    </td>
-                    <td id='posX'>
-
-                    </td>
-                </tr>
-                <tr>
-                    <td id='y'>
-
-                    </td>
-                    <td id='posY'>
-
-                    </td>
-                </tr>
-                <tr>
-                    <td id='z'>
-
-                    </td>
-                    <td id='posZ'>
-
-                    </td>
-                </tr>
-            </table>
-        </div>
+        <section id='corpoMenu'>
+            <section id='titulo'><h1>Nano Racer</h1></section>
+            <section id="menu">
+                <div id='start' class="detalhes"><p>START</p></div>
+                <div id='multiplayer' class="detalhes"><p>MULTIPLAYER</p></div>
+                <div id='continue' class="detalhes"><p>continue</p></div>
+                <div id='option' class="detalhes"><p>option</p></div>
+            </section>
+        </section>
     </body>
 </html>
