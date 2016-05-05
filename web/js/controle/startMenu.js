@@ -6,7 +6,7 @@
 
 /* global arquivo, ip, abriuSocket, mensagemSocket */
 
-var startMenu = function(){
+var StartMenu = function(){
   document.getElementById('start').addEventListener('click', startGame);
   function startGame (){
     document.getElementById('corpoMenu').style.display = 'none';

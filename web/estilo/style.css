@@ -13,8 +13,11 @@ body {
     background: black;
      cursor: pointer;
 }
-#marcador {
+#hud {
     position: absolute;
+}
+#velocimetro {
+    
     font-family: 'robo';
     font-style: italic;
     text-shadow: 1px 1px white;
@@ -25,6 +28,9 @@ body {
     font-size: 1.5em;
 /*    margin-top: 0.5%;
     margin-left: 0.5%;*/
+}
+#voltas {
+    
 }
 #titulo {
     position: absolute;
@@ -62,7 +68,7 @@ body {
     display: block;
     padding: 1px;
     color: white;
-    cursor: url(../imagens/theload.png),auto;
+    cursor: pointer;//url(../imagens/theload.png),auto;
     font-family: robo;
     text-shadow: 2px 2px 5px #1E7DA2;
     transition-duration: 0.5s;
@@ -70,7 +76,7 @@ body {
 .detalhes:hover {
    background: rgba(255, 255, 255, 0.75);
    color: black;
-   cursor: url(../imagens/theload.png),pointer,auto;
+/*   cursor: url(../imagens/theload.png),pointer,auto;*/
   
 }
 #corpoMenu {

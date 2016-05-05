@@ -6,5 +6,5 @@ Physijs.scripts.ammo = "ammo.js";
 var controleFase;
 
 function inicia() {
-    new startMenu();
+    new StartMenu();
 }
