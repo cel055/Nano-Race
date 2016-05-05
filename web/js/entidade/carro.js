@@ -42,7 +42,7 @@ var Carro = function () {
         _self.sound2.load('sound-music/acelera1.ogg');
         _self.carro.add(_self.sound2);
         _self.sound2.setLoop(false);
-        _self.sound2.setVolume(1000);
+        
         var materialFisicaCarro = new Physijs.createMaterial(new THREE.MeshPhongMaterial({
             shading: THREE.SmoothShading,
             opacity: 0.5,
@@ -79,6 +79,8 @@ var Carro = function () {
         if (_self.velocidade < 2000) {
             if (_self.velocidade > 1000) {
                 _self.velocidade += Math.abs(500 / (_self.velocidade / 5));
+                console.log(_self.velocidade * 0.2);
+                _self.sound2.play();
             } else if (_self.velocidade > 0) {
                 _self.velocidade += Math.abs(500 / (_self.velocidade / 10));
             } else if (_self.velocidade < 0) {
@@ -90,8 +92,8 @@ var Carro = function () {
             _self.velocidade = 2000;
         }
 
-//        _self.sound2.setRefDistance( 5 );
-        _self.sound2.play();
+        
+        
 
     };
 
@@ -135,6 +137,7 @@ var Carro = function () {
     };
 
     this.moveCarro = function () {
+                _self.sound2.setVolume(_self.velocidade * 0.05);
 //        _self.geoFisicaCarro.__dirtyRotation = true;
         if (_self.geoFisicaCarro.position.y < -2) {
             _self.geoFisicaCarro.__dirtyPosition = true;
