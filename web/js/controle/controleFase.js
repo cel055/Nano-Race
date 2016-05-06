@@ -116,9 +116,9 @@ var ControleFase = function () {
         }
         var obj = {
             comando: "novo",
-            x: _self.posicaoInicial.x,
-            y: 10,
-            z: _self.posicaoInicial.z - (_self.listaJogadores.length * 25),
+            velocidade: _self.carro.velocidade,
+            rotacao: _self.carro.rotacao,
+//            z: _self.posicaoInicial.z - (_self.listaJogadores.length * 25),
             nave: "supernave"
         };
         socketSend(obj);
@@ -127,7 +127,18 @@ var ControleFase = function () {
     }
 
     function updateFisica() {
-        _self.carro.moveCarro();
+        for(var prop in _self.listaJogadores){
+            _self.listaJogadores[prop].carro.moveCarro();
+        }
+        var obj = {
+            comando:"novaPosicao",
+            id: _self.carro.id,
+            velocidade: _self.carro.velocidade,
+            rotacao: _self.carro.rotacao,
+            nave: "supernave"
+        };
+        socketSend(obj);
+//        _self.carro.moveCarro();
     }
 
     function render() {
@@ -181,9 +192,11 @@ ControleFase.prototype = Object.create(Object.prototype, {
     novaPosicao: {
         value: function (dadosJogador) {
             var _c = ControleFase.prototype.listaJogadores[dadosJogador.id].carro;
-            _c.geoFisicaCarro.__dirtyPosition = true;
-            _c.geoFisicaCarro.__dirtyRotation = true;
-            _c.geoFisicaCarro.position = new THREE.Vector3(dadosJogador.x, dadosJogador.y, dadosJogador.z)
+            _c.velocidade = ControleFase.prototype.listaJogadores[dadosJogador.id].velocidade;
+            _c.rotacao = ControleFase.prototype.listaJogadores[dadosJogador.id].rotacao;
+//            _c.geoFisicaCarro.__dirtyPosition = true;
+//            _c.geoFisicaCarro.__dirtyRotation = true;
+//            _c.geoFisicaCarro.position = new THREE.Vector3(dadosJogador.x, dadosJogador.y, dadosJogador.z)
         }
     }
 });

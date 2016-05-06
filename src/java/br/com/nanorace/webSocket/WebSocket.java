@@ -69,9 +69,9 @@ public class WebSocket {
             case "novo":
                 JogadorComSessao novo = new JogadorComSessao(
                         session,
-                        jsonRecebido.getJsonNumber("x").doubleValue(),
-                        jsonRecebido.getJsonNumber("y").doubleValue(),
-                        jsonRecebido.getJsonNumber("z").doubleValue(),
+                        jsonRecebido.getJsonNumber("velocidade").doubleValue(),
+                        jsonRecebido.getJsonNumber("rotacao").doubleValue(),
+//                        jsonRecebido.getJsonNumber("z").doubleValue(),
                         jsonRecebido.getString("nave")
                 );
                 usuariosLogados.put(session.getId(), novo);
