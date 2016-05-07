@@ -16,8 +16,13 @@ var StartMenu = function(){
       
   }
   function startGame (){
+      
     var ip = document.getElementById('ip').value;
     var porta = document.getElementById('porta').value;
+    if(ip === '' && porta ===''){
+        ip = location.hostname;
+        porta = location.port;
+    }
     document.getElementById('corpoMenu').style.display = 'none';
     controleFase = new ControleFase();
     socket = new WebSocket("ws://" + ip + ":" + porta + "/Nano_Race" + arquivo);
