@@ -16,8 +16,6 @@ var Carro = function () {
     this.sound2;
 
     this.carrega = function (obj, mtl) {
-
-
         var loader = new THREE.OBJMTLLoader();
         loader.load(obj, mtl,
                 function (object) {
@@ -65,18 +63,20 @@ var Carro = function () {
         _self.geoFisicaCarro.addEventListener('collision', _self.colisaoCarro);
         _self.rotSeno = Math.sin(_self.rotacao * Math.PI / 180);
         _self.rotCoseno = Math.cos(_self.rotacao * Math.PI / 180);
-        _self.checkPointAtual = _self.fase.pista.listaCheckPoints.length - 1;
     };
 
     this.colisaoCarro = function (outroObj, velocidadeRelativa, rotacaoRelativa, contato) {
+//        _self.geoFisicaCarro.__dirtyRotation = true;
+        _self.geoFisicaCarro.rotation.x = 0;
+        _self.geoFisicaCarro.rotation.z = 0;
         if (outroObj.name === "checkPoint") {
-            for(var i = 0, size = _self.fase.pista.listaCheckPoints.length; i < size; i++){
-                if(outroObj == _self.fase.pista.listaCheckPoints[i]){
-                    if(_self.checkPointAtual == size - 1 && i == 0){
-                        volta--;
+            for (var i = 0, size = _self.fase.pista.listaCheckPoints.length; i < size; i++) {
+                if (outroObj == _self.fase.pista.listaCheckPoints[i]) {
+                    if (_self.checkPointAtual == size - 1 && i == 0) {
+                        document.getElementById("voltas").innerHTML = "voltas: " + --volta + "/2";
                     }
                     _self.checkPointAtual = i;
-                    return ;
+                    return;
                 }
             }
         }

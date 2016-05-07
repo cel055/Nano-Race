@@ -19,7 +19,6 @@ var CarroDesktop = function () {
             if(_self.teclado.pressed('right') === false|| _self.teclado.pressed('left')=== false){
                 _self.carro.rotation.x = 0 * Math.PI / 180;
                 _self.carro.rotation.z = 0 * Math.PI / 180;
-                
             }
         } else {
             _self.desaceleraCarro();
@@ -31,15 +30,6 @@ var CarroDesktop = function () {
         } else if (_self.teclado.pressed('left')) {
             _self.viraEsquerda();
         }
-//        if (_self.teclado.pressed('h')) {
-//            var divDebug = document.getElementById('debugar');
-//            if (divDebug.style.display && divDebug.style.display == 'none') {
-//                divDebug.style.display = 'block';
-//            }else{
-//                divDebug.style.display = 'none';
-//            }
-        //}
-//        _self.moveCarro();
         document.getElementById('velocimetro').innerHTML = "kmH :  " + parseInt(_self.velocidade);
     };
 };
