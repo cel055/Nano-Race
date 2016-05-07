@@ -43,7 +43,7 @@ var Carro = function () {
         _self.sound2.load('sound-music/acelera1.ogg');
         _self.carro.add(_self.sound2);
         _self.sound2.setLoop(false);
-        
+
         var materialFisicaCarro = new Physijs.createMaterial(new THREE.MeshPhongMaterial({
             shading: THREE.SmoothShading,
             opacity: 0.5,
@@ -65,15 +65,19 @@ var Carro = function () {
         _self.geoFisicaCarro.addEventListener('collision', _self.colisaoCarro);
         _self.rotSeno = Math.sin(_self.rotacao * Math.PI / 180);
         _self.rotCoseno = Math.cos(_self.rotacao * Math.PI / 180);
+        _self.checkPointAtual = _self.fase.pista.listaCheckPoints.length - 1;
     };
 
     this.colisaoCarro = function (outroObj, velocidadeRelativa, rotacaoRelativa, contato) {
         if (outroObj.name === "checkPoint") {
-            _self.checkPointAtual++;
-            if (_self.fase.pista.listaCheckPoints.length <= _self.checkPointAtual) {
-                _self.checkPointAtual = 0;
-                volta--;
-                document.getElementById('nvoltas').innerHTML = volta + "/2";
+            for(var i = 0, size = _self.fase.pista.listaCheckPoints.length; i < size; i++){
+                if(outroObj == _self.fase.pista.listaCheckPoints[i]){
+                    if(_self.checkPointAtual == size - 1 && i == 0){
+                        volta--;
+                    }
+                    _self.checkPointAtual = i;
+                    return ;
+                }
             }
         }
     };
@@ -95,8 +99,8 @@ var Carro = function () {
             _self.velocidade = 2000;
         }
 
-        
-        
+
+
 
     };
 
@@ -140,15 +144,18 @@ var Carro = function () {
     };
 
     this.moveCarro = function () {
-                _self.sound2.setVolume(_self.velocidade * 0.05);
-//        _self.geoFisicaCarro.__dirtyRotation = true;
+        _self.sound2.setVolume(_self.velocidade * 0.05);
         if (_self.geoFisicaCarro.position.y < -2) {
+            _self.geoFisicaCarro.__dirtyRotation = true;
             _self.geoFisicaCarro.__dirtyPosition = true;
             _self.velocidade = 0;
             _self.geoFisicaCarro.setLinearVelocity({x: _self.geoFisicaCarro.getLinearVelocity().x * -1, y: _self.geoFisicaCarro.getLinearVelocity().y * -1, z: _self.geoFisicaCarro.getLinearVelocity().z * -1});
             _self.geoFisicaCarro.position.y = 5;
             _self.geoFisicaCarro.position.x = _self.fase.pista.listaCheckPoints[_self.checkPointAtual].position.x;
             _self.geoFisicaCarro.position.z = _self.fase.pista.listaCheckPoints[_self.checkPointAtual].position.z;
+            _self.geoFisicaCarro.rotation.y = _self.fase.pista.listaCheckPoints[_self.checkPointAtual].rotation.y;
+            _self.geoFisicaCarro.rotation.x = 0;
+            _self.geoFisicaCarro.rotation.z = 0;
             return;
         }
         _self.geoFisicaCarro.rotation.y = _self.rotacao * Math.PI / 180;
