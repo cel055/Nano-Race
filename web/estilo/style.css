@@ -84,9 +84,12 @@ body {
     text-shadow: 2px 2px 5px #1E7DA2;
     transition-duration: 0.5s;
 }
+#iporta {
+    display: none;
+}
 .detalhes-2 {
     margin: 0 auto;
-    //max-width: 60%;
+    max-width: 60%;
     overflow: hidden;
     margin-top: 2%;
     font-size: 0.8em !important;
@@ -103,9 +106,12 @@ body {
     text-shadow: 2px 2px 5px #1E7DA2;
     transition-duration: 0.5s;
 }
-/*.detalhes-2 input{
-    font-size: 0.8em !important;
-}*/
+.detalhes-2 span input{
+    font-family: robo;
+    border: 2px solid black;
+    border-radius: 5px;
+    background-color: #448CD6;
+}
 .detalhes:hover {
    background: rgba(255, 255, 255, 0.75);
    color: black;

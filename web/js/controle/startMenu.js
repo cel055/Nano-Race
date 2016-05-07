@@ -8,10 +8,19 @@
 
 var StartMenu = function(){
   document.getElementById('start').addEventListener('click', startGame);
+  document.getElementById('multiplayer').addEventListener('click', subMenuStart);
+  
+  function subMenuStart(){
+      document.getElementById('iporta').style.display = 'block';
+      document.getElementById('botao').addEventListener('click', startGame);
+      
+  }
   function startGame (){
+    var ip = document.getElementById('ip').value;
+    var porta = document.getElementById('porta').value;
     document.getElementById('corpoMenu').style.display = 'none';
     controleFase = new ControleFase();
-    socket = new WebSocket("ws://" + ip + ":8080/Nano_Race" + arquivo);
+    socket = new WebSocket("ws://" + ip + ":" + porta + "/Nano_Race" + arquivo);
     socket.onopen = abriuSocket;
     socket.onmessage = mensagemSocket;
   }
