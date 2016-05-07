@@ -11,8 +11,12 @@ var Carro = function () {
     this.geoFisicaCarro;
     this.rotSeno = 0;
     this.rotCoseno = 0;
+    this.escutador;
+    this.sound2;
 
     this.carrega = function (obj, mtl) {
+
+
         var loader = new THREE.OBJMTLLoader();
         loader.load(obj, mtl,
                 function (object) {
@@ -31,6 +35,14 @@ var Carro = function () {
     };
 
     this.initBase = function (x, z) {
+        _self.escutador = new THREE.AudioListener();
+        //audio aceleracao
+        _self.fase.camera.add(_self.escutador);
+        _self.sound2 = new THREE.Audio(_self.escutador);
+        _self.sound2.load('sound-music/acelera1.ogg');
+        _self.carro.add(_self.sound2);
+        _self.sound2.setLoop(false);
+        
         var materialFisicaCarro = new Physijs.createMaterial(new THREE.MeshPhongMaterial({
             shading: THREE.SmoothShading,
             opacity: 0.5,
@@ -67,6 +79,8 @@ var Carro = function () {
         if (_self.velocidade < 2000) {
             if (_self.velocidade > 1000) {
                 _self.velocidade += Math.abs(500 / (_self.velocidade / 5));
+                console.log(_self.velocidade * 0.2);
+                _self.sound2.play();
             } else if (_self.velocidade > 0) {
                 _self.velocidade += Math.abs(500 / (_self.velocidade / 10));
             } else if (_self.velocidade < 0) {
@@ -77,6 +91,10 @@ var Carro = function () {
         } else {
             _self.velocidade = 2000;
         }
+
+        
+        
+
     };
 
     this.aceleraTrasCarro = function () {
@@ -119,6 +137,7 @@ var Carro = function () {
     };
 
     this.moveCarro = function () {
+                _self.sound2.setVolume(_self.velocidade * 0.05);
 //        _self.geoFisicaCarro.__dirtyRotation = true;
         if (_self.geoFisicaCarro.position.y < -2) {
             _self.geoFisicaCarro.__dirtyPosition = true;

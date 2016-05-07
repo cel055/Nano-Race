@@ -15,18 +15,25 @@ import javax.websocket.Session;
  */
 public class JogadorComSessao {
     public Session session;
-    public Double x;
-    public Double y;
+    public Double velocidade;
+    public Double rotacao;
     public Double z;
     public String nave;
 
     public JogadorComSessao() {
     }
 
-    public JogadorComSessao(Session session, Double x, Double y, Double z, String nave) {
+    public JogadorComSessao(Session session, Double velocidade, Double rotacao, String nave) {
         this.session = session;
-        this.x = x;
-        this.y = y;
+        this.velocidade = velocidade;
+        this.rotacao = rotacao;
+        this.nave = nave;
+    }
+
+    public JogadorComSessao(Session session, Double velocidade, Double y, Double z, String nave) {
+        this.session = session;
+        this.velocidade = velocidade;
+        this.rotacao = y;
         this.z = z;
         this.nave = nave;
     }
@@ -34,9 +41,9 @@ public class JogadorComSessao {
     public JsonObjectBuilder criaJson(){
         JsonObjectBuilder json = Json.createObjectBuilder();
         json.add("id", session.getId());
-        json.add("x", x);
-        json.add("y", y);
-        json.add("z", z);
+        json.add("velocidade", velocidade);
+        json.add("rotacao", rotacao);
+//        json.add("z", z);
         json.add("nave", nave);
         return json;
     }
