@@ -50,6 +50,6 @@ var CarroDesktop = function () {
 //            }
         //}
 //        _self.moveCarro();
-        document.getElementById('marcador').innerHTML = "kmH :  " + parseInt(_self.velocidade);
+        document.getElementById('velocimetro').innerHTML = "kmH :  " + parseInt(_self.velocidade);
     };
 };

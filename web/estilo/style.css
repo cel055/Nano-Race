@@ -15,9 +15,12 @@ body {
 }
 #hud {
     position: absolute;
+    width: 100%;
+    overflow: hidden;
 }
 #velocimetro {
-    
+    display: inline;
+    float: left;
     font-family: 'robo';
     font-style: italic;
     text-shadow: 1px 1px white;
@@ -26,11 +29,16 @@ body {
     background-size: cover;
     color: red;
     font-size: 1.5em;
-/*    margin-top: 0.5%;
-    margin-left: 0.5%;*/
+    
 }
 #voltas {
-    
+    display: inline;
+    float: right;
+    width: 10%;
+    font-family: robo;
+    color: white;
+    text-shadow: 2px 2px 5px #1E7DA2;
+    overflow: hidden;
 }
 #titulo {
     position: absolute;

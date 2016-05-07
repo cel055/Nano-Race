@@ -134,13 +134,13 @@ var ControleFase = function () {
         _self.cena.simulate(undefined, 1);
         requestAnimationFrame(render);
         if (_self.carro.velocidade == 0) {
-            document.getElementById('marcador').innerHTML = "kmH :  0";
+            document.getElementById('velocimetro').innerHTML = "kmH :  0";
         }
         _self.carro.movimentoCarro();
 //        _self.carro.movimentoCarro();
 //        _self.carro.moveCarro();
 //         posiCamera();
-        _self.controls.update();
+        _self.controls.update();    
         _self.renderizador.render(_self.cena, _self.camera);
     }
 
