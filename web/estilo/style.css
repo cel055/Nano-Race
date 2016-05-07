@@ -39,6 +39,7 @@ body {
     color: white;
     text-shadow: 2px 2px 5px #1E7DA2;
     overflow: hidden;
+    text-aling: center;
 }
 #titulo {
     position: absolute;
@@ -53,12 +54,13 @@ body {
 #titulo h1 {
     padding-top: 2px;
     margin-top: 0;
+    font-size: 1em;
     text-align: center;
 }
 #menu {
     position: absolute;
     margin: 0 auto;
-    margin-top: 10%;
+    margin-top: 8%;
     width: 80%;
     margin-left: 10%;
     overflow: hidden;
@@ -66,7 +68,8 @@ body {
 .detalhes {
     margin: 0 auto;
     width: 20%;
-    margin-top: 30px;
+    
+    margin-top: 2%;
     border-radius: 20px 0 20px 0;
     border: 3px solid #448CD6;
     box-shadow: 0px 0px 5px;
@@ -81,6 +84,28 @@ body {
     text-shadow: 2px 2px 5px #1E7DA2;
     transition-duration: 0.5s;
 }
+.detalhes-2 {
+    margin: 0 auto;
+    //max-width: 60%;
+    overflow: hidden;
+    margin-top: 2%;
+    font-size: 0.8em !important;
+    border-radius: 0 20px 0 20px ;
+    border: 3px solid #448CD6;
+    box-shadow: 0px 0px 5px;
+    background: rgba(26, 125, 98, 0.75);
+    line-height: 0;
+    display: block;
+    padding: 1px;
+    color: white;
+    cursor: pointer;//url(../imagens/theload.png),auto;
+    font-family: robo;
+    text-shadow: 2px 2px 5px #1E7DA2;
+    transition-duration: 0.5s;
+}
+/*.detalhes-2 input{
+    font-size: 0.8em !important;
+}*/
 .detalhes:hover {
    background: rgba(255, 255, 255, 0.75);
    color: black;

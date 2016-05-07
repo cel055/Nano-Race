@@ -1,5 +1,6 @@
 var Carro = function () {
     var _self = this;
+    var volta = 2;
     this.id;
     this.fase;
     this.checkPointAtual = 0;
@@ -71,6 +72,8 @@ var Carro = function () {
             _self.checkPointAtual++;
             if (_self.fase.pista.listaCheckPoints.length <= _self.checkPointAtual) {
                 _self.checkPointAtual = 0;
+                volta--;
+                document.getElementById('nvoltas').innerHTML = volta + "/2";
             }
         }
     };

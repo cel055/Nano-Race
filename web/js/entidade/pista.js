@@ -147,6 +147,7 @@ var Pista = function () {
                 this.pistaMeio.add(_self.pistaComum.clone());
                 }
                 else {
+                this.pistaMeio.name = "largada";
                 _self.pistaLargada.scale.x = 150;
                 _self.pistaLargada.scale.z = 150;
                 this.pistaMeio.add(_self.pistaLargada);
