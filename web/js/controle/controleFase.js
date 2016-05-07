@@ -152,7 +152,11 @@ var ControleFase = function () {
         if (_self.carro.velocidade == 0) {
             document.getElementById('velocimetro').innerHTML = "kmH :  0";
         }
-        _self.carro.movimentoCarro();
+        
+        for (var prop in _self.listaJogadores) {
+            _self.listaJogadores[prop].carro.movimentoCarro();
+        }
+//        _self.carro.movimentoCarro();
 //        _self.carro.movimentoCarro();
 //        _self.carro.moveCarro();
 //         posiCamera();
