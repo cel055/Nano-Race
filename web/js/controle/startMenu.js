@@ -12,10 +12,10 @@ var StartMenu = function(){
   
   function subMenuStart(){
       document.getElementById('iporta').style.display = 'block';
-      document.getElementById('botao').addEventListener('click', startGame);
+      document.getElementById('botao').addEventListener('click', startGameMultiplayer);
       
   }
-  function startGame (){
+  function startGameMultiplayer (){
       
     var ip = document.getElementById('ip').value;
     var porta = document.getElementById('porta').value;
@@ -29,5 +29,8 @@ var StartMenu = function(){
     socket.onopen = abriuSocket;
     socket.onmessage = mensagemSocket;
   }
-  
+  function startGame(){
+      document.getElementById('corpoMenu').style.display = 'none';
+      new ControleFase().inicia('a');
+  }
 };

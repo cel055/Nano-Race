@@ -121,23 +121,28 @@ var ControleFase = function () {
 //            z: _self.posicaoInicial.z - (_self.listaJogadores.length * 25),
             nave: "supernave"
         };
-        socketSend(obj);
+        if (_self.carro.id !== 'a') {
+            socketSend(obj);
+        }
+
 //        _self.carro.init(_self.posicaoInicial.x, _self.posicaoInicial.z - (_self.listaJogadores.length * 25));
 //        _self.cena.add(_self.carro.geoFisicaCarro);
     }
 
     function updateFisica() {
-        for(var prop in _self.listaJogadores){
+        for (var prop in _self.listaJogadores) {
             _self.listaJogadores[prop].carro.moveCarro();
         }
         var obj = {
-            comando:"novaPosicao",
+            comando: "novaPosicao",
             id: _self.carro.id,
             velocidade: _self.carro.velocidade,
             rotacao: _self.carro.rotacao,
             nave: "supernave"
         };
-        socketSend(obj);
+        if (_self.carro.id !== 'a') {
+            socketSend(obj);
+        }
 //        _self.carro.moveCarro();
     }
 
@@ -151,7 +156,7 @@ var ControleFase = function () {
 //        _self.carro.movimentoCarro();
 //        _self.carro.moveCarro();
 //         posiCamera();
-        _self.controls.update();    
+        _self.controls.update();
         _self.renderizador.render(_self.cena, _self.camera);
     }
 
