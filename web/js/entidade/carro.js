@@ -86,7 +86,7 @@ var Carro = function () {
         if (_self.velocidade < 2000) {
             if (_self.velocidade > 1000) {
                 _self.velocidade += Math.abs(500 / (_self.velocidade / 5));
-                console.log(_self.velocidade * 0.2);
+                //console.log(_self.velocidade * 0.2);
                 _self.sound2.play();
             } else if (_self.velocidade > 0) {
                 _self.velocidade += Math.abs(500 / (_self.velocidade / 10));

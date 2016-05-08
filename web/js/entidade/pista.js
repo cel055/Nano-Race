@@ -323,7 +323,7 @@ var Pista = function () {
              sound1.load('sound-music/sound-track.mp3');
         
         sound1.setRefDistance( 1 );
-            //sound1.autoplay = true;
+            sound1.autoplay = true;
             sound1.setLoop(true);
             sound1.setVolume(1000);
             //_self.fase.cena.add(sound1);

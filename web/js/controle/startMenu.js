@@ -7,12 +7,20 @@
 /* global arquivo, ip, abriuSocket, mensagemSocket */
 
 var StartMenu = function () {
+    var entrar = false;
     document.getElementById('start').addEventListener('click', startGame);
     document.getElementById('multiplayer').addEventListener('click', subMenuStart);
 
     function subMenuStart() {
+        if(entrar === false){
         document.getElementById('iporta').style.display = 'block';
         document.getElementById('botao').addEventListener('click', startGameMultiplayer);
+         entrar = true;
+        } else {
+            document.getElementById('iporta').style.display = 'none';
+            entrar = false;
+        }
+            
 
     }
     function startGameMultiplayer() {
