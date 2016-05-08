@@ -76,10 +76,12 @@ var Carro = function () {
                         document.getElementById("voltas").innerHTML = "voltas: " + --volta + "/2";
                     }
                     _self.checkPointAtual = i;
+                    navigator.vibrate(100);
                     return;
                 }
             }
         }
+        
     };
 
     this.aceleraFrenteCarro = function () {

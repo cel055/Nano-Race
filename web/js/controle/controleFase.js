@@ -9,8 +9,8 @@ var ControleFase = function () {
     this.camera;
     this.distancia = 800;
     this.gravidade = 10;
-    this.posicaoInicial = {x: 1325, z: -1640};
-
+    this.posicaoInicial = {x: 1425, z: -1640};
+    this.runCar = false;
     var luzSpot;
     var luzCarregado = false;
 
@@ -94,11 +94,37 @@ var ControleFase = function () {
         _self.cena.add(luzSpot);
 //        _self.carro.init(_self.posicaoInicial.x, _self.posicaoInicial.z);
 //        _self.cena.add(_self.carro.geoFisicaCarro);
+        
         _self.pista.init();
         colocaCarrosNaCena();
+        _self.clock = new THREE.Clock();
         render();
+        
+        _self.controls.enabled = true;
     }
-
+    function startLap(_delta){
+        var contador = document.getElementById("contadorLargada");
+        switch(_delta){
+            case 3:
+                contador.innerHTML = "<p>3</p>";
+             break;
+             case 5:
+                contador.innerHTML = "<p>2</p>";
+             break;
+             case 7:
+                contador.innerHTML = "<p>1</p>";
+             break;
+             case 9:
+                contador.style.color = 'green';
+                contador.innerHTML = '<p>GO</p>';
+             break;
+             case 10:
+                 document.getElementById('largada').style.display = 'none';
+                 _self.runCar = true;
+             break;
+        }
+      
+    }
     function colocaCarrosNaCena() {
 //        for (var i = 1, size = _self.listaJogadores.length; i <= size; i++) {
 //            _self.listaJogadores[i].carro.init(_self.posicaoInicial.x, _self.posicaoInicial.z - (i * 25));
@@ -107,10 +133,10 @@ var ControleFase = function () {
         var i = 0;
         for (var prop in _self.listaJogadores) {
             if (_self.listaJogadores[prop].carro.init) {
-                _self.listaJogadores[prop].carro.init(_self.posicaoInicial.x, _self.posicaoInicial.z - (++i * 25));
+                _self.listaJogadores[prop].carro.init(_self.posicaoInicial.x -= 20, _self.posicaoInicial.z);
 //                continue;
             } else {
-                _self.listaJogadores[prop].carro.initBase(_self.posicaoInicial.x, _self.posicaoInicial.z - (++i * 25));
+                _self.listaJogadores[prop].carro.initBase(_self.posicaoInicial.x -= 20 , _self.posicaoInicial.z);
             }
             _self.cena.add(_self.listaJogadores[prop].carro.geoFisicaCarro);
         }
@@ -147,6 +173,9 @@ var ControleFase = function () {
     }
 
     function render() {
+        var delta = _self.clock.getElapsedTime();
+         var largada = parseInt(delta);
+         startLap(largada);
         _self.cena.simulate(undefined, 1);
         requestAnimationFrame(render);
         if (_self.carro.velocidade == 0) {
