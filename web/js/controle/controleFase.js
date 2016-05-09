@@ -36,7 +36,7 @@ var ControleFase = function () {
 //            _self.listaJogadores[i].carro.fase = _self;
 //            _self.carro.carrega('modelos/' + _self.listaJogadores[i].nave + '.obj', 'modelos/' + _self.listaJogadores[i].nave + '.mtl');
 //        }
-        
+
         for (var prop in _self.listaJogadores) {
             _self.listaJogadores[prop].carro.fase = _self;
             _self.listaJogadores[prop].carro.carrega('modelos/' + _self.listaJogadores[prop].nave + '.obj', 'modelos/' + _self.listaJogadores[prop].nave + '.mtl');
@@ -97,37 +97,37 @@ var ControleFase = function () {
         _self.cena.add(luzSpot);
 //        _self.carro.init(_self.posicaoInicial.x, _self.posicaoInicial.z);
 //        _self.cena.add(_self.carro.geoFisicaCarro);
-        
+
         _self.pista.init();
         colocaCarrosNaCena();
         _self.clock = new THREE.Clock();
         render();
-        
+
         _self.controls.enabled = true;
     }
-    function startLap(_delta){
+    function startLap(_delta) {
         document.getElementById("contadorLargada").innerHTML = 'YOU READY?';
         var contador = document.getElementById("contadorLargada");
-        switch(_delta){
+        switch (_delta) {
             case 3:
                 contador.innerHTML = "YOU READY?<p>3</p>";
-             break;
-             case 5:
+                break;
+            case 5:
                 contador.innerHTML = "YOU READY?<p>2</p>";
-             break;
-             case 7:
+                break;
+            case 7:
                 contador.innerHTML = "YOU READY?<p>1</p>";
-             break;
-             case 9:
+                break;
+            case 9:
                 contador.style.color = 'green';
                 contador.innerHTML = 'YOU READY?<p>GO</p>';
-             break;
-             case 10:
-                 document.getElementById('largada').style.display = 'none';
-                 _self.runCar = true;
-             break;
+                break;
+            case 10:
+                document.getElementById('largada').style.display = 'none';
+                _self.runCar = true;
+                break;
         }
-      
+
     }
     function colocaCarrosNaCena() {
 
@@ -137,15 +137,16 @@ var ControleFase = function () {
                 _self.listaJogadores[prop].carro.init(_self.posicaoInicial.x -= 20, _self.posicaoInicial.z);
 //                continue;
             } else {
-                _self.listaJogadores[prop].carro.initBase(_self.posicaoInicial.x -= 20 , _self.posicaoInicial.z);
+                _self.listaJogadores[prop].carro.initBase(_self.posicaoInicial.x -= 20, _self.posicaoInicial.z);
             }
             _self.cena.add(_self.listaJogadores[prop].carro.geoFisicaCarro);
         }
         var obj = {
             comando: "novo",
-            velocidade: _self.carro.velocidade,
-            rotacao: _self.carro.rotacao,
-//            z: _self.posicaoInicial.z - (_self.listaJogadores.length * 25),
+            x: _self.carro.geoFisicaCarro.position.x,
+            y: _self.carro.geoFisicaCarro.position.y,
+            z: _self.carro.geoFisicaCarro.position.z,
+            rotacao: _self.carro.geoFisicaCarro.rotation.y,
             nave: "supernave"
         };
         if (_self.carro.id !== 'a') {
@@ -158,35 +159,37 @@ var ControleFase = function () {
         for (var prop in _self.listaJogadores) {
             _self.listaJogadores[prop].carro.moveCarro();
         }
-        var obj = {
-            comando: "novaPosicao",
-            id: _self.carro.id,
-            velocidade: _self.carro.velocidade,
-            rotacao: _self.carro.rotacao,
-            nave: "supernave"
-        };
         if (_self.carro.id !== 'a') {
+            var obj = {
+                comando: "novaPosicao",
+                id: _self.carro.id,
+                x: _self.carro.geoFisicaCarro.position.x,
+                y: _self.carro.geoFisicaCarro.position.y,
+                z: _self.carro.geoFisicaCarro.position.z,
+                rotacao: _self.carro.geoFisicaCarro.rotation.y,
+                nave: "supernave"
+            };
             socketSend(obj);
         }
 //        _self.carro.moveCarro();
     }
 
     function render() {
-       
+
         var delta = _self.clock.getElapsedTime();
-         var largada = parseInt(delta);
-         startLap(largada);
+        var largada = parseInt(delta);
+        startLap(largada);
         _self.cena.simulate();
         requestAnimationFrame(render);
         if (_self.carro.velocidade == 0) {
             document.getElementById('velocimetro').innerHTML = "kmH :  0";
         }
-        
+
         for (var prop in _self.listaJogadores) {
-            if(_self.runCar === true){
-            _self.listaJogadores[prop].carro.movimentoCarro();
+            if (_self.runCar === true) {
+                _self.listaJogadores[prop].carro.movimentoCarro();
             }
-                
+
         }
 
         _self.controls.update();
@@ -215,7 +218,7 @@ ControleFase.prototype = Object.create(Object.prototype, {
     colocaNovoCarroNaCena: {
         value: function (jsonJogador) {
             var __self = controleFase;
-            jsonJogador.carro = new Carro();
+            jsonJogador.carro = new CarroSocket();
             jsonJogador.carro.fase = __self;
             jsonJogador.carro.carrega('modelos/' + jsonJogador.nave + '.obj', 'modelos/' + jsonJogador.nave + '.mtl');
             var inter = setInterval(function () {
@@ -230,8 +233,12 @@ ControleFase.prototype = Object.create(Object.prototype, {
     novaPosicao: {
         value: function (dadosJogador) {
             var _c = ControleFase.prototype.listaJogadores[dadosJogador.id].carro;
-            _c.velocidade = ControleFase.prototype.listaJogadores[dadosJogador.id].velocidade;
-            _c.rotacao = ControleFase.prototype.listaJogadores[dadosJogador.id].rotacao;
+            if (_c.carregado) {
+                _c.x = dadosJogador.x;
+                _c.y = dadosJogador.y;
+                _c.z = dadosJogador.z;
+                _c.rotacao = dadosJogador.rotacao;
+            }
         }
     }
 });

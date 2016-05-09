@@ -79,7 +79,7 @@ body {
     display: block;
     padding: 1px;
     color: white;
-    cursor: pointer;//url(../imagens/theload.png),auto;
+    cursor: pointer;/*url(../imagens/theload.png),auto;*/
     font-family: robo;
     text-shadow: 2px 2px 5px #1E7DA2;
     transition-duration: 0.5s;
@@ -101,7 +101,7 @@ body {
     display: block;
     padding: 1px;
     color: white;
-    cursor: pointer;//url(../imagens/theload.png),auto;
+    cursor: pointer;/*url(../imagens/theload.png),auto;*/
     font-family: robo;
     text-shadow: 2px 2px 5px #1E7DA2;
     transition-duration: 0.5s;

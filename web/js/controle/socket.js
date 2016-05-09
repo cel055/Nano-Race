@@ -23,17 +23,16 @@ function mensagemSocket(evento) {
         case "listaInicial":
             for (var i = 0, size = objJson.lista.length; i < size; i++) {
                 ControleFase.prototype.listaJogadores[objJson.lista[i].id] = objJson.lista[i];
-                ControleFase.prototype.listaJogadores[objJson.lista[i].id].carro = new Carro();
+                ControleFase.prototype.listaJogadores[objJson.lista[i].id].carro = new CarroSocket();
             }
             controleFase.inicia(objJson.id);
             break;
         case "novo":
-            if (!ControleFase.prototype.listaJogadores[objJson.jogador.id]) {
-                ControleFase.prototype.listaJogadores[objJson.jogador.id] = objJson.jogador;
-                ControleFase.prototype.colocaNovoCarroNaCena(ControleFase.prototype.listaJogadores[objJson.jogador.id]);
-            } else {
-                ControleFase.prototype.novaPosicao(objJson.jogador);
-            }
+            ControleFase.prototype.listaJogadores[objJson.jogador.id] = objJson.jogador;
+            ControleFase.prototype.colocaNovoCarroNaCena(ControleFase.prototype.listaJogadores[objJson.jogador.id]);
+            break;
+        case "novaPosicao":
+            ControleFase.prototype.novaPosicao(objJson);
     }
 }
 
