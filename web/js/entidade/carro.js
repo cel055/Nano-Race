@@ -66,22 +66,23 @@ var Carro = function () {
     };
 
     this.colisaoCarro = function (outroObj, velocidadeRelativa, rotacaoRelativa, contato) {
-//        _self.geoFisicaCarro.__dirtyRotation = true;
+//      if (outroObj.name !== "checkPoint" || outroObj.name !== "pistaLateral" || outroObj.name !== "pistaCurva" || outroObj.name !== "pistaVoltar" || outroObj.name !== "pistaCurvaVoltar" || outroObj.name !== "pistaMeio") {
+//         
+//           
+//      }
         _self.geoFisicaCarro.rotation.x = 0;
         _self.geoFisicaCarro.rotation.z = 0;
         if (outroObj.name === "checkPoint") {
             for (var i = 0, size = _self.fase.pista.listaCheckPoints.length; i < size; i++) {
                 if (outroObj == _self.fase.pista.listaCheckPoints[i]) {
                     if (_self.checkPointAtual == size - 1 && i == 0) {
-                        document.getElementById("voltas").innerHTML = "voltas: " + --volta + "/2";
+                        document.getElementById("voltas").innerHTML = "Laps: " + --volta + "/2";
                     }
                     _self.checkPointAtual = i;
-                    navigator.vibrate(100);
                     return;
                 }
             }
         }
-        
     };
 
     this.aceleraFrenteCarro = function () {

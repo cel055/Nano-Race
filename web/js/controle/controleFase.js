@@ -1,3 +1,5 @@
+/* global THREE */
+
 var ControleFase = function () {
     var _self = this;
     var checagem;
@@ -34,6 +36,7 @@ var ControleFase = function () {
 //            _self.listaJogadores[i].carro.fase = _self;
 //            _self.carro.carrega('modelos/' + _self.listaJogadores[i].nave + '.obj', 'modelos/' + _self.listaJogadores[i].nave + '.mtl');
 //        }
+        
         for (var prop in _self.listaJogadores) {
             _self.listaJogadores[prop].carro.fase = _self;
             _self.listaJogadores[prop].carro.carrega('modelos/' + _self.listaJogadores[prop].nave + '.obj', 'modelos/' + _self.listaJogadores[prop].nave + '.mtl');
@@ -103,20 +106,21 @@ var ControleFase = function () {
         _self.controls.enabled = true;
     }
     function startLap(_delta){
+        document.getElementById("contadorLargada").innerHTML = 'YOU READY?';
         var contador = document.getElementById("contadorLargada");
         switch(_delta){
             case 3:
-                contador.innerHTML = "<p>3</p>";
+                contador.innerHTML = "YOU READY?<p>3</p>";
              break;
              case 5:
-                contador.innerHTML = "<p>2</p>";
+                contador.innerHTML = "YOU READY?<p>2</p>";
              break;
              case 7:
-                contador.innerHTML = "<p>1</p>";
+                contador.innerHTML = "YOU READY?<p>1</p>";
              break;
              case 9:
                 contador.style.color = 'green';
-                contador.innerHTML = '<p>GO</p>';
+                contador.innerHTML = 'YOU READY?<p>GO</p>';
              break;
              case 10:
                  document.getElementById('largada').style.display = 'none';
@@ -126,10 +130,7 @@ var ControleFase = function () {
       
     }
     function colocaCarrosNaCena() {
-//        for (var i = 1, size = _self.listaJogadores.length; i <= size; i++) {
-//            _self.listaJogadores[i].carro.init(_self.posicaoInicial.x, _self.posicaoInicial.z - (i * 25));
-//            _self.cena.add(_self.listaJogadores[i].carro.geoFisicaCarro);
-//        }
+
         var i = 0;
         for (var prop in _self.listaJogadores) {
             if (_self.listaJogadores[prop].carro.init) {
@@ -151,8 +152,6 @@ var ControleFase = function () {
             socketSend(obj);
         }
 
-//        _self.carro.init(_self.posicaoInicial.x, _self.posicaoInicial.z - (_self.listaJogadores.length * 25));
-//        _self.cena.add(_self.carro.geoFisicaCarro);
     }
 
     function updateFisica() {
@@ -173,22 +172,23 @@ var ControleFase = function () {
     }
 
     function render() {
+       
         var delta = _self.clock.getElapsedTime();
          var largada = parseInt(delta);
          startLap(largada);
-        _self.cena.simulate(undefined, 1);
+        _self.cena.simulate();
         requestAnimationFrame(render);
         if (_self.carro.velocidade == 0) {
             document.getElementById('velocimetro').innerHTML = "kmH :  0";
         }
         
         for (var prop in _self.listaJogadores) {
+            if(_self.runCar === true){
             _self.listaJogadores[prop].carro.movimentoCarro();
+            }
+                
         }
-//        _self.carro.movimentoCarro();
-//        _self.carro.movimentoCarro();
-//        _self.carro.moveCarro();
-//         posiCamera();
+
         _self.controls.update();
         _self.renderizador.render(_self.cena, _self.camera);
     }
@@ -221,7 +221,7 @@ ControleFase.prototype = Object.create(Object.prototype, {
             var inter = setInterval(function () {
                 if (jsonJogador.carro.carregado) {
                     clearInterval(inter);
-                    jsonJogador.carro.initBase(__self.posicaoInicial.x, __self.posicaoInicial.z - (__self.listaJogadores.length * 25))
+                    jsonJogador.carro.initBase(__self.posicaoInicial.x, __self.posicaoInicial.z - (__self.listaJogadores.length * 25));
                     __self.cena.add(jsonJogador.carro.geoFisicaCarro);
                 }
             }, 10);
@@ -232,9 +232,6 @@ ControleFase.prototype = Object.create(Object.prototype, {
             var _c = ControleFase.prototype.listaJogadores[dadosJogador.id].carro;
             _c.velocidade = ControleFase.prototype.listaJogadores[dadosJogador.id].velocidade;
             _c.rotacao = ControleFase.prototype.listaJogadores[dadosJogador.id].rotacao;
-//            _c.geoFisicaCarro.__dirtyPosition = true;
-//            _c.geoFisicaCarro.__dirtyRotation = true;
-//            _c.geoFisicaCarro.position = new THREE.Vector3(dadosJogador.x, dadosJogador.y, dadosJogador.z)
         }
     }
 });

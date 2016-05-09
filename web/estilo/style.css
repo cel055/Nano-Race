@@ -89,7 +89,7 @@ body {
 }
 .detalhes-2 {
     margin: 0 auto;
-    max-width: 60%;
+    max-width: 400px;
     overflow: hidden;
     margin-top: 2%;
     font-size: 0.8em !important;

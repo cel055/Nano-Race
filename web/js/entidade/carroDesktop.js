@@ -6,8 +6,11 @@ var CarroDesktop = function () {
     this.init = function (x, z) {
         _self.teclado = new THREEx.KeyboardState();
         _self.initBase(x, z);
+        _self.fase.camera.rotation.y = _self.carro.rotation.y;
+        _self.fase.camera.rotation.x = _self.carro.rotation.x;
         _self.geoFisicaCarro.add(_self.fase.camera);
         _self.fase.camera.position.set(0, 8.5, -18);
+        
     };
 
     this.movimentoCarro = function () {
