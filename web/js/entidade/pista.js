@@ -140,18 +140,18 @@ var Pista = function () {
                 this.pistaMeio.position.z = this.pistaPosicaoZ + 300 * i;
                 this.pistaMeio.position.y = 0;
 
-                
-                 if(i >0){
-                _self.pistaComum.scale.x = 150;
-                _self.pistaComum.scale.z = 150;
-                this.pistaMeio.add(_self.pistaComum.clone());
+
+                if (i > 0) {
+                    _self.pistaComum.scale.x = 150;
+                    _self.pistaComum.scale.z = 150;
+                    this.pistaMeio.add(_self.pistaComum.clone());
                 }
                 else {
-                this.pistaMeio.name = "largada";
-                _self.pistaLargada.scale.x = 150;
-                _self.pistaLargada.scale.z = 150;
-                this.pistaMeio.add(_self.pistaLargada);
-                }   
+                    this.pistaMeio.name = "largada";
+                    _self.pistaLargada.scale.x = 150;
+                    _self.pistaLargada.scale.z = 150;
+                    this.pistaMeio.add(_self.pistaLargada);
+                }
                 _self.fase.cena.add(this.pistaMeio);
 
 
@@ -316,22 +316,36 @@ var Pista = function () {
             //_self.fase.cena.add(this.curvaParteD);
         }
     };
+
+    this.criaCheckPointCurva = function () {
+        var inicioCurva, fimCurva;
+        inicioCurva = new Physijs.BoxMesh(
+                new THREE.BoxGeometry(_x, 1, 1),
+                new THREE.MeshPhongMaterial({
+                    ambient: 0x333333,
+                    opacity: 0.9,
+                    transparent: true,
+                    side: THREE.DoubleSide,
+                    visible: false
+                }));
+    };
+
     this.init = function () {
         var listener = new THREE.AudioListener();
         _self.fase.camera.add(listener);
-         var sound1 = new THREE.Audio(listener);
-             sound1.load('sound-music/sound-track.mp3');
-        
-        sound1.setRefDistance( 1 );
-            sound1.autoplay = true;
-            sound1.setLoop(true);
-            sound1.setVolume(1000);
-            //_self.fase.cena.add(sound1);
-       
+        var sound1 = new THREE.Audio(listener);
+        sound1.load('sound-music/sound-track.mp3');
+
+        sound1.setRefDistance(1);
+        sound1.autoplay = true;
+        sound1.setLoop(true);
+        sound1.setVolume(1000);
+        //_self.fase.cena.add(sound1);
+
         var mundo = new THREE.Mesh(_self.geometria, _self.material);
         mundo.position.set(1900, 0, 200);
         mundo.scale.set(110, 110, 110);
-        
+
         _self.fase.cena.add(mundo);
         var chaoMeshPhisica = new Physijs.createMaterial(new THREE.MeshPhongMaterial({
             ambient: 0x333333,
