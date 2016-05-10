@@ -41,7 +41,11 @@ var ControleFase = function () {
             _self.listaJogadores[prop].carro.fase = _self;
             _self.listaJogadores[prop].carro.carrega('modelos/' + _self.listaJogadores[prop].nave + '.obj', 'modelos/' + _self.listaJogadores[prop].nave + '.mtl');
         }
-        _self.carro = new CarroDesktop();
+        if (eMobile) {
+            _self.carro = new CarroMobile();
+        } else {
+            _self.carro = new CarroDesktop();
+        }
         _self.carro.fase = _self;
         _self.carro.id = _id;
         _self.listaJogadores[_id] = {

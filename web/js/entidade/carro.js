@@ -1,6 +1,6 @@
 var Carro = function () {
     var _self = this;
-    var volta = 2;
+    var volta = 1;
     this.id;
     this.fase;
     this.checkPointAtual = 0;
@@ -76,7 +76,7 @@ var Carro = function () {
             for (var i = 0, size = _self.fase.pista.listaCheckPoints.length; i < size; i++) {
                 if (outroObj == _self.fase.pista.listaCheckPoints[i]) {
                     if (_self.checkPointAtual == size - 1 && i == 0) {
-                        document.getElementById("voltas").innerHTML = "Laps: " + --volta + "/2";
+                        document.getElementById("voltas").innerHTML = "Laps: " + --volta + "/1";
                     }
                     _self.checkPointAtual = i;
                     return;
