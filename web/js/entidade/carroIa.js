@@ -7,7 +7,6 @@ var CarroIa = function(){
   
   this.colisaoCarro = function (outroObj, velocidadeRelativa, rotacaoRelativa, contato){
      if (outroObj.name === "checkPoint") {
-         alert("nois e foda");
             for (var i = 0, size = _self.fase.pista.listaCheckPoints.length; i < size; i++) {
                 if (outroObj == _self.fase.pista.listaCheckPoints[i]) {
                     if (_self.checkPointAtual == size - 1 && i == 0) {

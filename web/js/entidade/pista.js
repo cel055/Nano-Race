@@ -15,56 +15,82 @@ var Pista = function () {
     this.posiCarroX = 1325;
     this.posiCarroZ = -1605;
     this.listaCheckPoints = [];
+    
     this.carrega = function () {
         var loader = new THREE.OBJMTLLoader();
-        loader.load("modelos/pista.obj", "modelos/pista.mtl",
+        loader.load(
+                "modelos/pista.obj",
+                "modelos/pista.mtl",
                 function (object) {
                     _self.pista = object;
-                    _self.pista.traverse(function (child) {
-                        //child.castShadow = true;
-                        child.receiveShadow = true;
-                    });
+                    _self.pista.traverse(
+                            function (child) {
+                                //child.castShadow = true;
+                                child.receiveShadow = true;
+                            }
+                    );
                     _self.carregado = true;
-                });
+                }
+        );
         //criando o gerador da pista
         var pistaN = new THREE.OBJMTLLoader();
-        pistaN.load("modelos/pistacomum.obj", "modelos/pistacomum.mtl",
+        pistaN.load(
+                "modelos/pistacomum.obj",
+                "modelos/pistacomum.mtl",
                 function (object) {
                     _self.pistaComum = object;
-                    _self.pistaComum.traverse(function (child) {
-                        //child.castShadow = true;
-                        child.receiveShadow = true;
-                    });
+                    _self.pistaComum.traverse(
+                            function (child) {
+                                //child.castShadow = true;
+                                child.receiveShadow = true;
+                            }
+                    );
                     _self.carregadoN = true;
-                });
+                }
+        );
         var pistaL = new THREE.OBJMTLLoader();
-        pistaL.load("modelos/largada.obj", "modelos/largada.mtl",
+        pistaL.load(
+                "modelos/largada.obj",
+                "modelos/largada.mtl",
                 function (object) {
                     _self.pistaLargada = object;
-                    _self.pistaLargada.traverse(function (child) {
-                        //child.castShadow = true;
-                        child.receiveShadow = true;
-                    });
+                    _self.pistaLargada.traverse(
+                            function (child) {
+                                //child.castShadow = true;
+                                child.receiveShadow = true;
+                            }
+                    );
                     _self.carregadoL = true;
-                });
+                }
+        );
         var pistaC = new THREE.OBJMTLLoader();
-        pistaC.load("modelos/curva.obj", "modelos/curva.mtl",
+        pistaC.load(
+                "modelos/curva.obj",
+                "modelos/curva.mtl",
                 function (object) {
                     _self.pistaCurvaN = object;
-                    _self.pistaCurvaN.traverse(function (child) {
-                        child.receiveShadow = true;
-                    });
+                    _self.pistaCurvaN.traverse(
+                            function (child) {
+                                child.receiveShadow = true;
+                            }
+                    );
                     _self.carregadoC = true;
-                });
+                }
+        );
         var pistaS = new THREE.OBJMTLLoader();
-        pistaS.load("modelos/jumparea.obj", "modelos/jumparea.mtl",
+        pistaS.load(
+                "modelos/jumparea.obj",
+                "modelos/jumparea.mtl",
                 function (object) {
                     _self.pistaJump = object;
-                    _self.pistaJump.traverse(function (child) {
-                        child.receiveShadow = true;
-                    });
+                    _self.pistaJump.traverse(
+                            function (child) {
+                                child.receiveShadow = true;
+                            }
+                    );
                     _self.carregadoJ = true;
-                });
+                }
+        );
         //  criando o mundo ao redor
         _self.geometria = new THREE.SphereGeometry(50, 40, 40);
         _self.imagem = new THREE.ImageUtils.loadTexture('imagens/fundospecial.png');
@@ -79,6 +105,7 @@ var Pista = function () {
         });
 
     };
+    
     this.points = function (_posicaoCheck, _nomePista) {
         this.materialChekpoint = new Physijs.createMaterial(new THREE.MeshPhongMaterial({
             ambient: 0x000fff,
@@ -126,10 +153,28 @@ var Pista = function () {
                 break;
         }
     };
+    
     this.criaPista = function (_x, _y, _z, _posicaoInicialX, _posicaoInicialZ, _nomePista, _nomeMaterial, _tamanhoPista, _direcao, _direcaoY) {
         //1325 / -1640
+        var matInicio = new Physijs.createMaterial(new THREE.MeshPhongMaterial({
+            ambient: 0xFF0000,
+            //shading: THREE.SmoothShading,
+            opacity: 0.5,
+            transparent: true
+//            side: THREE.DoubleSide,
+//            visible: false
+                    //anisotropy: 5
+        }));
+        var matFim = new Physijs.createMaterial(new THREE.MeshPhongMaterial({
+            ambient: 0x0000FF,
+            //shading: THREE.SmoothShading,
+            opacity: 0.9
+//            transparent: true,
+//            side: THREE.DoubleSide,
+//            visible: false
+                    //anisotropy: 5
+        }));
         if (_nomePista === "pistaMeio") {
-
             for (var i = 0; i < _tamanhoPista; i++) {
                 this.pistaPosicaoX = _posicaoInicialX;
                 this.pistaPosicaoZ = _posicaoInicialZ;
@@ -162,7 +207,8 @@ var Pista = function () {
             this.referenciaZ = this.pistaMeio.position.z;
         }
         if (_nomePista === "pistaCurva") {
-            this.pistaCurva = new Physijs.BoxMesh(new THREE.BoxGeometry(_x, _y, _z), _nomeMaterial.clone(), 0);
+            this.pistaCurva = new Physijs.BoxMesh(new THREE.BoxGeometry(_x, _y, _z), matInicio, 0);
+//            this.pistaCurva = new Physijs.BoxMesh(new THREE.BoxGeometry(_x, _y, _z), _nomeMaterial.clone(), 0);
             _self.localDaCurva = this.pistaMeio.position.z;
             //this.pistaCurva.visible = true;
             var direcao;
@@ -181,7 +227,8 @@ var Pista = function () {
             _self.pistaCurvaN.scale.z = 150;
             this.pistaCurva.add(_self.pistaCurvaN);
             _self.fase.cena.add(this.pistaCurva);
-            this.curvaParteD = new Physijs.BoxMesh(new THREE.BoxGeometry(450, 1, 450), _nomeMaterial.clone(), 0);
+            this.curvaParteD = new Physijs.BoxMesh(new THREE.BoxGeometry(450, 3, 450), matFim, 0);
+//            this.curvaParteD = new Physijs.BoxMesh(new THREE.BoxGeometry(450, 1, 450), _nomeMaterial.clone(), 0);
             this.curvaParteD.position.x = this.pistaCurva.position.x + 78;
             this.curvaParteD.position.z = this.pistaCurva.position.z + 140;
             _self.fase.cena.add(this.curvaParteD);
@@ -225,7 +272,8 @@ var Pista = function () {
             this.referenciaZ = this.pistaMeio.position.z;
         }
         if (_nomePista === "curvaDois") {
-            this.pistaCurva = new Physijs.BoxMesh(new THREE.BoxGeometry(_x, _y, _z), _nomeMaterial.clone(), 0);
+            this.pistaCurva = new Physijs.BoxMesh(new THREE.BoxGeometry(_x, _y, _z), matInicio, 0);
+//            this.pistaCurva = new Physijs.BoxMesh(new THREE.BoxGeometry(_x, _y, _z), _nomeMaterial.clone(), 0);
             var direcao;
             var distancia;
             var ajuste = 0;
@@ -251,7 +299,8 @@ var Pista = function () {
             this.pistaCurva.rotation.y = -90 * Math.PI / 180 * direcao;
             this.pistaCurva.position.x = this.referenciaX + 300 * distancia + ajuste;
             this.pistaCurva.add(_self.pistaCurvaN.clone());
-            this.curvaParteD = new Physijs.BoxMesh(new THREE.BoxGeometry(450, 0, 350), _nomeMaterial.clone(), 0);
+//            this.curvaParteD = new Physijs.BoxMesh(new THREE.BoxGeometry(450, 0, 350), _nomeMaterial.clone(), 0);
+            this.curvaParteD = new Physijs.BoxMesh(new THREE.BoxGeometry(450, 0, 350), matFim, 0);
             this.curvaParteD.position.x = -75;
             this.curvaParteD.position.z = -120;
             this.pistaCurva.add(this.curvaParteD);
