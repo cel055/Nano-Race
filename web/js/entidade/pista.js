@@ -1,10 +1,9 @@
-/* global THREE, Physijs */
-
 var Pista = function () {
     document.body.style.cursor = 'none';
+    this.posicaoInicialPista = {x: 1325, z: -1640};
     var _self = this;
     this.pista;
-    this.pistaN;
+    this.carregado = false;
     this.fase;
     this.init;
     this.solo;
@@ -15,24 +14,18 @@ var Pista = function () {
     this.posiCarroX = 1325;
     this.posiCarroZ = -1605;
     this.listaCheckPoints = [];
-    
+    var carregadoN = false;
+    var carregadoL = false;
+    var carregadoC = false;
+    var meshParaFisica;
+
     this.carrega = function () {
-        var loader = new THREE.OBJMTLLoader();
-        loader.load(
-                "modelos/pista.obj",
-                "modelos/pista.mtl",
-                function (object) {
-                    _self.pista = object;
-                    _self.pista.traverse(
-                            function (child) {
-                                //child.castShadow = true;
-                                child.receiveShadow = true;
-                            }
-                    );
-                    _self.carregado = true;
-                }
-        );
-        //criando o gerador da pista
+        var intervalo = setInterval(function () {
+            if (carregadoN && carregadoL && carregadoC) {
+                clearInterval(intervalo);
+                _self.carregado = true;
+            }
+        }, 50);
         var pistaN = new THREE.OBJMTLLoader();
         pistaN.load(
                 "modelos/pistacomum.obj",
@@ -45,7 +38,7 @@ var Pista = function () {
                                 child.receiveShadow = true;
                             }
                     );
-                    _self.carregadoN = true;
+                    carregadoN = true;
                 }
         );
         var pistaL = new THREE.OBJMTLLoader();
@@ -60,7 +53,7 @@ var Pista = function () {
                                 child.receiveShadow = true;
                             }
                     );
-                    _self.carregadoL = true;
+                    carregadoL = true;
                 }
         );
         var pistaC = new THREE.OBJMTLLoader();
@@ -74,21 +67,7 @@ var Pista = function () {
                                 child.receiveShadow = true;
                             }
                     );
-                    _self.carregadoC = true;
-                }
-        );
-        var pistaS = new THREE.OBJMTLLoader();
-        pistaS.load(
-                "modelos/jumparea.obj",
-                "modelos/jumparea.mtl",
-                function (object) {
-                    _self.pistaJump = object;
-                    _self.pistaJump.traverse(
-                            function (child) {
-                                child.receiveShadow = true;
-                            }
-                    );
-                    _self.carregadoJ = true;
+                    carregadoC = true;
                 }
         );
         //  criando o mundo ao redor
@@ -105,7 +84,7 @@ var Pista = function () {
         });
 
     };
-    
+
     this.points = function (_posicaoCheck, _nomePista) {
         this.materialChekpoint = new Physijs.createMaterial(new THREE.MeshPhongMaterial({
             ambient: 0x000fff,
@@ -153,27 +132,9 @@ var Pista = function () {
                 break;
         }
     };
-    
+
     this.criaPista = function (_x, _y, _z, _posicaoInicialX, _posicaoInicialZ, _nomePista, _nomeMaterial, _tamanhoPista, _direcao, _direcaoY) {
         //1325 / -1640
-        var matInicio = new Physijs.createMaterial(new THREE.MeshPhongMaterial({
-            ambient: 0xFF0000,
-            //shading: THREE.SmoothShading,
-            opacity: 0.5,
-            transparent: true
-//            side: THREE.DoubleSide,
-//            visible: false
-                    //anisotropy: 5
-        }));
-        var matFim = new Physijs.createMaterial(new THREE.MeshPhongMaterial({
-            ambient: 0x0000FF,
-            //shading: THREE.SmoothShading,
-            opacity: 0.9
-//            transparent: true,
-//            side: THREE.DoubleSide,
-//            visible: false
-                    //anisotropy: 5
-        }));
         if (_nomePista === "pistaMeio") {
             for (var i = 0; i < _tamanhoPista; i++) {
                 this.pistaPosicaoX = _posicaoInicialX;
@@ -207,8 +168,8 @@ var Pista = function () {
             this.referenciaZ = this.pistaMeio.position.z;
         }
         if (_nomePista === "pistaCurva") {
-            this.pistaCurva = new Physijs.BoxMesh(new THREE.BoxGeometry(_x, _y, _z), matInicio, 0);
-//            this.pistaCurva = new Physijs.BoxMesh(new THREE.BoxGeometry(_x, _y, _z), _nomeMaterial.clone(), 0);
+//            this.pistaCurva = new Physijs.BoxMesh(new THREE.BoxGeometry(_x, _y, _z), matInicio, 0);
+            this.pistaCurva = new Physijs.BoxMesh(new THREE.BoxGeometry(_x, _y, _z), _nomeMaterial.clone(), 0);
             _self.localDaCurva = this.pistaMeio.position.z;
             //this.pistaCurva.visible = true;
             var direcao;
@@ -227,8 +188,8 @@ var Pista = function () {
             _self.pistaCurvaN.scale.z = 150;
             this.pistaCurva.add(_self.pistaCurvaN);
             _self.fase.cena.add(this.pistaCurva);
-            this.curvaParteD = new Physijs.BoxMesh(new THREE.BoxGeometry(450, 3, 450), matFim, 0);
-//            this.curvaParteD = new Physijs.BoxMesh(new THREE.BoxGeometry(450, 1, 450), _nomeMaterial.clone(), 0);
+//            this.curvaParteD = new Physijs.BoxMesh(new THREE.BoxGeometry(450, 3, 450), matFim, 0);
+            this.curvaParteD = new Physijs.BoxMesh(new THREE.BoxGeometry(450, 1, 450), _nomeMaterial.clone(), 0);
             this.curvaParteD.position.x = this.pistaCurva.position.x + 78;
             this.curvaParteD.position.z = this.pistaCurva.position.z + 140;
             _self.fase.cena.add(this.curvaParteD);
@@ -272,8 +233,8 @@ var Pista = function () {
             this.referenciaZ = this.pistaMeio.position.z;
         }
         if (_nomePista === "curvaDois") {
-            this.pistaCurva = new Physijs.BoxMesh(new THREE.BoxGeometry(_x, _y, _z), matInicio, 0);
-//            this.pistaCurva = new Physijs.BoxMesh(new THREE.BoxGeometry(_x, _y, _z), _nomeMaterial.clone(), 0);
+//            this.pistaCurva = new Physijs.BoxMesh(new THREE.BoxGeometry(_x, _y, _z), matInicio, 0);
+            this.pistaCurva = new Physijs.BoxMesh(new THREE.BoxGeometry(_x, _y, _z), _nomeMaterial.clone(), 0);
             var direcao;
             var distancia;
             var ajuste = 0;
@@ -299,8 +260,8 @@ var Pista = function () {
             this.pistaCurva.rotation.y = -90 * Math.PI / 180 * direcao;
             this.pistaCurva.position.x = this.referenciaX + 300 * distancia + ajuste;
             this.pistaCurva.add(_self.pistaCurvaN.clone());
-//            this.curvaParteD = new Physijs.BoxMesh(new THREE.BoxGeometry(450, 0, 350), _nomeMaterial.clone(), 0);
-            this.curvaParteD = new Physijs.BoxMesh(new THREE.BoxGeometry(450, 0, 350), matFim, 0);
+            this.curvaParteD = new Physijs.BoxMesh(new THREE.BoxGeometry(450, 0, 350), _nomeMaterial.clone(), 0);
+//            this.curvaParteD = new Physijs.BoxMesh(new THREE.BoxGeometry(450, 0, 350), matFim, 0);
             this.curvaParteD.position.x = -75;
             this.curvaParteD.position.z = -120;
             this.pistaCurva.add(this.curvaParteD);
@@ -366,19 +327,6 @@ var Pista = function () {
         }
     };
 
-    this.criaCheckPointCurva = function () {
-        var inicioCurva, fimCurva;
-        inicioCurva = new Physijs.BoxMesh(
-                new THREE.BoxGeometry(_x, 1, 1),
-                new THREE.MeshPhongMaterial({
-                    ambient: 0x333333,
-                    opacity: 0.9,
-                    transparent: true,
-                    side: THREE.DoubleSide,
-                    visible: false
-                }));
-    };
-
     this.init = function () {
         var listener = new THREE.AudioListener();
         _self.fase.camera.add(listener);
@@ -396,14 +344,15 @@ var Pista = function () {
         mundo.scale.set(110, 110, 110);
 
         _self.fase.cena.add(mundo);
+        meshParaFisica = new THREE.MeshPhongMaterial({
+            ambient: 0x333333,
+            opacity: 0,
+            transparent: true
+        });
         var chaoMeshPhisica = new Physijs.createMaterial(new THREE.MeshPhongMaterial({
             ambient: 0x333333,
-            //shading: THREE.SmoothShading,
-            opacity: 0.9,
-            transparent: true,
-            side: THREE.DoubleSide,
-            visible: false
-                    //anisotropy: 5
+            opacity: 0,
+            transparent: true
         }));
 
         this.criaPista(300, 1, 300, 1325, -1640, "pistaMeio", chaoMeshPhisica, 20);
@@ -424,6 +373,33 @@ var Pista = function () {
         this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "pistaCurvaVoltar", chaoMeshPhisica, 1, "esquerda", "cima");
         this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "pistaVoltar", chaoMeshPhisica, 5, 'direita', "cima");
 
+    };
+
+    this.criaObjDerTodaPista = function () {
+        this.pista = new Physijs.BoxMesh(new THREE.BoxGeometry(0, 0, 0), new Physijs.createMaterial(meshParaFisica, 0, 0), 0);
+    };
+
+    this.criaLargada = function () {
+        var p = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 300), new Physijs.createMaterial(meshParaFisica, 0, 0), 0);
+        p.add(_self.pistaLargada);
+        this.pista.add(p);
+    };
+
+    this.criaReta = function (inicioX, inicioY, repeticao) {
+
+    };
+
+    this.criaCheckPointCurva = function () {
+        var inicioCurva, fimCurva;
+        inicioCurva = new Physijs.BoxMesh(
+                new THREE.BoxGeometry(_x, 1, 1),
+                new THREE.MeshPhongMaterial({
+                    ambient: 0x333333,
+                    opacity: 0.9,
+                    transparent: true,
+                    side: THREE.DoubleSide,
+                    visible: false
+                }));
     };
 
 };

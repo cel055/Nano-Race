@@ -71,7 +71,7 @@ var ControleFase = function () {
                 return;
             }
         }
-        if (_self.pista.carregado == true && _self.pista.carregadoN == true && _self.pista.carregadoL == true && _self.pista.carregadoC == true && luzCarregado == true && _self.carro.carregado == true && _self.pista.carregadoJ) {
+        if (_self.pista.carregado == true && luzCarregado == true && _self.carro.carregado == true) {
             clearInterval(checagem);
             init();
         }
@@ -84,7 +84,7 @@ var ControleFase = function () {
 
     function init() {
         _self.cena = new Physijs.Scene();
-        _self.cena.setGravity(new THREE.Vector3(0, -200, 0));
+        _self.cena.setGravity(new THREE.Vector3(0, -500, 0));
         _self.cena.addEventListener("update", updateFisica);
         _self.camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 10000);
         _self.renderizador = new THREE.WebGLRenderer({clearColor: 0xff8844, clearAlpha: 0.0, alpha: true, antialias: true});

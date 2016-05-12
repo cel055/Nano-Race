@@ -49,7 +49,7 @@ var Carro = function () {
             transparent: true,
             visible: false
         }));
-        _self.geoFisicaCarro = new Physijs.BoxMesh(new THREE.BoxGeometry(6, 2, 6), materialFisicaCarro, 100);
+        _self.geoFisicaCarro = new Physijs.BoxMesh(new THREE.BoxGeometry(6, 2, 6), materialFisicaCarro, 200);
         _self.geoFisicaCarro.visible = true;
         _self.geoFisicaCarro.name = "carro";
         _self.geoFisicaCarro.position.set(x, 10, z);
