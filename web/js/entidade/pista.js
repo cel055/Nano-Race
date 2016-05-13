@@ -159,8 +159,7 @@ var Pista = function () {
                     _self.pistaComum.scale.x = 150;
                     _self.pistaComum.scale.z = 150;
                     this.pistaMeio.add(_self.pistaComum.clone());
-                }
-                else {
+                } else {
                     this.pistaMeio.name = "largada";
                     _self.pistaLargada.scale.x = 150;
                     _self.pistaLargada.scale.z = 150;
@@ -212,8 +211,7 @@ var Pista = function () {
                 if (_direcao === "direita") {
                     direcao = -1;
                     correcao = 300;
-                }
-                else {
+                } else {
                     direcao = 1;
                     correcao = 0;
                     if (_direcaoY === "baixo") {
@@ -257,8 +255,7 @@ var Pista = function () {
                 direcao = -2;
                 distancia = -1;
                 ajuste = -150;
-            }
-            else {
+            } else {
                 direcao = 1;
                 distancia = 1;
             }
@@ -354,7 +351,7 @@ var Pista = function () {
         _self.fase.cena.add(mundo);
         meshParaFisica = new THREE.MeshPhongMaterial({
             ambient: 0x333333,
-            opacity: 0.9,
+            opacity: 0.5,
             transparent: true
         });
         var chaoMeshPhisica = new Physijs.createMaterial(new THREE.MeshPhongMaterial({
@@ -385,6 +382,12 @@ var Pista = function () {
         criaLargada();
         criaReta(19);
         criaCurva(SENTIDO_O);
+        criaReta(2);
+        criaCurva(SENTIDO_S);
+        criaReta(20);
+        criaCurva(SENTIDO_L);
+        criaReta(2);
+        criaCurva(SENTIDO_N)
         _self.pista.position.y = 50;
         _self.pista.position.z = posicaoInicialPista.z;
         _self.pista.position.x = posicaoInicialPista.x;
@@ -419,7 +422,7 @@ var Pista = function () {
 
     function criaCurva(direcao) {
         var inicio = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 300), new Physijs.createMaterial(meshParaFisica.clone(), 0, 0), 0);
-        var fim = new Physijs.BoxMesh(new THREE.BoxGeometry(450, 1, 450), new Physijs.createMaterial(meshParaFisica.clone(), 0, 0), 0);
+        var fim = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 450), new Physijs.createMaterial(meshParaFisica.clone(), 0, 0), 0);
 
         inicio.position.x = ultimaPosicao.x;
         inicio.position.y = 0;
@@ -427,16 +430,67 @@ var Pista = function () {
         inicio.rotation.y = sentidoAtual;
         mudaPosicaoAtual();
 
+        switch (direcao) {
+            case SENTIDO_N:
+                if (sentidoAtual == SENTIDO_L) {
+                    fim.position.x = 75;
+                    fim.position.z = -150;
+                    ultimaPosicao.z += 150;
+                    ultimaPosicao.x -= 450;
+                } else {
+                    fim.position.x = -75;
+                    fim.position.z = 150;
+                    ultimaPosicao.z += 150;
+                    ultimaPosicao.x -= 450;
+                }
+                break;
+            case SENTIDO_S:
+                if (sentidoAtual == SENTIDO_L) {
+                    fim.position.x = -75;
+                    fim.position.z = 150;
+                    ultimaPosicao.z -= 150;
+                    ultimaPosicao.x -= 450;
+                } else {
+                    fim.position.x = -75;
+                    fim.position.z = -150;
+                    ultimaPosicao.z -= 450;
+                    ultimaPosicao.x -= 150;
+                }
+                break;
+            case SENTIDO_L:
+                if (sentidoAtual == SENTIDO_N) {
+                    fim.position.x = -75;
+                    fim.position.z = 150;
+                    ultimaPosicao.z -= 150;
+                    ultimaPosicao.x -= 450;
+                } else {
+                    fim.position.x = -75;
+                    fim.position.z = -150;
+                    ultimaPosicao.z += 150;
+                    ultimaPosicao.x -= 450;
+                }
+                break;
+            case SENTIDO_O:
+                if (sentidoAtual == SENTIDO_N) {
+                    fim.position.x = 75;
+                    fim.position.z = 150;
+                    ultimaPosicao.z -= 150;
+                    ultimaPosicao.x += 450;
+                } else {
+                    fim.position.x = 75;
+                    fim.position.z = -150;
+                    ultimaPosicao.z += 450;
+                    ultimaPosicao.x -= 150;
+                }
+                break;
+        }
         sentidoAtual = direcao;
-        fim.position.x = ultimaPosicao.x;
         fim.position.y = 0;
-        fim.position.z = ultimaPosicao.z;
         fim.rotation.y = sentidoAtual;
         inicio.add(fim);
-        mudaPosicaoAtual();
 
         var clone = _self.pistaCurvaN.clone();
-//        clone.rotation.y = sentidoAtual;
+        clone.rotation.y = sentidoAtual;
         inicio.add(clone);
         _self.pista.add(inicio);
     }
@@ -463,10 +517,10 @@ var Pista = function () {
                 ultimaPosicao.z -= 300;
                 break;
             case SENTIDO_L:
-                ultimaPosicao.x += 300;
+                ultimaPosicao.x -= 300;
                 break;
             case SENTIDO_O:
-                ultimaPosicao.x -= 300;
+                ultimaPosicao.x += 300;
                 break;
         }
 
