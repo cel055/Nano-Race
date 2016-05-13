@@ -1,6 +1,12 @@
 var Pista = function () {
     document.body.style.cursor = 'none';
-    this.posicaoInicialPista = {x: 1325, z: -1640};
+    var posicaoInicialPista = {x: 1325, z: -1640};
+    this.posicaoInicialCarro = {x: 1325, z: -1605};
+    var SENTIDO_N = 0;
+    var SENTIDO_S = 180 * Math.PI / 180;
+    var SENTIDO_L = 90 * Math.PI / 180;
+    var SENTIDO_O = -90 * Math.PI / 180;
+    var sentidoAtual = SENTIDO_N;
     var _self = this;
     this.pista;
     this.carregado = false;
@@ -18,6 +24,7 @@ var Pista = function () {
     var carregadoL = false;
     var carregadoC = false;
     var meshParaFisica;
+    var ultimaPosicao = {x: 0, z: 0};
 
     this.carrega = function () {
         var intervalo = setInterval(function () {
@@ -67,6 +74,7 @@ var Pista = function () {
                                 child.receiveShadow = true;
                             }
                     );
+                    _self.pistaCurvaN.rotation.y = SENTIDO_S;
                     carregadoC = true;
                 }
         );
@@ -346,7 +354,7 @@ var Pista = function () {
         _self.fase.cena.add(mundo);
         meshParaFisica = new THREE.MeshPhongMaterial({
             ambient: 0x333333,
-            opacity: 0,
+            opacity: 0.9,
             transparent: true
         });
         var chaoMeshPhisica = new Physijs.createMaterial(new THREE.MeshPhongMaterial({
@@ -373,21 +381,65 @@ var Pista = function () {
         this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "pistaCurvaVoltar", chaoMeshPhisica, 1, "esquerda", "cima");
         this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "pistaVoltar", chaoMeshPhisica, 5, 'direita', "cima");
 
+        criaObjDeTodaPista();
+        criaLargada();
+        criaReta(19);
+        criaCurva(SENTIDO_O);
+        _self.pista.position.y = 50;
+        _self.pista.position.z = posicaoInicialPista.z;
+        _self.pista.position.x = posicaoInicialPista.x;
+        _self.fase.cena.add(_self.pista);
     };
 
-    this.criaObjDerTodaPista = function () {
-        this.pista = new Physijs.BoxMesh(new THREE.BoxGeometry(0, 0, 0), new Physijs.createMaterial(meshParaFisica, 0, 0), 0);
-    };
+    function criaObjDeTodaPista() {
+        _self.pista = new Physijs.BoxMesh(new THREE.BoxGeometry(0, 0, 0), new Physijs.createMaterial(meshParaFisica.clone(), 0, 0), 0);
+    }
 
-    this.criaLargada = function () {
-        var p = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 300), new Physijs.createMaterial(meshParaFisica, 0, 0), 0);
-        p.add(_self.pistaLargada);
-        this.pista.add(p);
-    };
+    function criaLargada() {
+        var p = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 300), new Physijs.createMaterial(meshParaFisica.clone(), 0, 0), 0);
+        p.add(_self.pistaLargada.clone());
+        p.position = {x: ultimaPosicao.x, y: 0, z: ultimaPosicao.z};
+        _self.pista.add(p);
+        mudaPosicaoAtual();
+    }
 
-    this.criaReta = function (inicioX, inicioY, repeticao) {
+    function criaReta(repeticao) {
+        var p;
+        for (var i = 0; i < repeticao; i++) {
+            p = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 300), new Physijs.createMaterial(meshParaFisica.clone(), 0, 0), 0);
+            p.add(_self.pistaComum.clone());
+            p.position.x = ultimaPosicao.x;
+            p.position.y = 0;
+            p.position.z = ultimaPosicao.z;
+            p.rotation.y = sentidoAtual;
+            _self.pista.add(p);
+            mudaPosicaoAtual();
+        }
+    }
 
-    };
+    function criaCurva(direcao) {
+        var inicio = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 300), new Physijs.createMaterial(meshParaFisica.clone(), 0, 0), 0);
+        var fim = new Physijs.BoxMesh(new THREE.BoxGeometry(450, 1, 450), new Physijs.createMaterial(meshParaFisica.clone(), 0, 0), 0);
+
+        inicio.position.x = ultimaPosicao.x;
+        inicio.position.y = 0;
+        inicio.position.z = ultimaPosicao.z;
+        inicio.rotation.y = sentidoAtual;
+        mudaPosicaoAtual();
+
+        sentidoAtual = direcao;
+        fim.position.x = ultimaPosicao.x;
+        fim.position.y = 0;
+        fim.position.z = ultimaPosicao.z;
+        fim.rotation.y = sentidoAtual;
+        inicio.add(fim);
+        mudaPosicaoAtual();
+
+        var clone = _self.pistaCurvaN.clone();
+//        clone.rotation.y = sentidoAtual;
+        inicio.add(clone);
+        _self.pista.add(inicio);
+    }
 
     this.criaCheckPointCurva = function () {
         var inicioCurva, fimCurva;
@@ -401,5 +453,23 @@ var Pista = function () {
                     visible: false
                 }));
     };
+
+    function mudaPosicaoAtual() {
+        switch (sentidoAtual) {
+            case SENTIDO_N:
+                ultimaPosicao.z += 300;
+                break;
+            case SENTIDO_S:
+                ultimaPosicao.z -= 300;
+                break;
+            case SENTIDO_L:
+                ultimaPosicao.x += 300;
+                break;
+            case SENTIDO_O:
+                ultimaPosicao.x -= 300;
+                break;
+        }
+
+    }
 
 };
