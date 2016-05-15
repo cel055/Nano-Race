@@ -45,6 +45,8 @@ var Pista = function () {
                                 child.receiveShadow = true;
                             }
                     );
+                    _self.pistaComum.scale.x = 150;
+                    _self.pistaComum.scale.z = 150;
                     carregadoN = true;
                 }
         );
@@ -60,6 +62,8 @@ var Pista = function () {
                                 child.receiveShadow = true;
                             }
                     );
+                    _self.pistaLargada.scale.x = 150;
+                    _self.pistaLargada.scale.z = 150;
                     carregadoL = true;
                 }
         );
@@ -75,6 +79,8 @@ var Pista = function () {
                             }
                     );
                     _self.pistaCurvaN.rotation.y = SENTIDO_S;
+                    _self.pistaCurvaN.scale.x = 150;
+                    _self.pistaCurvaN.scale.z = 150;
                     carregadoC = true;
                 }
         );
@@ -351,44 +357,53 @@ var Pista = function () {
         _self.fase.cena.add(mundo);
         meshParaFisica = new THREE.MeshPhongMaterial({
             ambient: 0x333333,
-            opacity: 0.5,
-            transparent: true
-        });
-        var chaoMeshPhisica = new Physijs.createMaterial(new THREE.MeshPhongMaterial({
-            ambient: 0x333333,
             opacity: 0,
             transparent: true
-        }));
-
-        this.criaPista(300, 1, 300, 1325, -1640, "pistaMeio", chaoMeshPhisica, 20);
-        this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "pistaCurva", chaoMeshPhisica, 20);
-        this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "pistaLateral", chaoMeshPhisica, 10);
-        this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "curvaDois", chaoMeshPhisica, 10);
-        this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "pistaVoltar", chaoMeshPhisica, 3);
-        this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "pistaCurvaVoltar", chaoMeshPhisica, 4);
-        this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "pistaLateral", chaoMeshPhisica, 5, "direita", "cima");
-        this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "curvaDois", chaoMeshPhisica, 1, "direita", "baixo");
-        this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "pistaVoltar", chaoMeshPhisica, 10, "direita");
-        this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "pistaCurvaVoltar", chaoMeshPhisica, 1, "esquerda");
-        this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "pistaLateral", chaoMeshPhisica, 4, "esquerda", "baixo");
-        this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "curvaDois", chaoMeshPhisica, 1);
-        this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "pistaVoltar", chaoMeshPhisica, 8);
-        this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "pistaCurvaVoltar", chaoMeshPhisica, 6);
-        this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "pistaLateral", chaoMeshPhisica, 9, "direita", "cima");
-        this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "pistaCurvaVoltar", chaoMeshPhisica, 1, "esquerda", "cima");
-        this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "pistaVoltar", chaoMeshPhisica, 5, 'direita', "cima");
+        });
+//        var chaoMeshPhisica = new Physijs.createMaterial(new THREE.MeshPhongMaterial({
+//            ambient: 0x333333,
+//            opacity: 0,
+//            transparent: true
+//        }));
+//
+//        this.criaPista(300, 1, 300, 1325, -1640, "pistaMeio", chaoMeshPhisica, 20);
+//        this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "pistaCurva", chaoMeshPhisica, 20);
+//        this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "pistaLateral", chaoMeshPhisica, 10);
+//        this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "curvaDois", chaoMeshPhisica, 10);
+//        this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "pistaVoltar", chaoMeshPhisica, 3);
+//        this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "pistaCurvaVoltar", chaoMeshPhisica, 4);
+//        this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "pistaLateral", chaoMeshPhisica, 5, "direita", "cima");
+//        this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "curvaDois", chaoMeshPhisica, 1, "direita", "baixo");
+//        this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "pistaVoltar", chaoMeshPhisica, 10, "direita");
+//        this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "pistaCurvaVoltar", chaoMeshPhisica, 1, "esquerda");
+//        this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "pistaLateral", chaoMeshPhisica, 4, "esquerda", "baixo");
+//        this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "curvaDois", chaoMeshPhisica, 1);
+//        this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "pistaVoltar", chaoMeshPhisica, 8);
+//        this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "pistaCurvaVoltar", chaoMeshPhisica, 6);
+//        this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "pistaLateral", chaoMeshPhisica, 9, "direita", "cima");
+//        this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "pistaCurvaVoltar", chaoMeshPhisica, 1, "esquerda", "cima");
+//        this.criaPista(300, 1, 300, this.pistaPosicaoX, this.pistaPosicaoZ, "pistaVoltar", chaoMeshPhisica, 5, 'direita', "cima");
 
         criaObjDeTodaPista();
         criaLargada();
         criaReta(19);
         criaCurva(SENTIDO_O);
-        criaReta(2);
+        criaReta(10);
         criaCurva(SENTIDO_S);
-        criaReta(20);
+        criaReta(3);
         criaCurva(SENTIDO_L);
-        criaReta(2);
-        criaCurva(SENTIDO_N)
-        _self.pista.position.y = 50;
+        criaReta(5);
+        criaCurva(SENTIDO_S);
+        criaReta(10);
+        criaCurva(SENTIDO_O);
+        criaReta(4);
+        criaCurva(SENTIDO_S);
+        criaReta(8);
+        criaCurva(SENTIDO_L);
+        criaReta(9);
+        criaCurva(SENTIDO_N);
+        criaReta(5);
+        _self.pista.position.y = 1;
         _self.pista.position.z = posicaoInicialPista.z;
         _self.pista.position.x = posicaoInicialPista.x;
         _self.fase.cena.add(_self.pista);
@@ -423,6 +438,7 @@ var Pista = function () {
     function criaCurva(direcao) {
         var inicio = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 300), new Physijs.createMaterial(meshParaFisica.clone(), 0, 0), 0);
         var fim = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 450), new Physijs.createMaterial(meshParaFisica.clone(), 0, 0), 0);
+        var clone = _self.pistaCurvaN.clone();
 
         inicio.position.x = ultimaPosicao.x;
         inicio.position.y = 0;
@@ -433,64 +449,85 @@ var Pista = function () {
         switch (direcao) {
             case SENTIDO_N:
                 if (sentidoAtual == SENTIDO_L) {
+                    fim.position.x = -75;
+                    fim.position.z = -150;
+                    fim.rotation.y = SENTIDO_L;
+                    ultimaPosicao.z += 450;
+                    ultimaPosicao.x += 150;
+                    clone.rotation.y = SENTIDO_S;
+                } else {
                     fim.position.x = 75;
                     fim.position.z = -150;
-                    ultimaPosicao.z += 150;
-                    ultimaPosicao.x -= 450;
-                } else {
-                    fim.position.x = -75;
-                    fim.position.z = 150;
-                    ultimaPosicao.z += 150;
-                    ultimaPosicao.x -= 450;
+                    fim.rotation.y = SENTIDO_L;
+                    ultimaPosicao.z += 450;
+                    ultimaPosicao.x -= 150;
+                    clone.position.x = 150;
+                    clone.position.z = -150;
+                    clone.rotation.y = SENTIDO_L;
                 }
                 break;
             case SENTIDO_S:
                 if (sentidoAtual == SENTIDO_L) {
-                    fim.position.x = -75;
-                    fim.position.z = 150;
-                    ultimaPosicao.z -= 150;
-                    ultimaPosicao.x -= 450;
+                    fim.position.x = 75;
+                    fim.position.z = -150;
+                    fim.rotation.y = SENTIDO_L;
+                    ultimaPosicao.z -= 450;
+                    ultimaPosicao.x += 150;
+                    clone.rotation.y = SENTIDO_L;
+                    clone.position.x = 150;
+                    clone.position.z = -150;
                 } else {
                     fim.position.x = -75;
                     fim.position.z = -150;
+                    fim.rotation.y = SENTIDO_O;
                     ultimaPosicao.z -= 450;
                     ultimaPosicao.x -= 150;
+                    clone.rotation.y = SENTIDO_S;
                 }
                 break;
             case SENTIDO_L:
                 if (sentidoAtual == SENTIDO_N) {
                     fim.position.x = -75;
                     fim.position.z = 150;
+                    fim.rotation.y = SENTIDO_O;
                     ultimaPosicao.z -= 150;
                     ultimaPosicao.x -= 450;
+                    clone.rotation.y = SENTIDO_O;
+                    clone.position.x = -150;
+                    clone.position.z = 150;
                 } else {
-                    fim.position.x = -75;
-                    fim.position.z = -150;
+                    fim.position.x = 75;
+                    fim.position.z = 150;
+                    fim.rotation.y = SENTIDO_L;
                     ultimaPosicao.z += 150;
                     ultimaPosicao.x -= 450;
+                    clone.rotation.y = SENTIDO_N;
                 }
                 break;
             case SENTIDO_O:
                 if (sentidoAtual == SENTIDO_N) {
                     fim.position.x = 75;
                     fim.position.z = 150;
+                    fim.rotation.y = SENTIDO_O;
                     ultimaPosicao.z -= 150;
                     ultimaPosicao.x += 450;
+                    clone.rotation.y = SENTIDO_N;
                 } else {
-                    fim.position.x = 75;
-                    fim.position.z = -150;
-                    ultimaPosicao.z += 450;
-                    ultimaPosicao.x -= 150;
+                    fim.position.x = -75;
+                    fim.position.z = 150;
+                    fim.rotation.y = SENTIDO_L;
+                    ultimaPosicao.z += 150;
+                    ultimaPosicao.x += 450;
+                    clone.rotation.y = SENTIDO_O;
+                    clone.position.x = -150;
+                    clone.position.z = 150;
                 }
                 break;
         }
         sentidoAtual = direcao;
         fim.position.y = 0;
-        fim.rotation.y = sentidoAtual;
         inicio.add(fim);
 
-        var clone = _self.pistaCurvaN.clone();
-        clone.rotation.y = sentidoAtual;
         inicio.add(clone);
         _self.pista.add(inicio);
     }
