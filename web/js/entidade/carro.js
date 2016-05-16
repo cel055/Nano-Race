@@ -1,13 +1,12 @@
 var Carro = function () {
     var _self = this;
-    var volta = 1;
+    this.volta = 2;
     this.id;
     this.fase;
     this.checkPointAtual = 0;
     this.carro;
     this.velocidade = 0;
     this.rotacao = 0;
-    this.fase;
     this.carregado = false;
     this.geoFisicaCarro;
     this.rotSeno = 0;
@@ -63,26 +62,6 @@ var Carro = function () {
         _self.geoFisicaCarro.addEventListener('collision', _self.colisaoCarro);
         _self.rotSeno = Math.sin(_self.rotacao * Math.PI / 180);
         _self.rotCoseno = Math.cos(_self.rotacao * Math.PI / 180);
-    };
-
-    this.colisaoCarro = function (outroObj, velocidadeRelativa, rotacaoRelativa, contato) {
-//      if (outroObj.name !== "checkPoint" || outroObj.name !== "pistaLateral" || outroObj.name !== "pistaCurva" || outroObj.name !== "pistaVoltar" || outroObj.name !== "pistaCurvaVoltar" || outroObj.name !== "pistaMeio") {
-//         
-//           
-//      }
-        _self.geoFisicaCarro.rotation.x = 0;
-        _self.geoFisicaCarro.rotation.z = 0;
-        if (outroObj.name === "checkPoint") {
-            for (var i = 0, size = _self.fase.pista.listaCheckPoints.length; i < size; i++) {
-                if (outroObj == _self.fase.pista.listaCheckPoints[i]) {
-                    if (_self.checkPointAtual == size - 1 && i == 0) {
-                        document.getElementById("voltas").innerHTML = "Laps: " + --volta + "/1";
-                    }
-                    _self.checkPointAtual = i;
-                    return;
-                }
-            }
-        }
     };
 
     this.aceleraFrenteCarro = function () {
@@ -148,7 +127,7 @@ var Carro = function () {
 
     this.moveCarro = function () {
         _self.sound2.setVolume(_self.velocidade * 0.05);
-        if (_self.geoFisicaCarro.position.y < -2) {
+        if (_self.geoFisicaCarro.position.y < -10) {
             _self.geoFisicaCarro.__dirtyRotation = true;
             _self.geoFisicaCarro.__dirtyPosition = true;
             _self.velocidade = 0;
@@ -159,6 +138,8 @@ var Carro = function () {
             _self.geoFisicaCarro.rotation.y = _self.fase.pista.listaCheckPoints[_self.checkPointAtual].rotation.y;
             _self.geoFisicaCarro.rotation.x = 0;
             _self.geoFisicaCarro.rotation.z = 0;
+            _self.geoFisicaCarro.__dirtyRotation = true;
+            _self.geoFisicaCarro.__dirtyPosition = true;
             return;
         }
         _self.geoFisicaCarro.rotation.y = _self.rotacao * Math.PI / 180;

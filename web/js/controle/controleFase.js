@@ -109,6 +109,7 @@ var ControleFase = function () {
 
         _self.controls.enabled = true;
     }
+    
     function startLap(_delta) {
         document.getElementById("contadorLargada").innerHTML = 'YOU READY?';
         var contador = document.getElementById("contadorLargada");
@@ -133,13 +134,13 @@ var ControleFase = function () {
         }
 
     }
+    
     function colocaCarrosNaCena() {
 
         var i = 0;
         for (var prop in _self.listaJogadores) {
             if (_self.listaJogadores[prop].carro.init) {
                 _self.listaJogadores[prop].carro.init(_self.posicaoInicial.x -= 20, _self.posicaoInicial.z);
-//                continue;
             } else {
                 _self.listaJogadores[prop].carro.initBase(_self.posicaoInicial.x -= 20, _self.posicaoInicial.z);
             }

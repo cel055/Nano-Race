@@ -1,5 +1,5 @@
 var CarroMobile = function () {
-    Carro.apply(this);
+    CarroJogador.apply(this);
     var _self = this;
     this.x;
     this.y;
