@@ -191,7 +191,7 @@ var ControleFase = function () {
         }
 
         for (var prop in _self.listaJogadores) {
-            if (_self.runCar === true) {
+            if (_self.runCar === true && !_self.listaJogadores[prop].carro.estaVoando) {
                 _self.listaJogadores[prop].carro.movimentoCarro();
             }
 

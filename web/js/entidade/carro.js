@@ -13,6 +13,7 @@ var Carro = function () {
     this.rotCoseno = 0;
     this.escutador;
     this.sound2;
+    this.estaVoando = false;
 
     this.carrega = function (obj, mtl) {
         var loader = new THREE.OBJMTLLoader();
@@ -127,6 +128,12 @@ var Carro = function () {
 
     this.moveCarro = function () {
         _self.sound2.setVolume(_self.velocidade * 0.05);
+        if(_self.geoFisicaCarro.position.y < -2){
+            _self.estaVoando = true;
+            _self.geoFisicaCarro.__dirtyRotation = true;
+            _self.geoFisicaCarro.__dirtyPosition = true;
+            _self.velocidade = 0;
+        }
         if (_self.geoFisicaCarro.position.y < -10) {
             _self.geoFisicaCarro.__dirtyRotation = true;
             _self.geoFisicaCarro.__dirtyPosition = true;

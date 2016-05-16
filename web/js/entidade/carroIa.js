@@ -1,14 +1,25 @@
 var CarroIa = function () {
     Carro.apply(this);
     var _self = this;
-    var numVoltas = 0;
-
+    var nariz;
     var correndo = true, fazendoCurva = false, sentidoCurva = 0;
+
+    this.init = function (x, z) {
+        _self.initBase(x, z);
+        nariz = new Physijs.BoxMesh(new THREE.BoxGeometry(1, 0.1, 1), new Physijs.createMaterial(new THREE.MeshPhongMaterial({
+            ambient: 0x333333,
+            opacity: 0,
+            transparent: true
+        })));
+        nariz.position.z = 50;
+        _self.geoFisicaCarro.add(nariz);
+    };
+
 
     this.movimentoCarro = function () {
         if (correndo && _self.velocidade < 1000) {
             _self.aceleraFrenteCarro();
-        } else if(fazendoCurva){
+        } else if (fazendoCurva) {
             _self.aceleraTrasCarro();
             if (sentidoCurva == 0) {
                 _self.viraEsquerda();
@@ -21,8 +32,8 @@ var CarroIa = function () {
     this.colisaoCarro = function (outroObj, velocidadeRelativa, rotacaoRelativa, contato) {
         switch (outroObj.name) {
             case "largada":
-                numVoltas++;
-                if(numVoltas >= 2){
+                --_self.volta;
+                if (--_self.volta <= 0) {
                     alert("se mata");
                 }
                 break;
@@ -53,6 +64,7 @@ var CarroIa = function () {
                 _self.geoFisicaCarro.rotation.y = outroObj.rotation.y;
                 break;
             default :
+                _self.estaVoando = false;
 
         }
     };

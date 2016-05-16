@@ -1,7 +1,7 @@
-var CarroJogador = function (){
+var CarroJogador = function () {
     Carro.apply(this);
     var _self = this;
-    
+
     this.colisaoCarro = function (outroObj, velocidadeRelativa, rotacaoRelativa, contato) {
         switch (outroObj.name) {
             case "largada":
@@ -20,6 +20,8 @@ var CarroJogador = function (){
                     }
                 }
                 break;
+            default :
+                _self.estaVoando = false;
 
         }
     };
