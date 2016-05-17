@@ -2,6 +2,7 @@ var CarroIa = function () {
     Carro.apply(this);
     var _self = this;
     var correndo = true, fazendoCurva = false;
+    var proxCheck = 0;
     var contCurva = 0;
     
     this.init = function (x, z) {
@@ -16,8 +17,9 @@ var CarroIa = function () {
 //        nariz.position.z = 50;
 //        _self.geoFisicaCarro.add(nariz);
     };
+    
     this.movimentoCarro = function () {
-        var posX = _self.fase.pista.listaCheckPoints[_self.checkPointAtual + 1].position.x - _self.geoFisicaCarro.position.x, posZ = _self.fase.pista.listaCheckPoints[_self.checkPointAtual + 1].position.z - _self.geoFisicaCarro.position.z;
+        var posX = _self.fase.pista.listaCheckPoints[proxCheck].position.x - _self.geoFisicaCarro.position.x, posZ = _self.fase.pista.listaCheckPoints[proxCheck].position.z - _self.geoFisicaCarro.position.z;
         var atan = Math.atan2(posX, posZ);
         _self.rotSeno = Math.sin(atan);
         _self.rotCoseno = Math.cos(atan);
@@ -42,6 +44,10 @@ var CarroIa = function () {
             case "check":
                 if (_self.fase.pista.listaCheckPoints[_self.checkPointAtual] == outroObj) {
                     return;
+                }
+                proxCheck++;
+                if(proxCheck == _self.fase.pista.listaCheckPoints.length){
+                    proxCheck = 0;
                 }
                 _self.posicaoCheckPoint = {y: _self.geoFisicaCarro.rotation.y, rotacao: _self.rotacao, rotSeno: _self.rotSeno, rotCoseno: _self.rotCoseno};
                 if(outroObj.tipo && outroObj.tipo != "reta"){

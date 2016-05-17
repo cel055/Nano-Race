@@ -185,8 +185,6 @@ var Pista = function () {
         var checkFim = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 30), new Physijs.createMaterial(meshParaFisica.clone(), 0, 0), 0);
         _self.listaCurvas.push(checkInicio);
         _self.listaCurvas.push(checkFim);
-        _self.listaCheckPoints.push(checkInicio);
-        _self.listaCheckPoints.push(checkFim);
         var clone = _self.pistaCurvaN.clone();
 
         inicio.position.x = ultimaPosicao.x;
@@ -311,6 +309,9 @@ var Pista = function () {
         checkFim.tipo = "fimCurva";
         _self.fase.cena.add(checkFim);
 
+        _self.listaCheckPoints.push(checkInicio);
+        _self.listaCheckPoints.push(checkFim);
+        
         inicio.add(clone);
         _self.fase.cena.add(inicio);
     }
