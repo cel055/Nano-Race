@@ -20,6 +20,7 @@ var Pista = function () {
     this.posiCarroX = 1325;
     this.posiCarroZ = -1605;
     this.listaCheckPoints = [];
+    this.listaCurvas = [];
     var carregadoN = false;
     var carregadoL = false;
     var carregadoC = false;
@@ -182,10 +183,16 @@ var Pista = function () {
         var fim = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 451), new Physijs.createMaterial(meshParaFisica.clone(), 0, 0), 0);
         var checkInicio = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 30), new Physijs.createMaterial(new THREE.MeshPhongMaterial({
             ambient: 0x333333,
+            opacity: 0.3,
+            transparent: true
+        }), 0, 0), 0);
+        var checkFim = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 30), new Physijs.createMaterial(new THREE.MeshPhongMaterial({
+            ambient: 0x333333,
             opacity: 0.5,
             transparent: true
         }), 0, 0), 0);
-        var checkFim = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 30), new Physijs.createMaterial(meshParaFisica.clone(), 0, 0), 0);
+        _self.listaCurvas.push(checkInicio);
+        _self.listaCurvas.push(checkFim);
         var clone = _self.pistaCurvaN.clone();
 
         inicio.position.x = ultimaPosicao.x;
@@ -196,7 +203,7 @@ var Pista = function () {
         mudaPosicaoAtual();
 
         checkInicio.name = "inicioCurva";
-        
+
         switch (direcao) {
             case SENTIDO_N:
                 checkInicio.position.z = ultimaPosicao.z;
@@ -219,7 +226,7 @@ var Pista = function () {
                 fim.rotation.y = SENTIDO_L;
                 ultimaPosicao.z += 450;
                 checkFim.position.x = ultimaPosicao.x;
-                checkFim.position.z = ultimaPosicao.z + 200;
+                checkFim.position.z = ultimaPosicao.z - 200;
                 break;
             case SENTIDO_S:
                 checkInicio.position.z = ultimaPosicao.z;
@@ -243,7 +250,7 @@ var Pista = function () {
                 fim.position.z = -150;
                 ultimaPosicao.z -= 450;
                 checkFim.position.x = ultimaPosicao.x;
-                checkFim.position.z = ultimaPosicao.z - 200;
+                checkFim.position.z = ultimaPosicao.z + 200;
                 break;
             case SENTIDO_L:
                 checkInicio.position.x = ultimaPosicao.x;
@@ -266,7 +273,7 @@ var Pista = function () {
                 }
                 fim.position.z = 150;
                 ultimaPosicao.x -= 450;
-                checkFim.position.x = ultimaPosicao.x - 200;
+                checkFim.position.x = ultimaPosicao.x + 200;
                 checkFim.position.z = ultimaPosicao.z;
                 break;
             case SENTIDO_O:
@@ -290,7 +297,7 @@ var Pista = function () {
                 }
                 fim.position.z = 150;
                 ultimaPosicao.x += 450;
-                checkFim.position.x = ultimaPosicao.x + 200;
+                checkFim.position.x = ultimaPosicao.x - 200;
                 checkFim.position.z = ultimaPosicao.z;
                 break;
         }
@@ -313,12 +320,25 @@ var Pista = function () {
     }
 
     function criaCheckPoint() {
-        var check = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 30), new Physijs.createMaterial(meshParaFisica.clone(), 0, 0), 0);
+        var check = new Physijs.BoxMesh(new THREE.BoxGeometry(30, 1, 300), new Physijs.createMaterial(meshParaFisica.clone(), 0, 0), 0);
         check.name = "check";
         check.position.y = 0.1;
         check.position.x = ultimaPosicao.x;
         check.position.z = ultimaPosicao.z;
-        check.rotation.y = sentidoAtual;
+        switch (sentidoAtual) {
+            case SENTIDO_O:
+                check.rotation.y = SENTIDO_N;
+                break;
+            case SENTIDO_L:
+                check.rotation.y = SENTIDO_S;
+                break;
+            case SENTIDO_S:
+                check.rotation.y = SENTIDO_L;
+                break;
+            case SENTIDO_N:
+                check.rotation.y = SENTIDO_O;
+                break;
+        }
         _self.listaCheckPoints.push(check);
         _self.fase.cena.add(check);
     }

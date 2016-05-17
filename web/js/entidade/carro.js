@@ -4,6 +4,7 @@ var Carro = function () {
     this.id;
     this.fase;
     this.checkPointAtual = 0;
+    this.posicaoCheckPoint = {y:0,rotacao:0,rotSeno:0,rotCoseno:0};
     this.carro;
     this.velocidade = 0;
     this.rotacao = 0;
@@ -132,19 +133,26 @@ var Carro = function () {
             _self.estaVoando = true;
             _self.geoFisicaCarro.__dirtyRotation = true;
             _self.geoFisicaCarro.__dirtyPosition = true;
-            _self.velocidade = 0;
         }
         if (_self.geoFisicaCarro.position.y < -10) {
             _self.geoFisicaCarro.__dirtyRotation = true;
             _self.geoFisicaCarro.__dirtyPosition = true;
+            
             _self.velocidade = 0;
             _self.geoFisicaCarro.setLinearVelocity({x: _self.geoFisicaCarro.getLinearVelocity().x * -1, y: _self.geoFisicaCarro.getLinearVelocity().y * -1, z: _self.geoFisicaCarro.getLinearVelocity().z * -1});
+            
             _self.geoFisicaCarro.position.y = 5;
             _self.geoFisicaCarro.position.x = _self.fase.pista.listaCheckPoints[_self.checkPointAtual].position.x;
             _self.geoFisicaCarro.position.z = _self.fase.pista.listaCheckPoints[_self.checkPointAtual].position.z;
-            _self.geoFisicaCarro.rotation.y = _self.fase.pista.listaCheckPoints[_self.checkPointAtual].rotation.y;
+            
+            _self.geoFisicaCarro.rotation.y = _self.posicaoCheckPoint.y;
             _self.geoFisicaCarro.rotation.x = 0;
             _self.geoFisicaCarro.rotation.z = 0;
+            
+            _self.rotacao = _self.posicaoCheckPoint.rotacao;
+            _self.rotSeno = _self.posicaoCheckPoint.rotSeno;
+            _self.rotCoseno = _self.posicaoCheckPoint.rotCoseno;
+            
             _self.geoFisicaCarro.__dirtyRotation = true;
             _self.geoFisicaCarro.__dirtyPosition = true;
             return;

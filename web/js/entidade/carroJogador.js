@@ -13,6 +13,7 @@ var CarroJogador = function () {
                 if (_self.fase.pista.listaCheckPoints[_self.checkPointAtual] == outroObj) {
                     return;
                 }
+                _self.posicaoCheckPoint = {y:_self.geoFisicaCarro.rotation.y,rotacao:_self.rotacao,rotSeno:_self.rotSeno,rotCoseno:_self.rotCoseno};
                 for (var i = 0, size = _self.fase.pista.listaCheckPoints.length; i < size; i++) {
                     if (outroObj == _self.fase.pista.listaCheckPoints[i]) {
                         _self.checkPointAtual = i;
