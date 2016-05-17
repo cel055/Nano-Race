@@ -24,7 +24,8 @@ var CarroIa = function () {
         _self.rotSeno = Math.sin(atan);
         _self.rotCoseno = Math.cos(atan);
         _self.geoFisicaCarro.rotation.y = atan;
-        if (correndo && _self.velocidade < 1500 && Math.random() < 0.6) {
+
+        if (correndo && _self.velocidade < 500) {
             _self.aceleraFrenteCarro();
         } else if (fazendoCurva) {
             _self.desaceleraCarro();
