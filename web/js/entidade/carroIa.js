@@ -26,7 +26,7 @@ var CarroIa = function () {
         _self.rotCoseno = Math.cos(atan);
         _self.geoFisicaCarro.rotation.y = atan;
 
-        if (correndo && _self.velocidade < 500) {
+        if (correndo && _self.velocidade < 1500) {
             _self.aceleraFrenteCarro();
         } else if (fazendoCurva) {
             _self.desaceleraCarro();
@@ -41,6 +41,7 @@ var CarroIa = function () {
                     if (--_self.volta <= 0) {
                         alert("se mata");
                     }
+                        alert(_self.volta);
                 }
                 break;
             case "check":

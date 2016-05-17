@@ -180,7 +180,7 @@ var Pista = function () {
 
     function criaCurva(direcao) {
         var inicio = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 301), new Physijs.createMaterial(meshParaFisica.clone(), 0, 0), 0);
-        var fim = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 451), new Physijs.createMaterial(meshParaFisica.clone(), 0, 0), 0);
+        var fim = new Physijs.BoxMesh(new THREE.BoxGeometry(400, 1, 451), new Physijs.createMaterial(meshParaFisica.clone(), 0, 0), 0);
         var checkInicio = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 30), new Physijs.createMaterial(new THREE.MeshPhongMaterial({
             ambient: 0x333333,
             opacity: 0.3,
