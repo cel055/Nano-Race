@@ -181,18 +181,12 @@ var Pista = function () {
     function criaCurva(direcao) {
         var inicio = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 301), new Physijs.createMaterial(meshParaFisica.clone(), 0, 0), 0);
         var fim = new Physijs.BoxMesh(new THREE.BoxGeometry(400, 1, 451), new Physijs.createMaterial(meshParaFisica.clone(), 0, 0), 0);
-        var checkInicio = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 30), new Physijs.createMaterial(new THREE.MeshPhongMaterial({
-            ambient: 0x333333,
-            opacity: 0.3,
-            transparent: true
-        }), 0, 0), 0);
-        var checkFim = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 30), new Physijs.createMaterial(new THREE.MeshPhongMaterial({
-            ambient: 0x333333,
-            opacity: 0.5,
-            transparent: true
-        }), 0, 0), 0);
+        var checkInicio = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 30), new Physijs.createMaterial(meshParaFisica.clone(), 0, 0), 0);
+        var checkFim = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 30), new Physijs.createMaterial(meshParaFisica.clone(), 0, 0), 0);
         _self.listaCurvas.push(checkInicio);
         _self.listaCurvas.push(checkFim);
+        _self.listaCheckPoints.push(checkInicio);
+        _self.listaCheckPoints.push(checkFim);
         var clone = _self.pistaCurvaN.clone();
 
         inicio.position.x = ultimaPosicao.x;
@@ -202,7 +196,8 @@ var Pista = function () {
 
         mudaPosicaoAtual();
 
-        checkInicio.name = "inicioCurva";
+        checkInicio.name = "check";
+        checkInicio.tipo = "inicioCurva";
 
         switch (direcao) {
             case SENTIDO_N:
@@ -312,7 +307,8 @@ var Pista = function () {
 
         checkFim.position.y = 0.1;
         checkFim.rotation.y = sentidoAtual;
-        checkFim.name = "fimCurva";
+        checkFim.name = "check";
+        checkFim.tipo = "fimCurva";
         _self.fase.cena.add(checkFim);
 
         inicio.add(clone);
@@ -322,6 +318,7 @@ var Pista = function () {
     function criaCheckPoint() {
         var check = new Physijs.BoxMesh(new THREE.BoxGeometry(30, 1, 300), new Physijs.createMaterial(meshParaFisica.clone(), 0, 0), 0);
         check.name = "check";
+        check.tipo = "reta";
         check.position.y = 0.1;
         check.position.x = ultimaPosicao.x;
         check.position.z = ultimaPosicao.z;

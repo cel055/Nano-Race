@@ -10,8 +10,8 @@ var CarroDesktop = function () {
         _self.initBase(x, z);
         _self.fase.camera.rotation.y = _self.carro.rotation.y;
         _self.fase.camera.rotation.x = _self.carro.rotation.x;
-        _self.geoFisicaCarro.add(_self.fase.camera);
-        _self.fase.camera.position.set(0, 8.5, -18);
+//        _self.geoFisicaCarro.add(_self.fase.camera);
+//        _self.fase.camera.position.set(0, 8.5, -18);
         
     };
 
