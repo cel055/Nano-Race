@@ -139,11 +139,15 @@ var Carro = function () {
             _self.geoFisicaCarro.__dirtyPosition = true;
             
             _self.velocidade = 0;
-            _self.geoFisicaCarro.setLinearVelocity({x: _self.geoFisicaCarro.getLinearVelocity().x * -1, y: _self.geoFisicaCarro.getLinearVelocity().y * -1, z: _self.geoFisicaCarro.getLinearVelocity().z * -1});
+            _self.geoFisicaCarro.setLinearVelocity({x: 0, y: 0, z: 0});
             
             _self.geoFisicaCarro.position.y = 5;
             _self.geoFisicaCarro.position.x = _self.fase.pista.listaCheckPoints[_self.checkPointAtual].position.x;
             _self.geoFisicaCarro.position.z = _self.fase.pista.listaCheckPoints[_self.checkPointAtual].position.z;
+            
+            _self.carro.rotation.x = 0;
+            _self.carro.rotation.y = 0;
+            _self.carro.rotation.z = 0;
             
             _self.geoFisicaCarro.rotation.y = _self.posicaoCheckPoint.y;
             _self.geoFisicaCarro.rotation.x = 0;
@@ -157,7 +161,7 @@ var Carro = function () {
             _self.geoFisicaCarro.__dirtyPosition = true;
             return;
         }
-        _self.geoFisicaCarro.rotation.y = _self.rotacao * Math.PI / 180;
+        _self.carro.rotation.y = _self.rotacao * Math.PI / 180;
         _self.geoFisicaCarro.setLinearVelocity({x: _self.velocidade * _self.rotSeno, y: _self.geoFisicaCarro.getLinearVelocity().y, z: _self.velocidade * _self.rotCoseno});
     };
 };

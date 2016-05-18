@@ -180,9 +180,17 @@ var Pista = function () {
 
     function criaCurva(direcao) {
         var inicio = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 301), new Physijs.createMaterial(meshParaFisica.clone(), 0, 0), 0);
-        var fim = new Physijs.BoxMesh(new THREE.BoxGeometry(400, 1, 451), new Physijs.createMaterial(meshParaFisica.clone(), 0, 0), 0);
-        var checkInicio = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 30), new Physijs.createMaterial(meshParaFisica.clone(), 0, 0), 0);
-        var checkFim = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 30), new Physijs.createMaterial(meshParaFisica.clone(), 0, 0), 0);
+        var fim = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 451), new Physijs.createMaterial(meshParaFisica.clone(), 0, 0), 0);
+        var checkInicio = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 30), new Physijs.createMaterial(new THREE.MeshPhongMaterial({
+            ambient: 0x333333,
+            opacity: 0.3,
+            transparent: true
+        }), 0, 0), 0);
+        var checkFim = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 30), new Physijs.createMaterial(new THREE.MeshPhongMaterial({
+            ambient: 0x333333,
+            opacity: 0.5,
+            transparent: true
+        }), 0, 0), 0);
         _self.listaCurvas.push(checkInicio);
         _self.listaCurvas.push(checkFim);
         var clone = _self.pistaCurvaN.clone();
@@ -194,8 +202,7 @@ var Pista = function () {
 
         mudaPosicaoAtual();
 
-        checkInicio.name = "check";
-        checkInicio.tipo = "inicioCurva";
+        checkInicio.name = "inicioCurva";
 
         switch (direcao) {
             case SENTIDO_N:
@@ -305,13 +312,9 @@ var Pista = function () {
 
         checkFim.position.y = 0.1;
         checkFim.rotation.y = sentidoAtual;
-        checkFim.name = "check";
-        checkFim.tipo = "fimCurva";
+        checkFim.name = "fimCurva";
         _self.fase.cena.add(checkFim);
 
-        _self.listaCheckPoints.push(checkInicio);
-        _self.listaCheckPoints.push(checkFim);
-        
         inicio.add(clone);
         _self.fase.cena.add(inicio);
     }
@@ -319,7 +322,6 @@ var Pista = function () {
     function criaCheckPoint() {
         var check = new Physijs.BoxMesh(new THREE.BoxGeometry(30, 1, 300), new Physijs.createMaterial(meshParaFisica.clone(), 0, 0), 0);
         check.name = "check";
-        check.tipo = "reta";
         check.position.y = 0.1;
         check.position.x = ultimaPosicao.x;
         check.position.z = ultimaPosicao.z;
