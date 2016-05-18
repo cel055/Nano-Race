@@ -24,7 +24,7 @@ var ControleFase = function () {
 //        _self.carro = new CarroDesktop();
 //        _self.carro.fase = _self;
 //        _self.carro.carrega('modelos/supernave.obj', 'modelos/supernave.mtl');
-        _self.pista = new Pista();
+        _self.pista = new Pista1();
         _self.pista.fase = _self;
         _self.pista.carrega();
         carregarLuz();
@@ -171,7 +171,7 @@ var ControleFase = function () {
                 x: _self.carro.geoFisicaCarro.position.x,
                 y: _self.carro.geoFisicaCarro.position.y,
                 z: _self.carro.geoFisicaCarro.position.z,
-                rotacao: _self.carro.geoFisicaCarro.rotation.y,
+                rotacao: _self.carro.carro.rotation.y,
                 nave: "supernave"
             };
             socketSend(obj);

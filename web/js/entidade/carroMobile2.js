@@ -1,59 +1,107 @@
 var CarroMobile = function () {
     CarroJogador.apply(this);
     var _self = this;
-    this.x;
-    this.y;
-    this.z;
-    this.watchId;
+    var viraDireita = false;
+    var viraEsquerda = false;
+    var acelera = false;
+    var freia = false;
+    
     this.init = function (x, z) {
         _self.initBase(x, z);
         _self.fase.camera.rotation.y = _self.carro.rotation.y;
         _self.fase.camera.rotation.x = _self.carro.rotation.x;
-        _self.geoFisicaCarro.add(_self.fase.camera);
-        _self.fase.camera.position.set(0, 8.5, -18);
-        //watchId = navigator.accelerometer.watchAcceleration(onSuccess, onError, {frequency: 100});
-    if (window.DeviceOrientationEvent) {
-  window.addEventListener('deviceorientation', deviceMotionHandler, false);
-      }
+        _self.carro.add(_self.fase.camera);
+        _self.fase.camera.position.set(0, 4, -7);
+        
+        criaBotaoAcelera();
+        
+        criaBotaoFreio();
+        
+        window.addEventListener('deviceorientation', deviceMotionHandler, false);
     };
+    
+    function criaBotaoAcelera(){
+        var botao = document.createElement("div");
+        botao.style.borderRadius = "50%";
+        botao.style.position = "fixed";
+        botao.style.bottom = "5px";
+        botao.style.height = "50px";
+        botao.style.width = "50px";
+        botao.style.zIndex = "1000";
+        botao.style.backgroundColor = "rgba(26, 125, 98, 0.75)";
+        botao.style.textAlign = "center";
+        botao.style.right = "5px";
+//        botaoFreia.appendChild(document.createTextNode("F"));
+        botao.addEventListener("touchstart",function (evento){
+            evento.stopPropagation();
+            acelera = true;
+        });
+        botao.addEventListener("touchend",function (evento){
+            evento.stopPropagation();
+            acelera = false;
+        });
+        document.body.appendChild(botao);
+        return botao;
+    }
+    
+    function criaBotaoFreio(){
+        var botao = document.createElement("div");
+        botao.style.borderRadius = "50%";
+        botao.style.position = "fixed";
+        botao.style.bottom = "5px";
+        botao.style.height = "50px";
+        botao.style.width = "50px";
+        botao.style.zIndex = "1000";
+        botao.style.backgroundColor = "rgba(26, 125, 98, 0.75)";
+        botao.style.textAlign = "center";
+        botao.style.left = "5px";
+//        botaoFreia.appendChild(document.createTextNode("F"));
+        botao.addEventListener("touchstart",function (evento){
+            evento.stopPropagation();
+            freia = true;
+        });
+        botao.addEventListener("touchend",function (evento){
+            evento.stopPropagation();
+            freia = false;
+        });
+        document.body.appendChild(botao);
+        return botao;
+    }
 
     function deviceMotionHandler(evento) {
-       // var acceleration = evento.acceleration;
-        //var rotacao = evento.rotationRate;
-        _self.x = evento.alpha;
-        _self.y =  evento.beta;
-        _self.z = evento.gama;
+//        if(evento.gamma > -30){
+//            acelera = true;
+//        }else if(evento.gamma < -50){
+//            freia = true;
+//        }else{
+//            acelera = false;
+//            freia = false;
+//        }
+        
+        if(evento.beta > 10){
+            viraDireita = true;
+        }else if(evento.beta < -10){
+            viraEsquerda = true;
+        }else{
+            viraDireita = false;
+            viraEsquerda = false;
+        }
     }
 
     this.movimentoCarro = function () {
-        if (_self.x > 4) {
+        if(freia){
             _self.aceleraTrasCarro();
-            _self.carro.rotation.x = 0 * Math.PI / 180;
-        } else if (_self.x < -1) {
+        }else if(acelera){
             _self.aceleraFrenteCarro();
-            if (_self.y < -4) {
-                _self.carro.rotation.x = 0 * Math.PI / 180;
-                _self.carro.rotation.z = 0 * Math.PI / 180;
-            }
-        } else {
+        }else{
             _self.desaceleraCarro();
-            _self.carro.rotation.z = 0 * Math.PI / 180;
         }
-
-        if (this.y > 4) {
+        
+        if(viraDireita){
             _self.viraDireita();
-        } else if (false) {
+        }else if(viraEsquerda){
             _self.viraEsquerda();
         }
         document.getElementById('velocimetro').innerHTML = "kmH :  " + parseInt(_self.velocidade);
     };
-
-    function onSuccess(rotation) {
-        _self.x = rotation.alpha;
-        _self.y =  rotation.beta .y;
-        _self.z = acceleration.z;
-    }
-    function onError() {
-
-    }
 };

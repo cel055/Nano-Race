@@ -10,7 +10,7 @@ var CarroSocket = function (){
         _self.geoFisicaCarro.position.x = _self.x;
         _self.geoFisicaCarro.position.y = _self.y;
         _self.geoFisicaCarro.position.z = _self.z;
-        _self.geoFisicaCarro.rotation.y = _self.rotacao;
+        _self.carro.rotation.y = _self.rotacao;
     };
     this.movimentoCarro = function (){
         

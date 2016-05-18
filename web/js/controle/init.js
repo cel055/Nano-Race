@@ -19,7 +19,6 @@ function inicia() {
             || navigator.userAgent.match(/Windows Phone/i)
             ) {
         eMobile = true;
-        alert("é mobile");
     }
     new StartMenu();
 }

@@ -2,11 +2,11 @@ var Pista = function () {
     document.body.style.cursor = 'none';
     var posicaoInicialPista = {x: 1325, z: -1640};
     this.posicaoInicialCarro = {x: 1325, z: -1605};
-    var SENTIDO_N = 0;
-    var SENTIDO_S = 180 * Math.PI / 180;
-    var SENTIDO_L = 90 * Math.PI / 180;
-    var SENTIDO_O = -90 * Math.PI / 180;
-    var sentidoAtual = SENTIDO_N;
+    this.SENTIDO_N = 0;
+    this.SENTIDO_S = 180 * Math.PI / 180;
+    this.SENTIDO_L = 90 * Math.PI / 180;
+    this.SENTIDO_O = -90 * Math.PI / 180;
+    var sentidoAtual = this.SENTIDO_N;
     var _self = this;
     this.pista;
     this.carregado = false;
@@ -79,7 +79,7 @@ var Pista = function () {
                                 child.receiveShadow = true;
                             }
                     );
-                    _self.pistaCurvaN.rotation.y = SENTIDO_S;
+                    _self.pistaCurvaN.rotation.y = _self.SENTIDO_S;
                     _self.pistaCurvaN.scale.x = 150;
                     _self.pistaCurvaN.scale.z = 150;
                     carregadoC = true;
@@ -100,7 +100,7 @@ var Pista = function () {
 
     };
 
-    this.init = function () {
+    this.initBase = function () {
         var listener = new THREE.AudioListener();
         _self.fase.camera.add(listener);
         var sound1 = new THREE.Audio(listener);
@@ -113,8 +113,8 @@ var Pista = function () {
         //_self.fase.cena.add(sound1);
 
         var mundo = new THREE.Mesh(_self.geometria, _self.material);
-        mundo.position.set(1900, 0, 200);
-        mundo.scale.set(110, 110, 110);
+        mundo.position.set(posicaoInicialPista.x, 0, posicaoInicialPista.z);
+        mundo.scale.set(150, 150, 150);
 
         _self.fase.cena.add(mundo);
         meshParaFisica = new THREE.MeshPhongMaterial({
@@ -122,28 +122,9 @@ var Pista = function () {
             opacity: 0,
             transparent: true
         });
-
-        criaLargada();
-        criaReta(19);
-        criaCurva(SENTIDO_O);
-        criaReta(10);
-        criaCurva(SENTIDO_S);
-        criaReta(3);
-        criaCurva(SENTIDO_L);
-        criaReta(5);
-        criaCurva(SENTIDO_S);
-        criaReta(10);
-        criaCurva(SENTIDO_O);
-        criaReta(4);
-        criaCurva(SENTIDO_S);
-        criaReta(8);
-        criaCurva(SENTIDO_L);
-        criaReta(9);
-        criaCurva(SENTIDO_N);
-        criaReta(5);
     };
 
-    function criaLargada() {
+    this.criaLargada = function() {
         var p = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 301), new Physijs.createMaterial(meshParaFisica.clone(), 0, 0), 0);
         var check = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 30), new Physijs.createMaterial(meshParaFisica.clone(), 0, 0), 0);
         check.name = "largada";
@@ -158,9 +139,9 @@ var Pista = function () {
         _self.fase.cena.add(check);
         _self.fase.cena.add(p);
         mudaPosicaoAtual();
-    }
+    };
 
-    function criaReta(repeticao) {
+    this.criaReta = function (repeticao) {
         var p;
         for (var i = 0; i < repeticao; i++) {
             p = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 301), new Physijs.createMaterial(meshParaFisica.clone(), 0, 0), 0);
@@ -170,27 +151,19 @@ var Pista = function () {
             p.position.z = ultimaPosicao.z;
             p.rotation.y = sentidoAtual;
             p.name = "reta";
-            if (i % 2 == 0) {
+            if (i % 2 != 0) {
                 criaCheckPoint();
             }
             _self.fase.cena.add(p);
             mudaPosicaoAtual();
         }
-    }
+    };
 
-    function criaCurva(direcao) {
+    this.criaCurva = function (direcao) {
         var inicio = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 301), new Physijs.createMaterial(meshParaFisica.clone(), 0, 0), 0);
         var fim = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 451), new Physijs.createMaterial(meshParaFisica.clone(), 0, 0), 0);
-        var checkInicio = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 30), new Physijs.createMaterial(new THREE.MeshPhongMaterial({
-            ambient: 0x333333,
-            opacity: 0.3,
-            transparent: true
-        }), 0, 0), 0);
-        var checkFim = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 30), new Physijs.createMaterial(new THREE.MeshPhongMaterial({
-            ambient: 0x333333,
-            opacity: 0.5,
-            transparent: true
-        }), 0, 0), 0);
+        var checkInicio = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 30), new Physijs.createMaterial(meshParaFisica.clone(), 0, 0), 0);
+        var checkFim = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 30), new Physijs.createMaterial(meshParaFisica.clone(), 0, 0), 0);
         _self.listaCurvas.push(checkInicio);
         _self.listaCurvas.push(checkFim);
         var clone = _self.pistaCurvaN.clone();
@@ -205,14 +178,14 @@ var Pista = function () {
         checkInicio.name = "inicioCurva";
 
         switch (direcao) {
-            case SENTIDO_N:
+            case _self.SENTIDO_N:
                 checkInicio.position.z = ultimaPosicao.z;
-                if (sentidoAtual == SENTIDO_L) {
+                if (sentidoAtual == _self.SENTIDO_L) {
                     checkInicio.name += "Esquerda";
                     checkInicio.position.x = ultimaPosicao.x + 600;
                     fim.position.x = -75;
                     ultimaPosicao.x += 150;
-                    clone.rotation.y = SENTIDO_S;
+                    clone.rotation.y = _self.SENTIDO_S;
                 } else {
                     checkInicio.name += "Direita";
                     checkInicio.position.x = ultimaPosicao.x - 600;
@@ -220,78 +193,78 @@ var Pista = function () {
                     ultimaPosicao.x -= 150;
                     clone.position.x = 150;
                     clone.position.z = -150;
-                    clone.rotation.y = SENTIDO_L;
+                    clone.rotation.y = _self.SENTIDO_L;
                 }
                 fim.position.z = -150;
-                fim.rotation.y = SENTIDO_L;
+                fim.rotation.y = _self.SENTIDO_L;
                 ultimaPosicao.z += 450;
                 checkFim.position.x = ultimaPosicao.x;
                 checkFim.position.z = ultimaPosicao.z - 200;
                 break;
-            case SENTIDO_S:
+            case _self.SENTIDO_S:
                 checkInicio.position.z = ultimaPosicao.z;
-                if (sentidoAtual == SENTIDO_L) {
+                if (sentidoAtual == _self.SENTIDO_L) {
                     checkInicio.name += "Direita";
                     checkInicio.position.x = ultimaPosicao.x + 600;
                     fim.position.x = 75;
-                    fim.rotation.y = SENTIDO_L;
+                    fim.rotation.y = _self.SENTIDO_L;
                     ultimaPosicao.x += 150;
-                    clone.rotation.y = SENTIDO_L;
+                    clone.rotation.y = _self.SENTIDO_L;
                     clone.position.x = 150;
                     clone.position.z = -150;
                 } else {
                     checkInicio.name += "Esquerda";
                     checkInicio.position.x = ultimaPosicao.x - 600;
                     fim.position.x = -75;
-                    fim.rotation.y = SENTIDO_O;
+                    fim.rotation.y = _self.SENTIDO_O;
                     ultimaPosicao.x -= 150;
-                    clone.rotation.y = SENTIDO_S;
+                    clone.rotation.y = _self.SENTIDO_S;
                 }
                 fim.position.z = -150;
                 ultimaPosicao.z -= 450;
                 checkFim.position.x = ultimaPosicao.x;
                 checkFim.position.z = ultimaPosicao.z + 200;
                 break;
-            case SENTIDO_L:
+            case _self.SENTIDO_L:
                 checkInicio.position.x = ultimaPosicao.x;
-                if (sentidoAtual == SENTIDO_N) {
+                if (sentidoAtual == _self.SENTIDO_N) {
                     checkInicio.name += "Direita";
                     checkInicio.position.z = ultimaPosicao.z - 600;
                     fim.position.x = -75;
-                    fim.rotation.y = SENTIDO_O;
+                    fim.rotation.y = _self.SENTIDO_O;
                     ultimaPosicao.z -= 150;
-                    clone.rotation.y = SENTIDO_O;
+                    clone.rotation.y = _self.SENTIDO_O;
                     clone.position.x = -150;
                     clone.position.z = 150;
                 } else {
                     checkInicio.name += "Esquerda";
                     checkInicio.position.z = ultimaPosicao.z + 600;
                     fim.position.x = 75;
-                    fim.rotation.y = SENTIDO_L;
+                    fim.rotation.y = _self.SENTIDO_L;
                     ultimaPosicao.z += 150;
-                    clone.rotation.y = SENTIDO_N;
+                    clone.rotation.y = _self.SENTIDO_N;
                 }
                 fim.position.z = 150;
                 ultimaPosicao.x -= 450;
                 checkFim.position.x = ultimaPosicao.x + 200;
                 checkFim.position.z = ultimaPosicao.z;
                 break;
-            case SENTIDO_O:
+            case _self.SENTIDO_O:
                 checkInicio.position.x = ultimaPosicao.x;
-                if (sentidoAtual == SENTIDO_N) {
+                if (sentidoAtual == _self.SENTIDO_N) {
                     checkInicio.name += "Esquerda";
                     checkInicio.position.z = ultimaPosicao.z - 600;
                     fim.position.x = 75;
-                    fim.rotation.y = SENTIDO_O;
+                    fim.rotation.y = _self.SENTIDO_O;
                     ultimaPosicao.z -= 150;
-                    clone.rotation.y = SENTIDO_N;
+                    clone.rotation.y = _self.SENTIDO_N;
                 } else {
                     checkInicio.name += "Direita";
                     checkInicio.position.z = ultimaPosicao.z + 600;
                     fim.position.x = -75;
-                    fim.rotation.y = SENTIDO_L;
+                    fim.rotation.y = _self.SENTIDO_L;
                     ultimaPosicao.z += 150;
-                    clone.rotation.y = SENTIDO_O;
+                    clone.rotation.y = _self.SENTIDO_O;
                     clone.position.x = -150;
                     clone.position.z = 150;
                 }
@@ -317,7 +290,7 @@ var Pista = function () {
 
         inicio.add(clone);
         _self.fase.cena.add(inicio);
-    }
+    };
 
     function criaCheckPoint() {
         var check = new Physijs.BoxMesh(new THREE.BoxGeometry(30, 1, 300), new Physijs.createMaterial(meshParaFisica.clone(), 0, 0), 0);
@@ -326,17 +299,17 @@ var Pista = function () {
         check.position.x = ultimaPosicao.x;
         check.position.z = ultimaPosicao.z;
         switch (sentidoAtual) {
-            case SENTIDO_O:
-                check.rotation.y = SENTIDO_N;
+            case _self.SENTIDO_O:
+                check.rotation.y = _self.SENTIDO_N;
                 break;
-            case SENTIDO_L:
-                check.rotation.y = SENTIDO_S;
+            case _self.SENTIDO_L:
+                check.rotation.y = _self.SENTIDO_S;
                 break;
-            case SENTIDO_S:
-                check.rotation.y = SENTIDO_L;
+            case _self.SENTIDO_S:
+                check.rotation.y = _self.SENTIDO_L;
                 break;
-            case SENTIDO_N:
-                check.rotation.y = SENTIDO_O;
+            case _self.SENTIDO_N:
+                check.rotation.y = _self.SENTIDO_O;
                 break;
         }
         _self.listaCheckPoints.push(check);
@@ -345,16 +318,16 @@ var Pista = function () {
 
     function mudaPosicaoAtual() {
         switch (sentidoAtual) {
-            case SENTIDO_N:
+            case _self.SENTIDO_N:
                 ultimaPosicao.z += 300;
                 break;
-            case SENTIDO_S:
+            case _self.SENTIDO_S:
                 ultimaPosicao.z -= 300;
                 break;
-            case SENTIDO_L:
+            case _self.SENTIDO_L:
                 ultimaPosicao.x -= 300;
                 break;
-            case SENTIDO_O:
+            case _self.SENTIDO_O:
                 ultimaPosicao.x += 300;
                 break;
         }

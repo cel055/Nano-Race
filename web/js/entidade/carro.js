@@ -4,7 +4,7 @@ var Carro = function () {
     this.id;
     this.fase;
     this.checkPointAtual = 0;
-    this.posicaoCheckPoint = {y:0,rotacao:0,rotSeno:0,rotCoseno:0};
+    this.posicaoCheckPoint = {y: 0, rotacao: 0, rotSeno: 0, rotCoseno: 0};
     this.carro;
     this.velocidade = 0;
     this.rotacao = 0;
@@ -53,7 +53,7 @@ var Carro = function () {
         _self.geoFisicaCarro = new Physijs.BoxMesh(new THREE.BoxGeometry(6, 2, 6), materialFisicaCarro, 200);
         _self.geoFisicaCarro.visible = true;
         _self.geoFisicaCarro.name = "carro";
-        _self.geoFisicaCarro.position.set(x, 10, z);
+        _self.geoFisicaCarro.position.set(x, 50, z);
         _self.geoFisicaCarro.add(_self.carro);
         //_self.geoFisicaCarro.receiveShadow = true;
         _self.geoFisicaCarro.setCcdMotionThreshold(7);
@@ -117,48 +117,45 @@ var Carro = function () {
         _self.rotacao -= 2.5;
         _self.rotSeno = Math.sin(_self.rotacao * Math.PI / 180);
         _self.rotCoseno = Math.cos(_self.rotacao * Math.PI / 180);
-        _self.carro.rotation.z = 5 * Math.PI / 180;
     };
 
     this.viraEsquerda = function () {
         _self.rotacao += 2.5;
         _self.rotSeno = Math.sin(_self.rotacao * Math.PI / 180);
         _self.rotCoseno = Math.cos(_self.rotacao * Math.PI / 180);
-        _self.carro.rotation.z = -5 * Math.PI / 180;
     };
 
     this.moveCarro = function () {
+        _self.geoFisicaCarro.__dirtyRotation = true;
+        _self.geoFisicaCarro.rotation.y = 0;
+        _self.geoFisicaCarro.rotation.z = 0;
+        _self.geoFisicaCarro.rotation.x = 0;
         _self.sound2.setVolume(_self.velocidade * 0.05);
-        if(_self.geoFisicaCarro.position.y < -2){
+        if (_self.geoFisicaCarro.position.y < -50) {
             _self.estaVoando = true;
-            _self.geoFisicaCarro.__dirtyRotation = true;
             _self.geoFisicaCarro.__dirtyPosition = true;
         }
-        if (_self.geoFisicaCarro.position.y < -10) {
-            _self.geoFisicaCarro.__dirtyRotation = true;
+        if (_self.geoFisicaCarro.position.y < -100) {
             _self.geoFisicaCarro.__dirtyPosition = true;
-            
+
             _self.velocidade = 0;
             _self.geoFisicaCarro.setLinearVelocity({x: 0, y: 0, z: 0});
-            
+
             _self.geoFisicaCarro.position.y = 5;
             _self.geoFisicaCarro.position.x = _self.fase.pista.listaCheckPoints[_self.checkPointAtual].position.x;
             _self.geoFisicaCarro.position.z = _self.fase.pista.listaCheckPoints[_self.checkPointAtual].position.z;
-            
+
             _self.carro.rotation.x = 0;
-            _self.carro.rotation.y = 0;
+            _self.carro.rotation.y = _self.posicaoCheckPoint.y;
             _self.carro.rotation.z = 0;
-            
-            _self.geoFisicaCarro.rotation.y = _self.posicaoCheckPoint.y;
-            _self.geoFisicaCarro.rotation.x = 0;
-            _self.geoFisicaCarro.rotation.z = 0;
-            
+
             _self.rotacao = _self.posicaoCheckPoint.rotacao;
             _self.rotSeno = _self.posicaoCheckPoint.rotSeno;
             _self.rotCoseno = _self.posicaoCheckPoint.rotCoseno;
-            
+
             _self.geoFisicaCarro.__dirtyRotation = true;
             _self.geoFisicaCarro.__dirtyPosition = true;
+            _self.estaVoando = false;
             return;
         }
         _self.carro.rotation.y = _self.rotacao * Math.PI / 180;
