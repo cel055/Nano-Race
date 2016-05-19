@@ -5,6 +5,7 @@ var CarroSocket = function (){
     this.y = 0;
     this.z = 0;
     this.rotacao = 0;
+    this.fisicaCarregada = true;
     
     this.moveCarro = function(){
         _self.geoFisicaCarro.position.x = _self.x;

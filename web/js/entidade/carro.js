@@ -3,6 +3,7 @@ var Carro = function () {
     this.volta = 2;
     this.id;
     this.fase;
+    this.acabou = false;
     this.checkPointAtual = 0;
     this.posicaoCheckPoint = {y: 0, rotacao: 0, rotSeno: 0, rotCoseno: 0};
     this.carro;
@@ -11,10 +12,11 @@ var Carro = function () {
     this.carregado = false;
     this.geoFisicaCarro;
     this.rotSeno = 0;
-    this.rotCoseno = 0;
+    this.rotCoseno = 1;
     this.escutador;
     this.sound2;
     this.estaVoando = false;
+    this.fisicaCarregada = false;
 
     this.carrega = function (obj, mtl) {
         var loader = new THREE.OBJMTLLoader();
@@ -41,7 +43,7 @@ var Carro = function () {
         _self.sound2 = new THREE.Audio(_self.escutador);
         _self.sound2.load('sound-music/acelera1.ogg');
         _self.carro.add(_self.sound2);
-        _self.sound2.setLoop(false);
+        _self.sound2.setLoop(true);
 
         var materialFisicaCarro = new Physijs.createMaterial(new THREE.MeshPhongMaterial({
             shading: THREE.SmoothShading,
@@ -51,6 +53,9 @@ var Carro = function () {
             visible: false
         }));
         _self.geoFisicaCarro = new Physijs.BoxMesh(new THREE.BoxGeometry(6, 2, 6), materialFisicaCarro, 200);
+        _self.geoFisicaCarro.addEventListener( 'ready', function (){
+            _self.fisicaCarregada = true;
+        });
         _self.geoFisicaCarro.visible = true;
         _self.geoFisicaCarro.name = "carro";
         _self.geoFisicaCarro.position.set(x, 50, z);
@@ -71,7 +76,7 @@ var Carro = function () {
             if (_self.velocidade > 1000) {
                 _self.velocidade += Math.abs(500 / (_self.velocidade / 5));
                 //console.log(_self.velocidade * 0.2);
-                _self.sound2.play();
+//                _self.sound2.play();
             } else if (_self.velocidade > 0) {
                 _self.velocidade += Math.abs(500 / (_self.velocidade / 10));
             } else if (_self.velocidade < 0) {
@@ -103,7 +108,7 @@ var Carro = function () {
     };
 
     this.desaceleraCarro = function () {
-        _self.carro.rotation.x = 10 * Math.PI / 180;
+//        _self.carro.rotation.x = 10 * Math.PI / 180;
         if (_self.velocidade > 100 || _self.velocidade < -100) {
             _self.velocidade *= 0.99;
         } else if (_self.velocidade > 1 || _self.velocidade < -1) {
@@ -130,6 +135,8 @@ var Carro = function () {
         _self.geoFisicaCarro.rotation.y = 0;
         _self.geoFisicaCarro.rotation.z = 0;
         _self.geoFisicaCarro.rotation.x = 0;
+        _self.carro.rotation.z = 0;
+        _self.carro.rotation.x = 0;
         _self.sound2.setVolume(_self.velocidade * 0.05);
         if (_self.geoFisicaCarro.position.y < -50) {
             _self.estaVoando = true;

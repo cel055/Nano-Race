@@ -12,15 +12,15 @@ var StartMenu = function () {
     document.getElementById('multiplayer').addEventListener('click', subMenuStart);
 
     function subMenuStart() {
-        if(entrar === false){
-        document.getElementById('iporta').style.display = 'block';
-        document.getElementById('botao').addEventListener('click', startGameMultiplayer);
-         entrar = true;
+        if (entrar === false) {
+            document.getElementById('iporta').style.display = 'block';
+            document.getElementById('botao').addEventListener('click', startGameMultiplayer);
+            entrar = true;
         } else {
             document.getElementById('iporta').style.display = 'none';
             entrar = false;
         }
-            
+
 
     }
     function startGameMultiplayer() {
@@ -40,15 +40,16 @@ var StartMenu = function () {
     function startGame() {
         document.getElementById('corpoMenu').style.display = 'none';
 
-       controleFase = new ControleFase();
-
-        for (var i = 0; i <2; i++) {
+        controleFase = new ControleFase();
+        var pista = document.getElementById("radioPista1").checked ? 1 : 2;
+        controleFase.escolhaPista = pista;
+        for (var i = 0; i < 2; i++) {
             ControleFase.prototype.listaJogadores[i] = {};
             ControleFase.prototype.listaJogadores[i].id = i;
             ControleFase.prototype.listaJogadores[i].nave = "supernave";
             ControleFase.prototype.listaJogadores[i].carro = new CarroIa();
         }
-        
+
         controleFase.inicia('a');
     }
 };

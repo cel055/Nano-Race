@@ -21,13 +21,13 @@
         <script type="text/javascript" src="js/libs/MTLLoader.js"></script>
         <script type="text/javascript" src="js/libs/OBJMTLLoader.js"></script>
         <script type="text/javascript" src="js/libs/WebGLRenderer.js"></script>
-        
+
 
         <!--<script type="text/javascript" src="js/controle/js.js"></script>-->
         <script type="text/javascript" src="js/controle/startMenu.js"></script>
         <script type="text/javascript" src="js/controle/socket.js"></script>
         <script type="text/javascript" src="js/controle/init.js"></script>
-        
+
         <script type="text/javascript" src="js/controle/controleFase.js"></script>
 
         <script type="text/javascript" src="js/entidade/carro.js"></script>
@@ -51,8 +51,22 @@
                 <div id='start' class="detalhes"><p>START</p></div>
                 <div id='multiplayer' class="detalhes"><p>MULTIPLAYER</p></div>
                 <div id="iporta" class="detalhes-2">Ip-server:<input type='text' id='ip' size='8' value=''>Porta:<input type='text' id='porta' size='1' value=''><span><input type='button' value='ok' id='botao'></span></div>
-                <div id='continue' class="detalhes"><p>continue</p></div>
-                <div id='option' class="detalhes"><p>option</p></div>
+                <!--                <div id='continue' class="detalhes"><p>continue</p></div>
+                                <div id='option' class="detalhes"><p>option</p></div>-->
+                <div class="detalhes"><p>Choose a track</p>
+                    <p>
+                        <input id="radioPista1" type="radio" name="pista" value="1" checked="true"/>
+                        <label for="radioPista1">
+                            Track 1
+                        </label>
+                    </p>
+                    <p>
+                        <input id="radioPista2" type="radio" name="pista" value="2"/>
+                        <label for="radioPista2">
+                            Track 2
+                        </label>
+                    </p>
+                </div>
             </section>
         </section>
     </body>

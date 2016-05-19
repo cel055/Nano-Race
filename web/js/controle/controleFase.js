@@ -2,6 +2,8 @@
 
 var ControleFase = function () {
     var _self = this;
+    this.somFundo;
+    this.escutadorSomDeFundo;
     var checagem;
     this.carro;
     this.pista;
@@ -16,6 +18,7 @@ var ControleFase = function () {
     var luzSpot;
     var luzCarregado = false;
 
+    this.escolhaPista = 1;
     var pista;
     var pistaCarregado = false;
 
@@ -24,7 +27,11 @@ var ControleFase = function () {
 //        _self.carro = new CarroDesktop();
 //        _self.carro.fase = _self;
 //        _self.carro.carrega('modelos/supernave.obj', 'modelos/supernave.mtl');
-        _self.pista = new Pista1();
+        if (_self.escolhaPista == 1) {
+            _self.pista = new Pista1();
+        } else {
+            _self.pista = new Pista2();
+        }
         _self.pista.fase = _self;
         _self.pista.carrega();
         carregarLuz();
@@ -102,16 +109,40 @@ var ControleFase = function () {
 //        _self.carro.init(_self.posicaoInicial.x, _self.posicaoInicial.z);
 //        _self.cena.add(_self.carro.geoFisicaCarro);
 
+        _self.escutadorSomDeFundo = new THREE.AudioListener();
+        _self.camera.add(_self.escutadorSomDeFundo);
+        _self.somFundo = new THREE.Audio(_self.escutadorSomDeFundo);
+        _self.somFundo.load('sound-music/sound-track.mp3');
+        _self.camera.add(_self.somFundo);
+
+        _self.somFundo.setRefDistance(100);
+        _self.somFundo.autoplay = true;
+        _self.somFundo.setLoop(true);
+        _self.somFundo.setVolume(100);
+        
         _self.pista.init();
         colocaCarrosNaCena();
-        _self.clock = new THREE.Clock();
-        render();
+        var inter = setInterval(function () {
+            for (var prop in _self.listaJogadores) {
+                if (!_self.listaJogadores[prop].carro.fisicaCarregada) {
+                    return;
+                }
+            }
+            if (!_self.pista.todasFisicaCarregada) {
+                return;
+            }
+            clearInterval(inter);
 
-        _self.controls.enabled = true;
+//            _self.somFundo.play();
+            _self.clock = new THREE.Clock();
+            render();
+            _self.controls.enabled = true;
+        }, 50);
     }
-    
+
     function startLap(_delta) {
         document.getElementById("contadorLargada").innerHTML = 'YOU READY?';
+//        _self.carro.somFundo.play();
         var contador = document.getElementById("contadorLargada");
         switch (_delta) {
             case 3:
@@ -130,11 +161,14 @@ var ControleFase = function () {
             case 10:
                 document.getElementById('largada').style.display = 'none';
                 _self.runCar = true;
+                for (var prop in _self.listaJogadores) {
+                    _self.listaJogadores[prop].carro.sound2.play();
+                }
                 break;
         }
 
     }
-    
+
     function colocaCarrosNaCena() {
 
         var i = 0;
@@ -154,7 +188,7 @@ var ControleFase = function () {
             rotacao: _self.carro.geoFisicaCarro.rotation.y,
             nave: "supernave"
         };
-        if (_self.carro.id !== 'a') {
+        if (socket) {
             socketSend(obj);
         }
 
@@ -164,7 +198,7 @@ var ControleFase = function () {
         for (var prop in _self.listaJogadores) {
             _self.listaJogadores[prop].carro.moveCarro();
         }
-        if (_self.carro.id !== 'a') {
+        if (socket) {
             var obj = {
                 comando: "novaPosicao",
                 id: _self.carro.id,
@@ -184,33 +218,78 @@ var ControleFase = function () {
         var delta = _self.clock.getElapsedTime();
         var largada = parseInt(delta);
         startLap(largada);
+        var contCarros = 0;
+        for (var prop in _self.listaJogadores) {
+            if (_self.runCar === true && !_self.listaJogadores[prop].carro.estaVoando) {
+                _self.listaJogadores[prop].carro.movimentoCarro();
+            }
+            contCarros++;
+
+        }
+        if (_self.pista.chegada.length >= contCarros) {
+            telaFimDeJogo();
+            return;
+        }
         _self.cena.simulate();
         requestAnimationFrame(render);
         if (_self.carro.velocidade == 0) {
             document.getElementById('velocimetro').innerHTML = "kmH :  0";
         }
 
-        for (var prop in _self.listaJogadores) {
-            if (_self.runCar === true && !_self.listaJogadores[prop].carro.estaVoando) {
-                _self.listaJogadores[prop].carro.movimentoCarro();
-            }
-
-        }
 
         _self.controls.update();
         _self.renderizador.render(_self.cena, _self.camera);
     }
 
-//    function posiCamera() {
-//        if (_self.teclado.pressed('h')) {
-//        document.getElementById('x').innerHTML = "camera no eixo x:" + _self.camera.position.x;
-//        document.getElementById('y').innerHTML = "camera no eixo y:" + _self.camera.position.y;
-//        document.getElementById('z').innerHTML = "camera no eixo z:" + _self.camera.position.z;
-//        document.getElementById('posX').innerHTML = "carro eixo X:" + _self.carro.geoFisicaCarro.position.x;
-//        document.getElementById('posY').innerHTML = "carro eixo Y:" + _self.carro.geoFisicaCarro.position.y;
-//        document.getElementById('posZ').innerHTML = "carro eixo Z:" + _self.carro.geoFisicaCarro.position.z;
-//        }
-//     }
+    function telaFimDeJogo() {
+        if (!localStorage.ganhou) {
+            localStorage.setItem("ganhou", 0);
+        }
+        if (_self.carro == _self.pista.chegada[0]) {
+            localStorage.ganhou = Number(localStorage.ganhou) + 1;
+        }
+        if (!localStorage.corridas) {
+            localStorage.setItem("corridas", 1);
+        } else {
+            localStorage.corridas = Number(localStorage.corridas) + 1;
+        }
+        var div = document.createElement("div");
+        div.className = "detalhes";
+        div.style.position = "fixed";
+        div.style.height = "500px";
+        div.style.width = "500px";
+        div.style.top = (window.innerHeight / 2 - 250) + "px";
+        div.style.left = (window.innerWidth / 2 - 250) + "px";
+        var posicao;
+        for (var i = 1; i <= _self.pista.chegada.length; i++) {
+            if (_self.carro == _self.pista.chegada[i]) {
+                posicao = i + 1;
+                break;
+            }
+        }
+        var p = document.createElement("p");
+        p.innerHTML = "Position: " + posicao + "<br/>";
+        div.appendChild(p);
+
+        p = document.createElement("p");
+        p.innerHTML = "Victory: " + localStorage.ganhou + "<br/>";
+        div.appendChild(p);
+
+        p = document.createElement("p");
+        p.innerHTML = "Races: " + localStorage.corridas + "<br/>";
+        div.appendChild(p);
+
+        var botaoReiniciar = document.createElement("div");
+        botaoReiniciar.className = "detalhes";
+        p = document.createElement("p");
+        p.innerHTML = "Ok";
+        botaoReiniciar.appendChild(p);
+        botaoReiniciar.addEventListener("click", function () {
+            document.location.reload();
+        });
+        div.appendChild(botaoReiniciar);
+        document.body.appendChild(div);
+    }
 };
 
 ControleFase.prototype = Object.create(Object.prototype, {

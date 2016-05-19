@@ -12,6 +12,7 @@ var CarroMobile = function () {
         _self.fase.camera.rotation.x = _self.carro.rotation.x;
         _self.carro.add(_self.fase.camera);
         _self.fase.camera.position.set(0, 4, -7);
+        _self.initJog();
         
         criaBotaoAcelera();
         

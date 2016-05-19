@@ -1,5 +1,7 @@
 var Pista = function () {
     document.body.style.cursor = 'none';
+    this.todosOsChecks = [];
+    this.chegada = [];
     var posicaoInicialPista = {x: 1325, z: -1640};
     this.posicaoInicialCarro = {x: 1325, z: -1605};
     this.SENTIDO_N = 0;
@@ -26,6 +28,9 @@ var Pista = function () {
     var carregadoC = false;
     var meshParaFisica;
     var ultimaPosicao = {x: posicaoInicialPista.x, z: posicaoInicialPista.z};
+    var numElementosFisica = 0;
+    var confirmaCarregamentoFisica = 0;
+    this.todasFisicaCarregada = false;
 
     this.carrega = function () {
         var intervalo = setInterval(function () {
@@ -101,17 +106,6 @@ var Pista = function () {
     };
 
     this.initBase = function () {
-        var listener = new THREE.AudioListener();
-        _self.fase.camera.add(listener);
-        var sound1 = new THREE.Audio(listener);
-        sound1.load('sound-music/sound-track.mp3');
-
-        sound1.setRefDistance(1);
-        sound1.autoplay = true;
-        sound1.setLoop(true);
-        sound1.setVolume(1000);
-        //_self.fase.cena.add(sound1);
-
         var mundo = new THREE.Mesh(_self.geometria, _self.material);
         mundo.position.set(posicaoInicialPista.x, 0, posicaoInicialPista.z);
         mundo.scale.set(150, 150, 150);
@@ -124,9 +118,10 @@ var Pista = function () {
         });
     };
 
-    this.criaLargada = function() {
+    this.criaLargada = function () {
         var p = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 301), new Physijs.createMaterial(meshParaFisica.clone(), 0, 0), 0);
         var check = new Physijs.BoxMesh(new THREE.BoxGeometry(300, 1, 30), new Physijs.createMaterial(meshParaFisica.clone(), 0, 0), 0);
+        numElementosFisica += 2;
         check.name = "largada";
         check.position.y = 0.1;
         check.position.x = ultimaPosicao.x;
@@ -139,6 +134,8 @@ var Pista = function () {
         _self.fase.cena.add(check);
         _self.fase.cena.add(p);
         mudaPosicaoAtual();
+        p.addEventListener( 'ready', fisicaCarregada);
+        check.addEventListener( 'ready', fisicaCarregada);
     };
 
     this.criaReta = function (repeticao) {
@@ -155,6 +152,7 @@ var Pista = function () {
                 criaCheckPoint();
             }
             _self.fase.cena.add(p);
+            p.addEventListener( 'ready', fisicaCarregada);
             mudaPosicaoAtual();
         }
     };
@@ -286,14 +284,22 @@ var Pista = function () {
         checkFim.position.y = 0.1;
         checkFim.rotation.y = sentidoAtual;
         checkFim.name = "fimCurva";
+        _self.todosOsChecks.push(checkInicio);
+        _self.todosOsChecks.push(checkFim);
         _self.fase.cena.add(checkFim);
 
         inicio.add(clone);
+        numElementosFisica += 4;
         _self.fase.cena.add(inicio);
+        inicio.addEventListener( 'ready', fisicaCarregada);
+        fim.addEventListener( 'ready', fisicaCarregada);
+        checkInicio.addEventListener( 'ready', fisicaCarregada);
+        checkFim.addEventListener( 'ready', fisicaCarregada);
     };
 
     function criaCheckPoint() {
         var check = new Physijs.BoxMesh(new THREE.BoxGeometry(30, 1, 300), new Physijs.createMaterial(meshParaFisica.clone(), 0, 0), 0);
+        numElementosFisica++;
         check.name = "check";
         check.position.y = 0.1;
         check.position.x = ultimaPosicao.x;
@@ -313,7 +319,9 @@ var Pista = function () {
                 break;
         }
         _self.listaCheckPoints.push(check);
+        _self.todosOsChecks.push(check);
         _self.fase.cena.add(check);
+        check.addEventListener( 'ready', fisicaCarregada);
     }
 
     function mudaPosicaoAtual() {
@@ -332,5 +340,12 @@ var Pista = function () {
                 break;
         }
 
+    }
+    
+    function fisicaCarregada(){
+        confirmaCarregamentoFisica++;
+        if(confirmaCarregamentoFisica == numElementosFisica){
+            _self.todasFisicaCarregada = true;
+        }
     }
 };

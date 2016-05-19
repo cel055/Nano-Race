@@ -12,16 +12,16 @@ var CarroMobile = function () {
         _self.geoFisicaCarro.add(_self.fase.camera);
         _self.fase.camera.position.set(0, 8.5, -18);
         //watchId = navigator.accelerometer.watchAcceleration(onSuccess, onError, {frequency: 100});
-    if (window.DeviceOrientationEvent) {
-  window.addEventListener('deviceorientation', deviceMotionHandler, false);
-      }
+        if (window.DeviceOrientationEvent) {
+            window.addEventListener('deviceorientation', deviceMotionHandler, false);
+        }
     };
 
     function deviceMotionHandler(evento) {
-       // var acceleration = evento.acceleration;
+        // var acceleration = evento.acceleration;
         //var rotacao = evento.rotationRate;
         _self.x = evento.alpha;
-        _self.y =  evento.beta;
+        _self.y = evento.beta;
         _self.z = evento.gama;
     }
 
@@ -50,7 +50,7 @@ var CarroMobile = function () {
 
     function onSuccess(rotation) {
         _self.x = rotation.alpha;
-        _self.y =  rotation.beta .y;
+        _self.y = rotation.beta.y;
         _self.z = acceleration.z;
     }
     function onError() {

@@ -1,8 +1,9 @@
 var CarroIa = function () {
     Carro.apply(this);
     var _self = this;
-    var correndo = true, fazendoCurva = false;
+    var correndo = true, fazendoCurva = false, curvaPerto = false;
     var contCurva = 0;
+    var proxCheckCurva;
 
     this.init = function (x, z) {
         _self.initBase(x, z);
@@ -13,7 +14,14 @@ var CarroIa = function () {
 
 
     this.movimentoCarro = function () {
-        var posX = _self.fase.pista.listaCurvas[contCurva].position.x - _self.geoFisicaCarro.position.x, posZ = _self.fase.pista.listaCurvas[contCurva].position.z - _self.geoFisicaCarro.position.z;
+        if (!proxCheckCurva) {
+            proxCheckCurva = _self.fase.pista.listaCurvas[0];
+        }
+//        if(contCurva >= _self.fase.pista.listaCurvas.length){
+//            contCurva = 0;
+//        }
+        var posX = proxCheckCurva.position.x - _self.geoFisicaCarro.position.x, posZ = proxCheckCurva.position.z - _self.geoFisicaCarro.position.z;
+//        var posX = _self.fase.pista.listaCurvas[contCurva].position.x - _self.geoFisicaCarro.position.x, posZ = _self.fase.pista.listaCurvas[contCurva].position.z - _self.geoFisicaCarro.position.z;
         var atan = Math.atan2(posX, posZ);
 
         _self.rotSeno = Math.sin(atan);
@@ -28,10 +36,16 @@ var CarroIa = function () {
             }
             return;
         }
-        if (correndo && Math.random() < 0.6 && _self.velocidade < 1500) {
+        if (_self.velocidade < 450) {
+            _self.aceleraFrenteCarro();
+        } else if (correndo && Math.random() < 0.6 && _self.velocidade < 1500) {
             _self.aceleraFrenteCarro();
         } else if (fazendoCurva) {
-            _self.desaceleraCarro();
+            if (Math.sqrt(Math.pow(posX, 2) + Math.pow(posZ, 2)) < 150) {
+                _self.aceleraTrasCarro();
+            } else {
+                _self.desaceleraCarro();
+            }
 //            _self.aceleraTrasCarro();
         }
     };
@@ -41,6 +55,10 @@ var CarroIa = function () {
             case "largada":
                 if (_self.checkPointAtual == _self.fase.pista.listaCheckPoints.length - 1) {
                     --_self.volta;
+                    if (_self.volta <= 0 && !_self.acabou) {
+                        _self.fase.pista.chegada.push(_self);
+                        _self.acabou = true;
+                    }
                 }
                 break;
             case "check":
@@ -59,13 +77,25 @@ var CarroIa = function () {
                 _self.posicaoCheckPoint = {y: _self.geoFisicaCarro.rotation.y, rotacao: _self.rotacao, rotSeno: _self.rotSeno, rotCoseno: _self.rotCoseno};
                 fazendoCurva = true;
                 correndo = false;
+                proxCheckCurva = outroObj;
                 contCurva++;
+                for (var j = 0, size = _self.fase.pista.listaCurvas.length; j < size; j++) {
+                    if (outroObj == _self.fase.pista.listaCurvas[j]) {
+                        proxCheckCurva = _self.fase.pista.listaCurvas[j + 1] || _self.fase.pista.listaCurvas[0];
+                    }
+                }
                 break;
             case "inicioCurvaDireita":
                 _self.posicaoCheckPoint = {y: _self.geoFisicaCarro.rotation.y, rotacao: _self.rotacao, rotSeno: _self.rotSeno, rotCoseno: _self.rotCoseno};
                 fazendoCurva = true;
                 correndo = false;
+                proxCheckCurva = outroObj;
                 contCurva++;
+                for (var j = 0, size = _self.fase.pista.listaCurvas.length; j < size; j++) {
+                    if (outroObj == _self.fase.pista.listaCurvas[j]) {
+                        proxCheckCurva = _self.fase.pista.listaCurvas[j + 1] || _self.fase.pista.listaCurvas[0];
+                    }
+                }
                 break;
             case "fimCurva":
                 _self.posicaoCheckPoint = {y: _self.geoFisicaCarro.rotation.y, rotacao: _self.rotacao, rotSeno: _self.rotSeno, rotCoseno: _self.rotCoseno};
@@ -74,6 +104,11 @@ var CarroIa = function () {
                 contCurva++;
                 if (contCurva == _self.fase.pista.listaCurvas.length) {
                     contCurva = 0;
+                }
+                for (var j = 0, size = _self.fase.pista.listaCurvas.length; j < size; j++) {
+                    if (outroObj == _self.fase.pista.listaCurvas[j]) {
+                        proxCheckCurva = _self.fase.pista.listaCurvas[j + 1] || _self.fase.pista.listaCurvas[0];
+                    }
                 }
 //                _self.geoFisicaCarro.rotation.y = outroObj.rotation.y;
                 break;
@@ -121,6 +156,16 @@ var CarroIa = function () {
             _self.geoFisicaCarro.__dirtyRotation = true;
             _self.geoFisicaCarro.__dirtyPosition = true;
             _self.estaVoando = false;
+            for (var i = 0, size = _self.fase.pista.todosOsChecks.length; i < size; i++) {
+                if (_self.fase.pista.todosOsChecks[i] == _self.fase.pista.listaCheckPoints[_self.checkPointAtual]) {
+                    for (var j = i; j < size; j++) {
+                        if (_self.fase.pista.todosOsChecks[j].name.indexOf("Curva") != -1) {
+                            proxCheckCurva = _self.fase.pista.todosOsChecks[j];
+                            break;
+                        }
+                    }
+                }
+            }
             return;
         }
         _self.geoFisicaCarro.rotation.y = _self.rotacao * Math.PI / 180;
